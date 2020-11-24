@@ -3,6 +3,61 @@
 // N->Not test yet
 // Y->Tested
 
+/*
+ToolsSetVelocity
+ToolsGetVelocity
+ToolsGetSpeed
+ToolsGetAbsOrigin
+ToolsGetAbsAngles
+ToolsGetMyWeapons
+ToolsGetWeapon
+ToolsGetHealth
+ToolsSetHealth
+ToolsGetLMV
+ToolsSetLMV
+ToolsGetArmor
+ToolsSetArmor
+ToolsGetTeam
+ToolsSetTeam
+ToolsGetNightVision
+ToolsSetNightVision
+ToolsGetDefuser
+ToolsSetDefuser
+ToolsGetHelmet
+ToolsSetHelmet
+ToolsGetHeavySuit
+ToolsSetHeavySuit
+ToolsGetActiveWeapon
+ToolsSetActiveWeapon
+ToolsGetAddonBits
+ToolsSetAddonBits
+ToolsGetObserverMode
+ToolsGetObserverTarget
+ToolsGetHitGroup
+ToolsGetScore
+ToolsSetScore
+ToolsSetGravity
+ToolsSetSpot
+ToolsSetDetecting
+ToolsSetHud
+ToolsSetArm
+ToolsSetAttack
+ToolsSetFlashLight
+ToolsSetFov
+ToolsSetTextures
+ToolsGetEffect
+ToolsSetEffect
+ToolsGetActivator
+ToolsSetModelIndex
+ToolsGetOwner
+ToolsSetOwner
+ToolsGetParent
+ToolsSetParent
+ToolsGetRagdollIndex
+ToolsGetCollisionGroup
+ToolsSetCollisionGroup
+*/
+
 #ifndef _VEC_STD_TOOLS_H_
 #define _VEC_STD_TOOLS_H_
 
@@ -98,7 +153,7 @@ namespace vec
 			else
 			{
 				// Switch team of the entity
-				sm::cstrike::CS_SwitchTeam(entity, iValue);
+				sm::cstrike::CS_SwitchTeam(sm::ent_cast<CBasePlayer*>(entity), iValue);
 			}
 		}
 
