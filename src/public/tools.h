@@ -65,6 +65,9 @@ ToolsSetCollisionGroup
 #include <sm/cstrike.h>
 #include <sm/sourcemod.h>
 #include <sm/sdktools.h>
+#include <vector>
+#include <algorithm>
+#include <ranges>
 
 namespace vec
 {
@@ -126,14 +129,12 @@ namespace vec
 		}
 
 		//N
-		inline std::vector<CBaseCombatWeapon*> GetMyWeapons(CBasePlayer* entity)
+		inline auto GetMyWeapons(CBasePlayer* entity)
 		{
-			auto handleview = sm::GetEntPropArray<CBaseHandle>(entity, sm::Prop_Data, "m_hMyWeapons");
-
-			std::vector<CBaseCombatWeapon*> ret(handleview.size(), nullptr);
-			std::transform(handleview.begin(), handleview.end(), ret.begin(), sm::Converter<CBaseCombatWeapon*>());
-			ret.erase(std::remove(ret.begin(), ret.end(), nullptr), ret.end());
-			return ret;
+			// ignore this warning
+			return sm::GetEntPropArray<CBaseHandle>(entity, sm::Prop_Data, "m_hMyWeapons")
+				| std::ranges::views::transform(sm::Converter<CBaseCombatWeapon*>())
+				| std::ranges::views::filter(std::identity());
 		}
 
 		//Y

@@ -27,7 +27,7 @@ VECStandard g_VECStandard;
 SMEXT_LINK(&g_VECStandard);
 
 bool VECStandard::SDK_OnLoad(char* error, size_t maxlen, bool late)
-{
+{	
 	sm::SDK_OnLoad(error, maxlen, late);
 	vec::functions::SDK_OnLoad(error, maxlen, late);
 	return SDKExtension::SDK_OnLoad(error, maxlen, late);
