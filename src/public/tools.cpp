@@ -8,7 +8,6 @@ namespace vec
 			{"ToolsSetVelocity",					API::SetVelocity},
 			{"ToolsGetVelocity",					API::GetVelocity},
 			{"ToolsGetSpeed",						API::GetSpeed},
-			{"ToolsGetTeam",						API::GetTeam},
 			{"ToolsGetAbsOrigin",					API::GetAbsOrigin},
 			{"ToolsGetAbsAngles",					API::GetAbsAngles},
 			//{"ToolsGetMyWeapons",					API::GetMyWeapons},
