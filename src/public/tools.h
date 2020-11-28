@@ -34,8 +34,8 @@ ToolsSetAddonBits
 ToolsGetObserverMode
 ToolsGetObserverTarget
 ToolsGetHitGroup
-ToolsGetScore
-ToolsSetScore
+ToolsGetScore // using GetFrags+GetDeaths combines
+ToolsSetScore // using SetFrags+SetDeaths combines
 ToolsSetGravity
 ToolsSetSpot
 ToolsSetDetecting
@@ -62,9 +62,11 @@ ToolsSetCollisionGroup
 #define _VEC_STD_TOOLS_H_
 
 #include "extension.h"
-#include <sm/cstrike.h>
+
 #include <sm/sourcemod.h>
+#include <sm/cstrike.h>
 #include <sm/sdktools.h>
+
 #include <vector>
 #include <algorithm>
 #include <ranges>
@@ -80,7 +82,60 @@ namespace vec
 		// API extern
 		namespace API
 		{
+			static cell_t SetVelocity(IPluginContext*, const cell_t*);
+			static cell_t GetVelocity(IPluginContext*, const cell_t*);
+			static cell_t GetSpeed(IPluginContext*, const cell_t*);
+			static cell_t GetAbsOrigin(IPluginContext*, const cell_t*);
+			static cell_t GetAbsAngles(IPluginContext*, const cell_t*);
+			static cell_t GetMyWeapons(IPluginContext*, const cell_t*);
+			static cell_t GetWeapon(IPluginContext*, const cell_t*);
+			static cell_t GetHealth(IPluginContext*, const cell_t*);
+			static cell_t SetHealth(IPluginContext*, const cell_t*);
+			static cell_t GetLMV(IPluginContext*, const cell_t*);
+			static cell_t SetLMV(IPluginContext*, const cell_t*);
+			static cell_t GetArmor(IPluginContext*, const cell_t*);
+			static cell_t SetArmor(IPluginContext*, const cell_t*);
 			static cell_t GetTeam(IPluginContext*, const cell_t*);
+			static cell_t SetTeam(IPluginContext*, const cell_t*);
+			static cell_t GetNightVision(IPluginContext*, const cell_t*);
+			static cell_t SetNightVision(IPluginContext*, const cell_t*);
+			static cell_t GetDefuser(IPluginContext*, const cell_t*);
+			static cell_t SetDefuser(IPluginContext*, const cell_t*);
+			static cell_t GetHelmet(IPluginContext*, const cell_t*);
+			static cell_t SetHelmet(IPluginContext*, const cell_t*);
+			static cell_t GetHeavySuit(IPluginContext*, const cell_t*);
+			static cell_t SetHeavySuit(IPluginContext*, const cell_t*);
+			static cell_t GetActiveWeapon(IPluginContext*, const cell_t*);
+			static cell_t SetActiveWeapon(IPluginContext*, const cell_t*);
+			static cell_t GetAddonBits(IPluginContext*, const cell_t*);
+			static cell_t SetAddonBits(IPluginContext*, const cell_t*);
+			static cell_t GetObserverMode(IPluginContext*, const cell_t*);
+			static cell_t GetObserverTarget(IPluginContext*, const cell_t*);
+			static cell_t GetHitGroup(IPluginContext*, const cell_t*);
+			static cell_t GetFrags(IPluginContext*, const cell_t*);
+			static cell_t SetFrags(IPluginContext*, const cell_t*);
+			static cell_t GetDeaths(IPluginContext*, const cell_t*);
+			static cell_t SetDeaths(IPluginContext*, const cell_t*);
+			static cell_t SetGravity(IPluginContext*, const cell_t*);
+			static cell_t SetSpot(IPluginContext*, const cell_t*);
+			static cell_t SetDetecting(IPluginContext*, const cell_t*);
+			static cell_t SetHud(IPluginContext*, const cell_t*);
+			static cell_t SetArm(IPluginContext*, const cell_t*);
+			static cell_t SetAttack(IPluginContext*, const cell_t*);
+			static cell_t SetFlashLight(IPluginContext*, const cell_t*);
+			static cell_t SetFov(IPluginContext*, const cell_t*);
+			static cell_t SetTextures(IPluginContext*, const cell_t*);
+			static cell_t GetEffect(IPluginContext*, const cell_t*);
+			static cell_t SetEffect(IPluginContext*, const cell_t*);
+			static cell_t GetActivator(IPluginContext*, const cell_t*);
+			static cell_t SetModelIndex(IPluginContext*, const cell_t*);
+			static cell_t GetOwner(IPluginContext*, const cell_t*);
+			static cell_t SetOwner(IPluginContext*, const cell_t*);
+			static cell_t GetParent(IPluginContext*, const cell_t*);
+			static cell_t SetParent(IPluginContext*, const cell_t*);
+			static cell_t GetRagdollIndex(IPluginContext*, const cell_t*);
+			static cell_t GetCollisionGroup(IPluginContext*, const cell_t*);
+			static cell_t SetCollisionGroup(IPluginContext*, const cell_t*);
 		}
 
 		// Header-SDK Functions.
@@ -157,103 +212,86 @@ namespace vec
 				sm::cstrike::CS_SwitchTeam(sm::ent_cast<CBasePlayer*>(entity), iValue);
 			}
 		}
-
 		//Y
 		inline int GetFrags(CBaseEntity* entity) {
 			return sm::GetEntProp<int>(entity, sm::Prop_Data, "m_iFrags");
 		}
-
 		//Y
 		inline void SetFrags(CBaseEntity* entity, int value)
 		{
 			sm::SetEntProp<int>(entity, sm::Prop_Data, "m_iFrags", value);
 		}
-
 		//Y
 		inline int GetDeaths(CBaseEntity* entity)
 		{
 			return sm::GetEntProp<int>(entity, sm::Prop_Data, "m_iDeaths");
 		}
-
 		//Y
 		inline void SetDeaths(CBaseEntity* entity, int value)
 		{
 			sm::SetEntProp<int>(entity, sm::Prop_Data, "m_iDeaths", value);
 		}
-
 		//Y
 		inline bool GetDefuser(CBaseEntity* entity)
 		{
 			return sm::GetEntProp<bool>(entity, sm::Prop_Send, "m_bHasDefuser");
 		}
-
 		//Y
 		inline void SetDefuser(CBaseEntity* entity, bool bEnable)
 		{
 			sm::SetEntProp<bool>(entity, sm::Prop_Send, "m_bHasDefuser", bEnable);
 		}
-
 		//Y
 		inline int GetHealth(CBaseEntity* entity, bool bMax = false)
 		{
 			return sm::GetEntProp<int>(entity, sm::Prop_Data, bMax ? "m_iMaxHealth" : "m_iHealth");
 		}
-
 		//Y
 		inline void SetHealth(CBaseEntity* entity, int iValue, bool bSet = false)
 		{
 			sm::SetEntProp<int>(entity, sm::Prop_Send, "m_iHealth", iValue);
 			if (bSet) sm::SetEntProp<int>(entity, sm::Prop_Data, "m_iMaxHealth", iValue);
 		}
-
 		//Y
 		inline int GetArmor(CBaseEntity* entity)
 		{
 			return sm::GetEntProp<int>(entity, sm::Prop_Send, "m_ArmorValue");
 		}
-
 		//Y
 		inline void SetArmor(CBaseEntity* entity, int iValue)
 		{
 			sm::SetEntProp<int>(entity, sm::Prop_Send, "m_ArmorValue", iValue);
 		}
-
 		//Y
 		inline float GetLMV(CBaseEntity* entity)
 		{
 			return sm::GetEntProp<float>(entity, sm::Prop_Send, "m_flLaggedMovementValue");
 		}
-
 		//Y
 		inline void SetLMV(CBaseEntity* entity, float flValue)
 		{
 			sm::SetEntProp<float>(entity, sm::Prop_Send, "m_flLaggedMovementValue", flValue);
 		}
-
 		//Y
 		inline float GetGravity(CBaseEntity* entity)
 		{
 			return sm::GetEntProp<float>(entity, sm::Prop_Send, "m_flGravity");
 		}
-
 		//Y
 		inline void SetGravity(CBaseEntity* entity, float flValue)
 		{
 			sm::SetEntProp<float>(entity, sm::Prop_Send, "m_flGravity", flValue);
 		}
-
 		//Y
 		inline bool GetHelmet(CBaseEntity* entity)
 		{
 			return sm::GetEntProp<bool>(entity, sm::Prop_Send, "m_bHasHelmet");
 		}
-
 		//Y
 		inline void SetHelmet(CBaseEntity* entity, bool bEnable)
 		{
 			sm::SetEntProp<bool>(entity, sm::Prop_Send, "m_bHasHelmet", bEnable);
 		}
-
 		//Y
 		inline bool GetHeavySuit(CBaseEntity* entity)
 		{
@@ -278,6 +316,7 @@ namespace vec
 		//N
 		inline int SetAddonBits(CBaseEntity* pEntity, int val) {
 			sm::SetEntProp<int>(pEntity, sm::Prop_Send, "m_iAddonBits", val);
+			return 0;
 		}
 		//N
 		inline int GetObserverMode(CBaseEntity* pEntity) {
@@ -293,7 +332,7 @@ namespace vec
 		}
 		//N
 		inline void SetDetecting(CBaseEntity* pEntity, bool enable) {
-			sm::SetEntProp<float>(pEntity, sm::Prop_Send, "m_flDetectedByEnemySensorTime", enable ? (gpGlobals->curtime + 9999.f) : 0.f);
+			sm::SetEntProp<float>(pEntity, sm::Prop_Send, "m_flDetectedByEnemySensorTime", enable ? (sm::GetGameTime() + 9999.f) : 0.f);
 		}
 		//N
 		inline void SetArms(CBasePlayer* entity, const char* path)
@@ -310,7 +349,7 @@ namespace vec
 			sm::SetEntProp<int>(pEntity, sm::Prop_Send, "m_iDefaultFOV", val);
 		}
 		//N
-		inline void SetTexture(CBaseEntity* ent, int body = -1, int skin = -1) {
+		inline void SetTextures(CBaseEntity* ent, int body = -1, int skin = -1) {
 			if (body != -1) sm::SetEntProp<int>(ent, sm::Prop_Send, "m_nBody", body);
 			if (skin != -1) sm::SetEntProp<int>(ent, sm::Prop_Send, "m_nSkin", skin);
 		}
@@ -323,30 +362,36 @@ namespace vec
 			sm::SetEntProp<int>(ent, sm::Prop_Send, "m_fEffects", val);
 		}
 		//N
-		inline void SetFlashlight(CBasePlayer* ent, bool enable) {
+		inline void SetFlashLight(CBaseEntity* ent, bool enable) {
 			SetEffect(ent, enable ? (GetEffect(ent) ^ EF_DIMLIGHT) : 0);
 		}
 		//N
 		inline CBasePlayer* GetActivator(CBaseEntity* pEntity) {
-			return sm::ent_cast<CBasePlayer*>(sm::GetEntProp<CBaseHandle>(pEntity, sm::Prop_Data, "m_pActivator"));
+			
+			//return sm::GetEntPropEnt<CBasePlayer*>
+			//return sm::ent_cast<CBasePlayer*>(sm::GetEntProp<CBaseHandle>(pEntity, sm::Prop_Data, "m_pActivator"));
 		}
 		//N
 		inline void SetModelIndex(CBaseEntity* ent, int mdl) {
 			sm::SetEntProp<int>(ent, sm::Prop_Send, "m_nModelIndex", mdl);
 		}
 		//N
+		//TODO:GetEntPropEnt
 		inline CBaseEntity* GetOwner(CBaseEntity* ent, int mdl) {
 			return sm::ent_cast<CBaseEntity*>(sm::GetEntProp<CBaseHandle>(ent, sm::Prop_Data, "m_hOwner"));
 		}
 		//N
+		//TODO:SetEntPropEnt
 		inline void SetOwner(CBaseEntity* ent, CBaseEntity* owner) {
 			sm::SetEntProp<CBaseEntity*>(ent, sm::Prop_Data, "m_hOwner", owner);
 		}
 		//N
+		//TODO:GetEntPropEnt
 		inline CBaseEntity* GetParent(CBaseEntity* ent) {
 			return sm::ent_cast<CBaseEntity*>(sm::GetEntProp<CBaseHandle>(ent, sm::Prop_Send, "m_pParent"));
 		}
 		//N
+		//TODO:SetEntPropEnt
 		inline CBaseEntity* SetParent(CBaseEntity* ent, CBaseEntity* parent) {
 			sm::SetEntProp<CBaseEntity*>(ent, sm::Prop_Send, "m_pParent", parent);
 		}
