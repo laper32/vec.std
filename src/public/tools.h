@@ -314,9 +314,8 @@ namespace vec
 			return sm::GetEntProp<int>(pEntity, sm::Prop_Send, "m_iAddonBits");
 		}
 		//N
-		inline int SetAddonBits(CBaseEntity* pEntity, int val) {
+		inline void SetAddonBits(CBaseEntity* pEntity, int val) {
 			sm::SetEntProp<int>(pEntity, sm::Prop_Send, "m_iAddonBits", val);
-			return 0;
 		}
 		//N
 		inline int GetObserverMode(CBaseEntity* pEntity) {
@@ -367,37 +366,35 @@ namespace vec
 		}
 		//N
 		inline CBasePlayer* GetActivator(CBaseEntity* pEntity) {
-			
-			//return sm::GetEntPropEnt<CBasePlayer*>
-			//return sm::ent_cast<CBasePlayer*>(sm::GetEntProp<CBaseHandle>(pEntity, sm::Prop_Data, "m_pActivator"));
+			return sm::GetEntPropEnt<CBasePlayer*>(pEntity, sm::Prop_Data, "m_pActivator");
 		}
 		//N
 		inline void SetModelIndex(CBaseEntity* ent, int mdl) {
 			sm::SetEntProp<int>(ent, sm::Prop_Send, "m_nModelIndex", mdl);
 		}
 		//N
-		//TODO:GetEntPropEnt
-		inline CBaseEntity* GetOwner(CBaseEntity* ent, int mdl) {
-			return sm::ent_cast<CBaseEntity*>(sm::GetEntProp<CBaseHandle>(ent, sm::Prop_Data, "m_hOwner"));
+		inline CBaseEntity* GetOwner(CBaseEntity* ent) {
+			return sm::ent_cast<CBaseEntity*>(sm::GetEntPropEnt(ent, sm::Prop_Data, "m_hOwner"));
+			//return sm::ent_cast<CBaseEntity*>(sm::GetEntProp<CBaseHandle>(ent, sm::Prop_Data, "m_hOwner"));
 		}
 		//N
-		//TODO:SetEntPropEnt
 		inline void SetOwner(CBaseEntity* ent, CBaseEntity* owner) {
-			sm::SetEntProp<CBaseEntity*>(ent, sm::Prop_Data, "m_hOwner", owner);
+			sm::SetEntPropEnt(ent, sm::Prop_Data, "m_hOwner", owner);
+			//sm::SetEntProp<CBaseEntity*>(ent, sm::Prop_Data, "m_hOwner", owner);
 		}
 		//N
-		//TODO:GetEntPropEnt
 		inline CBaseEntity* GetParent(CBaseEntity* ent) {
-			return sm::ent_cast<CBaseEntity*>(sm::GetEntProp<CBaseHandle>(ent, sm::Prop_Send, "m_pParent"));
+			return sm::GetEntPropEnt<CBaseEntity*>(ent, sm::Prop_Send, "m_pParent");
 		}
 		//N
-		//TODO:SetEntPropEnt
-		inline CBaseEntity* SetParent(CBaseEntity* ent, CBaseEntity* parent) {
-			sm::SetEntProp<CBaseEntity*>(ent, sm::Prop_Send, "m_pParent", parent);
+		inline void SetParent(CBaseEntity* ent, CBaseEntity* parent) {
+			sm::SetEntProp(ent, sm::Prop_Data, "m_nParent", parent);
+			//sm::SetEntProp<CBaseEntity*>(ent, sm::Prop_Send, "m_pParent", parent);
 		}
 		//N
 		inline int GetRagdollIndex(CBaseEntity* pEntity) {
-			return sm::ent_cast<int>(sm::GetEntProp<CBaseHandle>(pEntity, sm::Prop_Send, "m_hRagdoll"));
+			return sm::GetEntPropEnt<int>(pEntity, sm::Prop_Send, "m_hRagdoll");
+			//return sm::ent_cast<int>(sm::GetEntProp<CBaseHandle>(pEntity, sm::Prop_Send, "m_hRagdoll"));
 		}
 		//N
 		inline int GetCollisionGroup(CBaseEntity* ent) {

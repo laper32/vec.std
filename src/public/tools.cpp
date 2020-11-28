@@ -92,7 +92,7 @@ namespace vec
 			}
 			static cell_t GetAbsAngles(IPluginContext* pContext, const cell_t* params) {
 				Vector out = vec::tools::GetAbsAngles(sm::ent_cast<CBaseEntity*>(params[1]));
-				sm::interop::cell2native(pContext, params[2], out);
+				return sm::interop::cell2native(pContext, params[2], out);
 			}
 			// wait a sec here..
 			static cell_t GetMyWeapons(IPluginContext* pContext, const cell_t* params) {
