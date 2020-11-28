@@ -14,3 +14,6 @@
 [submodule "smcppsdk"]
 	path = smcppsdk
 	url = git@github.com:MoeMod/smcppsdk.git
+[submodule "vec.include.public"]
+	path = vec.include.public
+	url = git@github.com:laper32/vec.include.public.git
