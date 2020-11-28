@@ -35,6 +35,8 @@ namespace vec
 			//{"ToolsGetObserverMode",				API::GetObserverMode},
 			//{"ToolsGetObserverTarget",			API::GetObserverTarget},
 			{"ToolsGetHitGroup",					API::GetHitGroup},
+			//{"ToolsGetScore",						API::GetScore},
+			//{"ToolsSetScore",						API::SetScore},
 			{"ToolsGetFrags",						API::GetFrags},
 			{"ToolsSetFrags",						API::SetFrags},
 			{"ToolsGetDeaths",						API::GetDeaths},
@@ -180,6 +182,13 @@ namespace vec
 			}
 			static cell_t GetHitGroup(IPluginContext* pContext, const cell_t* params) {
 				return vec::tools::GetHitGroup(sm::ent_cast<CBaseEntity*>(params[1]));
+			}
+			static cell_t GetScore(IPluginContext* pContext, const cell_t* params) {
+				return vec::tools::GetScore(sm::ent_cast<CBaseEntity*>(params[1]));
+			}
+			static cell_t SetScore(IPluginContext* pContext, const cell_t* params) {
+				vec::tools::SetScore(sm::ent_cast<CBaseEntity*>(params[1]), params[2], params[3]);
+				return 0;
 			}
 			static cell_t GetFrags(IPluginContext* pContext, const cell_t* params) {
 				return vec::tools::GetFrags(sm::ent_cast<CBaseEntity*>(params[1]));

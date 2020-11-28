@@ -63,9 +63,9 @@ ToolsSetCollisionGroup
 
 #include "extension.h"
 
-#include <sm/sourcemod.h>
-#include <sm/cstrike.h>
-#include <sm/sdktools.h>
+#include "sm/sourcemod.h"
+#include "sm/cstrike.h"
+#include "sm/sdktools.h"
 
 #include <vector>
 #include <algorithm>
@@ -112,6 +112,8 @@ namespace vec
 			static cell_t GetObserverMode(IPluginContext*, const cell_t*);
 			static cell_t GetObserverTarget(IPluginContext*, const cell_t*);
 			static cell_t GetHitGroup(IPluginContext*, const cell_t*);
+			static cell_t GetScore(IPluginContext*, const cell_t*);
+			static cell_t SetScore(IPluginContext*, const cell_t*);
 			static cell_t GetFrags(IPluginContext*, const cell_t*);
 			static cell_t SetFrags(IPluginContext*, const cell_t*);
 			static cell_t GetDeaths(IPluginContext*, const cell_t*);
@@ -230,6 +232,12 @@ namespace vec
 		inline void SetDeaths(CBaseEntity* entity, int value)
 		{
 			sm::SetEntProp<int>(entity, sm::Prop_Data, "m_iDeaths", value);
+		}
+		inline int GetScore(CBaseEntity* entity, bool score = true) { 
+			return (score) ? GetFrags(entity) : GetDeaths(entity); 
+		}
+		inline void SetScore(CBaseEntity* entity, int val, bool score = true) {
+			score ? SetFrags(entity, val) : SetDeaths(entity, val);
 		}
 		//Y
 		inline bool GetDefuser(CBaseEntity* entity)

@@ -18,3 +18,4 @@ target_link_libraries("vec.std" PUBLIC smcppsdk)
 target_link_libraries("vec.std" PUBLIC "vec.std.public")
 
 set_target_properties("vec.std" PROPERTIES PREFIX "" SUFFIX ".ext.2.csgo${HL2SDK_LIB_SHARED_EXT}")
+target_precompile_headers("vec.std" PRIVATE ${CMAKE_CURRENT_LIST_DIR}/stdafx.h)
