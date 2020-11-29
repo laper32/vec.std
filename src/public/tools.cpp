@@ -32,7 +32,7 @@ namespace vec
 			//{"ToolsSetActiveWeapon",				API::SetActiveWeapon},
 			{"ToolsGetAddonBits",					API::GetAddonBits},
 			{"ToolsSetAddonBits",					API::SetAddonBits},
-			//{"ToolsGetObserverMode",				API::GetObserverMode},
+			{"ToolsGetObserverMode",				API::GetObserverMode},
 			//{"ToolsGetObserverTarget",			API::GetObserverTarget},
 			{"ToolsGetHitGroup",					API::GetHitGroup},
 			//{"ToolsGetScore",						API::GetScore},

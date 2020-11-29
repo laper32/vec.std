@@ -331,7 +331,8 @@ namespace vec
 		}
 		//N
 		inline CBaseEntity* GetObserverTarget(CBaseEntity* entity) {
-			return sm::ent_cast<CBaseEntity*>(sm::GetEntProp<CBaseHandle>(entity, sm::Prop_Send, "m_hObserverTarget"));
+			return sm::GetEntPropEnt<CBaseEntity*>(entity, sm::Prop_Send, "m_hObserverTarget");
+			//return sm::ent_cast<CBaseEntity*>(sm::GetEntProp<CBaseHandle>(entity, sm::Prop_Send, "m_hObserverTarget"));
 		}
 		//N
 		inline int GetHitGroup(CBaseEntity* pEntity) {
