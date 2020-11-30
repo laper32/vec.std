@@ -178,7 +178,7 @@ namespace vec
 				return vec::tools::GetObserverMode(sm::ent_cast<CBaseEntity*>(params[1]));
 			}
 			static cell_t GetObserverTarget(IPluginContext* pContext, const cell_t* params) {
-				return 0;
+				return sm::ent_cast<cell_t>(vec::tools::GetObserverTarget(sm::ent_cast<CBaseEntity*>(params[1]));
 			}
 			static cell_t GetHitGroup(IPluginContext* pContext, const cell_t* params) {
 				return vec::tools::GetHitGroup(sm::ent_cast<CBaseEntity*>(params[1]));
@@ -219,6 +219,9 @@ namespace vec
 				return 0;
 			}
 			static cell_t SetArm(IPluginContext* pContext, const cell_t* params) {
+				std::string out;
+				sm::interop::cell2native(pContext, params[2], out);
+				vec::tools::SetArm(sm::ent_cast<CBaseEntity*>(params[1]), out.c_str());
 				return 0;
 			}
 			static cell_t SetAttack(IPluginContext* pContext, const cell_t* params) {
@@ -245,26 +248,28 @@ namespace vec
 				return 0;
 			}
 			static cell_t GetActivator(IPluginContext* pContext, const cell_t* params) {
-				return 0;
+				return sm::ent_cast<cell_t>(vec::tools::GetActivator(sm::ent_cast<CBaseEntity*>(params[1])));
 			}
 			static cell_t SetModelIndex(IPluginContext* pContext, const cell_t* params) {
 				vec::tools::SetModelIndex(sm::ent_cast<CBaseEntity*>(params[1]), params[2]);
 				return 0;
 			}
 			static cell_t GetOwner(IPluginContext* pContext, const cell_t* params) {
-				return 0;
+				return sm::ent_cast<cell_t>(vec::tools::GetOwner(sm::ent_cast<CBaseEntity*>(params[1])));
 			}
 			static cell_t SetOwner(IPluginContext* pContext, const cell_t* params) {
+				vec::tools::SetOwner(sm::ent_cast<CBaseEntity*>(params[1]), sm::ent_cast<CBaseEntity*>(params[2]));
 				return 0;
 			}
 			static cell_t GetParent(IPluginContext* pContext, const cell_t* params) {
-				return 0;
+				return sm::ent_cast<cell_t>(vec::tools::GetParent(sm::ent_cast<CBaseEntity*>(params[1])));
 			}
 			static cell_t SetParent(IPluginContext* pContext, const cell_t* params) {
+				vec::tools::SetParent(sm::ent_cast<CBaseEntity*>(params[1]), sm::ent_cast<CBaseEntity*>(params[2]));
 				return 0;
 			}
 			static cell_t GetRagdollIndex(IPluginContext* pContext, const cell_t* params) {
-				return 0;
+				return vec::tools::GetRagdollIndex(sm::ent_cast<CBaseEntity*>(params[1]));
 			}
 			static cell_t GetCollisionGroup(IPluginContext* pContext, const cell_t* params) {
 				return vec::tools::GetCollisionGroup(sm::ent_cast<CBaseEntity*>(params[1]));
