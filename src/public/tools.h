@@ -149,11 +149,14 @@ namespace vec
 		}
 
 		//N
-		inline void SetVelocity(CBaseEntity* pEntity, Vector vVelocity, bool bApply = true, bool bStack = true)
+		inline void SetVelocity(CBaseEntity* pEntity, bool bApply = true, bool bStack = true)
 		{
-			if (!bApply) vVelocity = GetVelocity(pEntity); return;
+			Vector vVelocity;
+			if (!bApply) { vVelocity = GetVelocity(pEntity); return; }
+			if (bStack) { vVelocity = GetVelocity(pEntity); vVelocity += GetVelocity(pEntity); }
+			/*if (!bApply) vVelocity = GetVelocity(pEntity); return;
 
-			if (bStack) vVelocity += GetVelocity(pEntity);
+			if (bStack) vVelocity += GetVelocity(pEntity);*/
 
 			sm::sdktools::TeleportEntity(pEntity, {}, {}, vVelocity);
 		}

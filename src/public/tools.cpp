@@ -76,7 +76,7 @@ namespace vec
 		{
 			// HELP
 			static cell_t SetVelocity(IPluginContext* pContext, const cell_t* params) {
-				
+				vec::tools::SetVelocity(sm::ent_cast<CBaseEntity*>(params[1]), params[2], params[3]);
 				//auto [pEntity, velocity, apply, stack] = sm::interop::params2tuple<CBaseEntity*, Vector, bool, bool>(pContext, params);
 				//vec::tools::SetVelocity(pEntity, velocity, apply, stack);
 				return 1;
