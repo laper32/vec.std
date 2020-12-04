@@ -20,6 +20,7 @@
 
 #include "functions.h"
 
+
 CGlobalVars* gpGlobals = nullptr;
 
 VECStandard g_VECStandard;

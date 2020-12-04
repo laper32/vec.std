@@ -14,6 +14,7 @@ target_include_directories("vec.std" PUBLIC
 	./
 )
 
+#target_link_libraries("vec.std" PRIVATE Boost::boost)
 target_link_libraries("vec.std" PUBLIC smcppsdk)
 target_link_libraries("vec.std" PUBLIC "vec.std.public")
 

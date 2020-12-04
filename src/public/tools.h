@@ -122,7 +122,7 @@ namespace vec
 			static cell_t SetSpot(IPluginContext*, const cell_t*);
 			static cell_t SetDetecting(IPluginContext*, const cell_t*);
 			static cell_t SetHud(IPluginContext*, const cell_t*);
-			static cell_t SetArm(IPluginContext*, const cell_t*);
+			static cell_t SetArms(IPluginContext*, const cell_t*);
 			static cell_t SetAttack(IPluginContext*, const cell_t*);
 			static cell_t SetFlashLight(IPluginContext*, const cell_t*);
 			static cell_t SetFov(IPluginContext*, const cell_t*);
@@ -422,6 +422,10 @@ namespace vec
 		//N
 		inline void SetCollisionGroup(CBaseEntity* ent, int val) {
 			sm::SetEntProp<int>(ent, sm::Prop_Data, "m_CollisionGroup", val);
+		}
+		inline void SetProgressBarTime(CBaseEntity* ent, int val)
+		{
+			
 		}
 	}
 }

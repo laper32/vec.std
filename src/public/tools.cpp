@@ -10,8 +10,8 @@ namespace vec
 			{"ToolsGetSpeed",						API::GetSpeed},
 			{"ToolsGetAbsOrigin",					API::GetAbsOrigin},
 			{"ToolsGetAbsAngles",					API::GetAbsAngles},
-			//{"ToolsGetMyWeapons",					API::GetMyWeapons},
-			//{"ToolsGetWeapon",					API::GetWeapon},
+			{"ToolsGetMyWeapons",					API::GetMyWeapons},
+			{"ToolsGetWeapon",						API::GetWeapon},
 			{"ToolsGetHealth",						API::GetHealth},
 			{"ToolsSetHealth",						API::SetHealth},
 			{"ToolsGetLMV",							API::GetLMV},
@@ -28,37 +28,37 @@ namespace vec
 			{"ToolsSetHelmet",						API::SetHelmet},
 			{"ToolsGetHeavySuit",					API::GetHeavySuit},
 			{"ToolsSetHeavySuit",					API::SetHeavySuit},
-			//{"ToolsGetActiveWeapon",				API::GetActiveWeapon},
-			//{"ToolsSetActiveWeapon",				API::SetActiveWeapon},
+			{"ToolsGetActiveWeapon",				API::GetActiveWeapon},
+			{"ToolsSetActiveWeapon",				API::SetActiveWeapon},
 			{"ToolsGetAddonBits",					API::GetAddonBits},
 			{"ToolsSetAddonBits",					API::SetAddonBits},
 			{"ToolsGetObserverMode",				API::GetObserverMode},
-			//{"ToolsGetObserverTarget",			API::GetObserverTarget},
+			{"ToolsGetObserverTarget",				API::GetObserverTarget},
 			{"ToolsGetHitGroup",					API::GetHitGroup},
-			//{"ToolsGetScore",						API::GetScore},
-			//{"ToolsSetScore",						API::SetScore},
+			{"ToolsGetScore",						API::GetScore},
+			{"ToolsSetScore",						API::SetScore},
 			{"ToolsGetFrags",						API::GetFrags},
 			{"ToolsSetFrags",						API::SetFrags},
 			{"ToolsGetDeaths",						API::GetDeaths},
 			{"ToolsSetDeaths",						API::SetDeaths},
 			{"ToolsSetGravity",						API::SetGravity},
-			//{"ToolsSetSpot",						API::SetSpot},
+			{"ToolsSetSpot",						API::SetSpot},
 			{"ToolsSetDetecting",					API::SetDetecting},
-			//{"ToolsSetHud",						API::SetHud},
-			//{"ToolsSetArm",						API::SetArm},
+			{"ToolsSetHud",							API::SetHud},
+			{"ToolsSetArms",						API::SetArms},
 			{"ToolsSetAttack",						API::SetAttack},
 			{"ToolsSetFlashLight",					API::SetFlashLight},
 			{"ToolsSetFov",							API::SetFov},
 			{"ToolsSetTextures",					API::SetTextures},
 			{"ToolsGetEffect",						API::GetEffect},
 			{"ToolsSetEffect",						API::SetEffect},
-			//{"ToolsGetActivator",					API::GetActivator},
+			{"ToolsGetActivator",					API::GetActivator},
 			{"ToolsSetModelIndex",					API::SetModelIndex},
-			//{"ToolsGetOwner",						API::GetOwner},
-			//{"ToolsSetOwner",						API::SetOwner},
-			//{"ToolsGetParent",					API::GetParent},
-			//{"ToolsSetParent",					API::SetParent},
-			//{"ToolsGetRagdollIndex",				API::GetRagdollIndex},
+			{"ToolsGetOwner",						API::GetOwner},
+			{"ToolsSetOwner",						API::SetOwner},
+			{"ToolsGetParent",						API::GetParent},
+			{"ToolsSetParent",						API::SetParent},
+			{"ToolsGetRagdollIndex",				API::GetRagdollIndex},
 			{"ToolsGetCollisionGroup",				API::GetCollisionGroup},
 			{"ToolsSetCollisionGroup",				API::SetCollisionGroup},
 			{nullptr, nullptr}
@@ -178,7 +178,7 @@ namespace vec
 				return vec::tools::GetObserverMode(sm::ent_cast<CBaseEntity*>(params[1]));
 			}
 			static cell_t GetObserverTarget(IPluginContext* pContext, const cell_t* params) {
-				return sm::ent_cast<cell_t>(vec::tools::GetObserverTarget(sm::ent_cast<CBaseEntity*>(params[1]));
+				return sm::ent_cast<cell_t>(vec::tools::GetObserverTarget(sm::ent_cast<CBaseEntity*>(params[1])));
 			}
 			static cell_t GetHitGroup(IPluginContext* pContext, const cell_t* params) {
 				return vec::tools::GetHitGroup(sm::ent_cast<CBaseEntity*>(params[1]));
@@ -218,10 +218,10 @@ namespace vec
 			static cell_t SetHud(IPluginContext* pContext, const cell_t* params) {
 				return 0;
 			}
-			static cell_t SetArm(IPluginContext* pContext, const cell_t* params) {
+			static cell_t SetArms(IPluginContext* pContext, const cell_t* params) {
 				std::string out;
 				sm::interop::cell2native(pContext, params[2], out);
-				vec::tools::SetArm(sm::ent_cast<CBaseEntity*>(params[1]), out.c_str());
+				vec::tools::SetArms(sm::ent_cast<CBasePlayer*>(params[1]), out.c_str());
 				return 0;
 			}
 			static cell_t SetAttack(IPluginContext* pContext, const cell_t* params) {

@@ -3,8 +3,11 @@ project("vec.std")
 
 include(smsdk_ext-cmake/smsdk_ext.cmake)
 
+#find_package(Boost REQUIRED)
+
 add_library(json INTERFACE)
 target_link_libraries(json INTERFACE ${CMAKE_SOURCE_DIR}/3rdparty/json)
+
 
 # JSON
 #find_package(nlohmann_json 3.2.0 REQUIRED)
