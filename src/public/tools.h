@@ -70,7 +70,7 @@ ToolsSetCollisionGroup
 #include <vector>
 #include <algorithm>
 #include <ranges>
-
+#include "engine.h"
 namespace vec
 {
 	namespace tools
@@ -138,6 +138,8 @@ namespace vec
 			static cell_t GetRagdollIndex(IPluginContext*, const cell_t*);
 			static cell_t GetCollisionGroup(IPluginContext*, const cell_t*);
 			static cell_t SetCollisionGroup(IPluginContext*, const cell_t*);
+			static cell_t SetProgressBarTime(IPluginContext*, const cell_t*);
+			static cell_t ResetProgressBarTime(IPluginContext*, const cell_t*);
 		}
 
 		// Header-SDK Functions.
@@ -292,6 +294,20 @@ namespace vec
 		{
 			sm::SetEntProp<float>(entity, sm::Prop_Send, "m_flGravity", flValue);
 		}
+		inline void SetSpot(CBaseEntity* entity, bool enable)
+		{
+			if (!enable)
+			{
+				sm::SetEntData(entity, vec::engine::Player_Spotted, false, 1, true);
+				sm::SetEntData(entity, vec::engine::Player_SpottedByMask, false, {}, true);
+				sm::SetEntData(entity, vec::engine::Player_SpottedByMask + 4, false, {}, true); // table
+				sm::SetEntData(entity, vec::engine::Player_Spotted - 4, 0, {}, true);
+			}
+			else
+			{
+				sm::SetEntData(entity, vec::engine::Player_Spotted - 4, 9, {}, true);
+			}
+		}
 		//Y
 		inline bool GetHelmet(CBaseEntity* entity)
 		{
@@ -414,9 +430,23 @@ namespace vec
 		inline void SetCollisionGroup(CBaseEntity* ent, int val) {
 			sm::SetEntProp<int>(ent, sm::Prop_Data, "m_CollisionGroup", val);
 		}
-		inline void SetProgressBarTime(CBaseEntity* ent, int val)
+		inline void SetProgressBarTime(CBasePlayer* ent, int val)
 		{
-			
+			// gets the current time
+			float flGameTime = sm::GetGameTime();
+
+			// Sets the bar for the client
+			sm::SetEntData(ent, vec::engine::Player_ProgressBarDuration, val, 4, true);
+			sm::SetEntData<float>(ent, vec::engine::Player_ProgressBarStartTime, flGameTime, true);
+			sm::SetEntData<float>(ent, vec::engine::Entity_SimulationTime, flGameTime + float(val), true);
+
+			// Progress bar type 0-15
+			sm::SetEntData(ent, vec::engine::Player_BlockingUseActionInProgress, 0, 4, true);
+		}
+		inline void ResetProgressBarTime(CBasePlayer* ent)
+		{
+			sm::SetEntData<float>(ent, vec::engine::Player_ProgressBarStartTime, 0.f, true);
+			sm::SetEntData(ent, vec::engine::Player_ProgressBarDuration, 0, 1, true);
 		}
 	}
 }

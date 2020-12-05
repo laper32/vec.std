@@ -61,6 +61,8 @@ namespace vec
 			{"ToolsGetRagdollIndex",				API::GetRagdollIndex},
 			{"ToolsGetCollisionGroup",				API::GetCollisionGroup},
 			{"ToolsSetCollisionGroup",				API::SetCollisionGroup},
+			{"ToolsSetProgressBarTime",				API::SetProgressBarTime},
+			{"ToolsResetProgressBarTime",			API::ResetProgressBarTime},
 			{nullptr, nullptr}
 		};
 
@@ -310,6 +312,16 @@ namespace vec
 			}
 			static cell_t SetCollisionGroup(IPluginContext* pContext, const cell_t* params) {
 				vec::tools::SetCollisionGroup(sm::ent_cast<CBaseEntity*>(params[1]), params[2]);
+				return 0;
+			}
+			static cell_t SetProgressBarTime(IPluginContext*pContext, const cell_t* params)
+			{
+				vec::tools::SetProgressBarTime(sm::ent_cast<CBasePlayer*>(params[1]), params[2]);
+				return 0;
+			}
+			static cell_t ResetProgressBarTime(IPluginContext* pContext, const cell_t* params)
+			{
+				vec::tools::ResetProgressBarTime(sm::ent_cast<CBasePlayer*>(params[1]));
 				return 0;
 			}
 		}
