@@ -4,6 +4,7 @@ set(TARGET_NAME "${CMAKE_PROJECT_NAME}.${TARGE_NAME}")
 add_library("vec.std.public" INTERFACE)
 
 target_sources("vec.std.public" INTERFACE
+	${CMAKE_CURRENT_LIST_DIR}/const.h
 	${CMAKE_CURRENT_LIST_DIR}/engine.h
 	${CMAKE_CURRENT_LIST_DIR}/engine.cpp
 	${CMAKE_CURRENT_LIST_DIR}/utils.h

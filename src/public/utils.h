@@ -2,6 +2,7 @@
 #ifndef _VEC_STD_UTILS_H_
 #define _VEC_STD_UTILS_H_
 #include "extension.h"
+#include "const.h"
 namespace vec
 {
 	namespace utils
@@ -41,8 +42,8 @@ namespace vec
 		//inline int UTIL_CreateBeam(float vStartPosition[3], float vEndPosition[3], char[] sDamage = "0", char[] sFrame = "0", char[] sWidth = "4.0", char[] sRenderFX = "0", char[] sType = "3", char[] sRate = "0", char[] sDecalName = "Bigshot", char[] sScroll = "35", char[] sScale = "1.0", char[] sTextureName = "materials/sprites/purplelaser1.vmt", char[] sLife = "0", char[] sStrike = "1", int iFlags = 0, char[] sAmplitude = "0", char[] sRadius = "256", char[] sRenderAMT = "100", char[] sColor, float flDelayTime, float flDurationTime, char[] sName)
 		//inline int UTIL_CreateLight(int parent = -1, float vPosition[3] = NULL_VECTOR, char[] sAttach = "", char[] sInnerCone = "0", char[] sCone = "80", char[] sBrightness = "1", char[] sPitch = "90", char[] sStyle = "1", int iFlags = 0, char[] sColor, float flDistance, float flRadius, float flDurationTime = 0.0)
 		//inline void UTIL_CreateGlowing(int entity, bool enableState, int iType = 0, int iRed = 255, int iGreen = 255, int iBlue = 255, int iAlpha = 255)
-		//inline void UTIL_SetRenderColor(int entity, RenderingColorType color, int iRender)
-		//inline int UTIL_GetRenderColor(int entity, RenderingColorType color)
+		inline void SetRenderColor(CBaseEntity* entity, RenderColorType_t color, int iRender);
+		inline int GetRenderColor(CBaseEntity* entity, RenderColorType_t color);
 		//inline void UTIL_CreateTracer(int parent, char[] sAttach, char[] sEffect, float vBullet[3], float flDurationTime)
 		//inline void UTIL_CreateShakeScreen(int client, float flAmplitude, float flFrequency, float flDurationTime)
 		//inline void UTIL_CreateFadeScreen(int client, float flDuration, float flHoldTime, int iFlags, int vColor[4])
@@ -68,7 +69,7 @@ namespace vec
 		//inline void GetEffectName(int iIndex, char[] sEffect, int iMaxLen)
 		//inline void GetParticleEffectName(int iIndex, char[] sEffect, int iMaxLen)
 		//inline void GetEffectNameCount(/*void*/)
-		inline int GetParticleEffectCount();
+		//inline int GetParticleEffectCount();
 		//inline bool PlayersFilter(int entity, int contentsMask)
 	}
 }
