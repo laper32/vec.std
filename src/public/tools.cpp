@@ -74,15 +74,7 @@ namespace vec
 
 		namespace API
 		{
-			inline int native2cell(IPluginContext* pContext, const Vector& in, cell_t out)
-			{
-				cell_t* addr;
-				pContext->LocalToPhysAddr(out, &addr);
-				addr[0] = sp_ftoc(in.x);
-				addr[1] = sp_ftoc(in.y);
-				addr[2] = sp_ftoc(in.z);
-				return 1;
-			}
+			
 			// HELP
 			static cell_t SetVelocity(IPluginContext* pContext, const cell_t* params) {
 				Vector in;
@@ -92,13 +84,12 @@ namespace vec
 			}
 			static cell_t GetVelocity(IPluginContext* pContext, const cell_t* params) {
 				Vector pos = vec::tools::GetVelocity(sm::ent_cast<CBaseEntity*>(params[1]));
-				return native2cell(pContext, pos, params[2]);
-				//cell_t* addr;
-				//pContext->LocalToPhysAddr(params[2], &addr);
-				//addr[0] = sp_ftoc(pos.x);
-				//addr[1] = sp_ftoc(pos.y);
-				//addr[2] = sp_ftoc(pos.z);
-				//return 1;
+				cell_t* addr;
+				pContext->LocalToPhysAddr(params[2], &addr);
+				addr[0] = sp_ftoc(pos.x);
+				addr[1] = sp_ftoc(pos.y);
+				addr[2] = sp_ftoc(pos.z);
+				return 1;
 			}
 			static cell_t GetSpeed(IPluginContext* pContext, const cell_t* params) {
 				return sp_ftoc(vec::tools::GetSpeed(sm::ent_cast<CBaseEntity*>(params[1])));
