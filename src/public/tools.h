@@ -190,9 +190,7 @@ namespace vec
 		//N
 		inline CBaseCombatWeapon* GetActiveWeapon(CBasePlayer* entity)
 		{
-			return static_cast<CBaseCombatWeapon*>(
-				sm::ent_cast<CBaseEntity*>(sm::GetEntProp<CBaseHandle>(entity, sm::Prop_Send, "m_hActiveWeapon"))
-				);
+			return sm::GetEntPropEnt<CBaseCombatWeapon*>(entity, sm::Prop_Send, "m_hActiveWeapon");
 		}
 
 		//N
@@ -394,7 +392,6 @@ namespace vec
 		//N
 		inline CBaseEntity* GetOwner(CBaseEntity* ent) {
 			return sm::ent_cast<CBaseEntity*>(sm::GetEntPropEnt(ent, sm::Prop_Data, "m_hOwner"));
-			//return sm::ent_cast<CBaseEntity*>(sm::GetEntProp<CBaseHandle>(ent, sm::Prop_Data, "m_hOwner"));
 		}
 		//N
 		inline void SetOwner(CBaseEntity* ent, CBaseEntity* owner) {

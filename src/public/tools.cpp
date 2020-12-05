@@ -82,26 +82,63 @@ namespace vec
 				return 1;
 			}
 			static cell_t GetVelocity(IPluginContext* pContext, const cell_t* params) {
-				Vector out = vec::tools::GetVelocity(sm::ent_cast<CBaseEntity*>(params[1]));
-				return sm::interop::cell2native(pContext, params[2], out);
+				Vector pos = vec::tools::GetVelocity(sm::ent_cast<CBaseEntity*>(params[1]));
+				cell_t* addr;
+				pContext->LocalToPhysAddr(params[2], &addr);
+				addr[0] = sp_ftoc(pos.x);
+				addr[1] = sp_ftoc(pos.y);
+				addr[2] = sp_ftoc(pos.z);
+				return 1;
+
+				// 你有时间确认一下这个FUNC: sm::interop::cell2native(IPluginContext*, cell_t, Vector)
+				// 是Input进去还是Output出来?
+				//return sm::interop::cell2native(pContext, params[2], pos);
 			}
 			static cell_t GetSpeed(IPluginContext* pContext, const cell_t* params) {
-				return vec::tools::GetSpeed(sm::ent_cast<CBaseEntity*>(params[1]));
+				return sp_ftoc(vec::tools::GetSpeed(sm::ent_cast<CBaseEntity*>(params[1])));
 			}
 			static cell_t GetAbsOrigin(IPluginContext* pContext, const cell_t* params) {
-				Vector out = vec::tools::GetAbsOrigin(sm::ent_cast<CBaseEntity*>(params[1]));
-				return sm::interop::cell2native(pContext, params[2], out);
+				Vector pos = vec::tools::GetAbsOrigin(sm::ent_cast<CBaseEntity*>(params[1]));
+				cell_t* addr;
+				pContext->LocalToPhysAddr(params[2], &addr);
+				addr[0] = sp_ftoc(pos.x);
+				addr[1] = sp_ftoc(pos.y);
+				addr[2] = sp_ftoc(pos.z);
+				return 1;
+				//return sm::interop::cell2native(pContext, params[2], out);
 			}
 			static cell_t GetAbsAngles(IPluginContext* pContext, const cell_t* params) {
-				Vector out = vec::tools::GetAbsAngles(sm::ent_cast<CBaseEntity*>(params[1]));
-				return sm::interop::cell2native(pContext, params[2], out);
+				Vector pos = vec::tools::GetAbsAngles(sm::ent_cast<CBaseEntity*>(params[1]));
+				cell_t* addr;
+				pContext->LocalToPhysAddr(params[2], &addr);
+				addr[0] = sp_ftoc(pos.x);
+				addr[1] = sp_ftoc(pos.y);
+				addr[2] = sp_ftoc(pos.z);
+				return 1;
+				//return sm::interop::cell2native(pContext, params[2], out);
 			}
-			// wait a sec here..
+			// 因为一些原因 (如ZP等), 我们必须用GetEntPropArraySize类似的方式
+			// 如果只是DLL限定的话, 就无所谓了.
 			static cell_t GetMyWeapons(IPluginContext* pContext, const cell_t* params) {
-				return 0;
+				int cnt = 0;
+				for (CBaseCombatWeapon* weapon : vec::tools::GetMyWeapons(sm::ent_cast<CBasePlayer*>(params[1])))
+				{
+					cnt++;
+				}
+				//return 0;
+				return cnt;
 			}
+			// keeps in there...
 			static cell_t GetWeapon(IPluginContext* pContext, const cell_t* params) {
-				return 0;
+				int pos = params[2];
+				int cnt = 0;
+				int out = -1;
+				for (CBaseCombatWeapon* weapon : vec::tools::GetMyWeapons(sm::ent_cast<CBasePlayer*>(params[1])))
+				{
+					cnt++;
+					if (pos == cnt) out = sm::ent_cast<int>(weapon); break;
+				}
+				return out;
 			}
 			static cell_t GetHealth(IPluginContext* pContext, const cell_t* params) {
 				return vec::tools::GetHealth(sm::ent_cast<CBaseEntity*>(params[1]));
@@ -162,7 +199,7 @@ namespace vec
 				return 0;
 			}
 			static cell_t GetActiveWeapon(IPluginContext* pContext, const cell_t* params) {
-				return 0;
+				return sm::ent_cast<cell_t>(vec::tools::GetActiveWeapon(sm::ent_cast<CBasePlayer*>(params[1])));
 			}
 			static cell_t SetActiveWeapon(IPluginContext* pContext, const cell_t* params) {
 				return 0;
