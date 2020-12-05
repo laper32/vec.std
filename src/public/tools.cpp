@@ -74,25 +74,31 @@ namespace vec
 
 		namespace API
 		{
+			inline int native2cell(IPluginContext* pContext, const Vector& in, cell_t out)
+			{
+				cell_t* addr;
+				pContext->LocalToPhysAddr(out, &addr);
+				addr[0] = sp_ftoc(in.x);
+				addr[1] = sp_ftoc(in.y);
+				addr[2] = sp_ftoc(in.z);
+				return 1;
+			}
 			// HELP
 			static cell_t SetVelocity(IPluginContext* pContext, const cell_t* params) {
-				//vec::tools::SetVelocity(sm::ent_cast<CBaseEntity*>(params[1]), params[2], params[3]);
-				//auto [pEntity, velocity, apply, stack] = sm::interop::params2tuple<CBaseEntity*, Vector, bool, bool>(pContext, params);
-				//vec::tools::SetVelocity(pEntity, velocity, apply, stack);
+				Vector in;
+				sm::interop::cell2native(pContext, params[2], in);
+				vec::tools::SetVelocity(sm::ent_cast<CBaseEntity*>(params[1]), in, params[3], params[4]);
 				return 1;
 			}
 			static cell_t GetVelocity(IPluginContext* pContext, const cell_t* params) {
 				Vector pos = vec::tools::GetVelocity(sm::ent_cast<CBaseEntity*>(params[1]));
-				cell_t* addr;
-				pContext->LocalToPhysAddr(params[2], &addr);
-				addr[0] = sp_ftoc(pos.x);
-				addr[1] = sp_ftoc(pos.y);
-				addr[2] = sp_ftoc(pos.z);
-				return 1;
-
-				// 你有时间确认一下这个FUNC: sm::interop::cell2native(IPluginContext*, cell_t, Vector)
-				// 是Input进去还是Output出来?
-				//return sm::interop::cell2native(pContext, params[2], pos);
+				return native2cell(pContext, pos, params[2]);
+				//cell_t* addr;
+				//pContext->LocalToPhysAddr(params[2], &addr);
+				//addr[0] = sp_ftoc(pos.x);
+				//addr[1] = sp_ftoc(pos.y);
+				//addr[2] = sp_ftoc(pos.z);
+				//return 1;
 			}
 			static cell_t GetSpeed(IPluginContext* pContext, const cell_t* params) {
 				return sp_ftoc(vec::tools::GetSpeed(sm::ent_cast<CBaseEntity*>(params[1])));
@@ -136,7 +142,7 @@ namespace vec
 				for (CBaseCombatWeapon* weapon : vec::tools::GetMyWeapons(sm::ent_cast<CBasePlayer*>(params[1])))
 				{
 					cnt++;
-					if (pos == cnt) out = sm::ent_cast<int>(weapon); break;
+					if (cnt == pos) out = sm::ent_cast<int>(weapon); break;
 				}
 				return out;
 			}
