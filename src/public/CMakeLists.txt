@@ -6,6 +6,8 @@ add_library("vec.std.public" INTERFACE)
 target_sources("vec.std.public" INTERFACE
 	${CMAKE_CURRENT_LIST_DIR}/engine.h
 	${CMAKE_CURRENT_LIST_DIR}/engine.cpp
+	${CMAKE_CURRENT_LIST_DIR}/utils.h
+	${CMAKE_CURRENT_LIST_DIR}/utils.cpp
 	${CMAKE_CURRENT_LIST_DIR}/tools.h
 	${CMAKE_CURRENT_LIST_DIR}/tools.cpp
 	${CMAKE_CURRENT_LIST_DIR}/hashlib.h
