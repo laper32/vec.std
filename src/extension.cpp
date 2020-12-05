@@ -22,6 +22,7 @@
 
 
 CGlobalVars* gpGlobals = nullptr;
+KeyValues* kv = nullptr;
 
 VECStandard g_VECStandard;
 

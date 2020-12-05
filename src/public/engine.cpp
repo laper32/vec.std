@@ -41,12 +41,11 @@ namespace vec
 		{
 			static cell_t InitSendPropOffset(IPluginContext* pContext, const cell_t* params)
 			{
-				//cell_t offset;
-				//char* _class; char* _prop;
-				//pContext->LocalToPhysAddr(params[1], &offset);
-				//pContext->LocalToString(params[2], &_class); pContext->LocalToString(params[3], &_prop);
-				//vec::engine::InitSendPropOffset(offset, _class, _prop);
-				//
+				cell_t* offset;
+				char* _class; char* _prop;
+				pContext->LocalToPhysAddr(params[1], &offset);
+				pContext->LocalToString(params[2], &_class); pContext->LocalToString(params[3], &_prop);
+				vec::engine::InitSendPropOffset(*offset, _class, _prop);
 				return 0;
 			}
 		}

@@ -90,5 +90,5 @@ public:
 };
 
 extern CGlobalVars* gpGlobals;
-
+extern KeyValues* kv;
 #endif // _INCLUDE_SOURCEMOD_EXTENSION_PROPER_H_
