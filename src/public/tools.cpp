@@ -68,7 +68,7 @@ namespace vec
 
 		bool SDK_OnLoad(char* error, size_t maxlen, bool late)
 		{
-			g_pShareSys->AddNatives(myself, g_ToolNatives);
+			sharesys->AddNatives(myself, g_ToolNatives);
 			//sharesys->AddNatives(myself, g_ToolsNative);
 
 			return true;
@@ -104,7 +104,6 @@ namespace vec
 				addr[1] = sp_ftoc(pos.y);
 				addr[2] = sp_ftoc(pos.z);
 				return 1;
-				//return sm::interop::cell2native(pContext, params[2], out);
 			}
 			static cell_t GetAbsAngles(IPluginContext* pContext, const cell_t* params) {
 				Vector pos = vec::tools::GetAbsAngles(sm::ent_cast<CBaseEntity*>(params[1]));
@@ -114,7 +113,6 @@ namespace vec
 				addr[1] = sp_ftoc(pos.y);
 				addr[2] = sp_ftoc(pos.z);
 				return 1;
-				//return sm::interop::cell2native(pContext, params[2], out);
 			}
 			// 因为一些原因 (如ZP等), 我们必须用GetEntPropArraySize类似的方式
 			// 如果只是DLL限定的话, 就无所谓了.
@@ -223,7 +221,7 @@ namespace vec
 				return vec::tools::GetScore(sm::ent_cast<CBaseEntity*>(params[1]));
 			}
 			static cell_t SetScore(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::SetScore(sm::ent_cast<CBaseEntity*>(params[1]), params[2], params[3]);
+				vec::tools::SetScore(sm::ent_cast<CBaseEntity*>(params[1]), params[3], params[2]);
 				return 0;
 			}
 			static cell_t GetFrags(IPluginContext* pContext, const cell_t* params) {

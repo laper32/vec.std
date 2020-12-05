@@ -24,7 +24,6 @@ namespace vec
 			if (offset < -1) throw std::runtime_error("Unable to find send prop: " + (std::string() + _prop));
 		}
 
-		
 		bool SDK_OnLoad(char* error, size_t maxlen, bool late)
 		{
 			InitSendPropOffset(Player_Spotted, "CBasePlayer", "m_bSpotted");
