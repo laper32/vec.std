@@ -406,7 +406,6 @@ namespace vec
 		//N
 		inline void SetOwner(CBaseEntity* ent, CBaseEntity* owner) {
 			sm::SetEntPropEnt(ent, sm::Prop_Data, "m_hOwner", owner);
-			//sm::SetEntProp<CBaseEntity*>(ent, sm::Prop_Data, "m_hOwner", owner);
 		}
 		//N
 		inline CBaseEntity* GetParent(CBaseEntity* ent) {
@@ -414,13 +413,11 @@ namespace vec
 		}
 		//N
 		inline void SetParent(CBaseEntity* ent, CBaseEntity* parent) {
-			sm::SetEntProp(ent, sm::Prop_Data, "m_nParent", parent);
-			//sm::SetEntProp<CBaseEntity*>(ent, sm::Prop_Send, "m_pParent", parent);
+			sm::SetEntPropEnt(ent, sm::Prop_Data, "m_nParent", parent);
 		}
 		//N
 		inline int GetRagdollIndex(CBaseEntity* pEntity) {
 			return sm::GetEntPropEnt<int>(pEntity, sm::Prop_Send, "m_hRagdoll");
-			//return sm::ent_cast<int>(sm::GetEntProp<CBaseHandle>(pEntity, sm::Prop_Send, "m_hRagdoll"));
 		}
 		//N
 		inline int GetCollisionGroup(CBaseEntity* ent) {

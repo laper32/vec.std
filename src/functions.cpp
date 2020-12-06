@@ -2,6 +2,7 @@
 
 #include "public/tools.h"
 #include "public/engine.h"
+#include "public/utils.h"
 namespace vec
 {
 	namespace functions
@@ -10,6 +11,7 @@ namespace vec
 		{
 			vec::engine::SDK_OnLoad(error, maxlen, late);
 			vec::tools::SDK_OnLoad(error, maxlen, late);
+			vec::utils::SDK_OnLoad(error, maxlen, late);
 			return true;
 		}
 	}

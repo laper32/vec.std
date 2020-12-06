@@ -7,6 +7,14 @@ namespace vec
 {
 	namespace utils
 	{
+		sp_nativeinfo_t g_UTILNatives[];
+		bool SDK_OnLoad(char* error, size_t maxlen, bool late);
+		
+		namespace API 
+		{
+			static cell_t RemoveEntity(IPluginContext* pContext, const cell_t* params);
+		}
+
 		inline CBaseEntity* CreateTrain(
 			std::string classname, Vector position, Vector angle, std::string path, 
 			float speed, std::string sound, int flags);

@@ -76,8 +76,6 @@ namespace vec
 
 		namespace API
 		{
-			
-			// HELP
 			static cell_t SetVelocity(IPluginContext* pContext, const cell_t* params) {
 				Vector in;
 				sm::interop::cell2native(pContext, params[2], in);
