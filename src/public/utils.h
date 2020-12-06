@@ -53,7 +53,7 @@ namespace vec
 		//inline int UTIL_PrecacheModel(char[] sModel)
 		//inline void UTIL_IgniteEntity(int entity, float flDurationTime)
 		//inline void UTIL_ExtinguishEntity(int entity)
-		//inline void UTIL_RemoveEntity(int entity, float flDelayTime)
+		inline void RemoveEntity(CBaseEntity* entity, float flDelayTime);
 		//inline void UTIL_PrecacheDecal(char[] sDecal)
 		//inline void UTIL_PrecacheSound(char[] sSound)
 		//inline void UTIL_FindHullIntersection(Handle &hTrace, float vPosition[3], const float vMins[3], const float vMaxs[3], TraceEntityFilter filter, any data)
