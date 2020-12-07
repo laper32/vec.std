@@ -20,6 +20,8 @@
 
 #include "functions.h"
 
+
+
 CGlobalVars* gpGlobals = nullptr;
 KeyValues* kv = nullptr;
 

@@ -13,7 +13,6 @@ add_library("vec.std" SHARED
 target_include_directories("vec.std" PUBLIC
 	./
 )
-#find_package(Boost)
 
 target_link_libraries("vec.std" PUBLIC smcppsdk)
 target_link_libraries("vec.std" PUBLIC "vec.std.public")
