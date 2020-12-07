@@ -12,8 +12,51 @@ namespace vec
 		
 		namespace API 
 		{
+			static cell_t CreateTrain(IPluginContext* pContext, const cell_t* params);
+			static cell_t CreatePath(IPluginContext* pContext, const cell_t* params);
+			static cell_t CreateMonster(IPluginContext* pContext, const cell_t* params);
+			static cell_t CreatePhysics(IPluginContext* pContext, const cell_t* params);
+			static cell_t CreateDynamic(IPluginContext* pContext, const cell_t* params);
+			static cell_t CreateProjectile(IPluginContext* pContext, const cell_t* params);
+			static cell_t CreateSmoke(IPluginContext* pContext, const cell_t* params);
+			static cell_t CreateParticle(IPluginContext* pContext, const cell_t* params);
+			static cell_t CreateExplosion(IPluginContext* pContext, const cell_t* params);
+			static cell_t CreateDamage(IPluginContext* pContext, const cell_t* params);
+			static cell_t CreateSprite(IPluginContext* pContext, const cell_t* params);
+			static cell_t CreateSpriteController(IPluginContext* pContext, const cell_t* params);
+			static cell_t CreateTesla(IPluginContext* pContext, const cell_t* params);
+			static cell_t CreateShooter(IPluginContext* pContext, const cell_t* params);
+			static cell_t CreateBeam(IPluginContext* pContext, const cell_t* params);
 			static cell_t CreateLight(IPluginContext* pContext, const cell_t* params);
+			static cell_t CreateGlowing(IPluginContext* pContext, const cell_t* params);
+			static cell_t SetRenderColor(IPluginContext* pContext, const cell_t* params);
+			static cell_t GetRenderColor(IPluginContext* pContext, const cell_t* params);
+			static cell_t CreateTracer(IPluginContext* pContext, const cell_t* params);
+			static cell_t CreateShakeScreen(IPluginContext* pContext, const cell_t* params);
+			static cell_t CreateFadeScreen(IPluginContext* pContext, const cell_t* params);
+			static cell_t CreatePhysForce(IPluginContext* pContext, const cell_t* params);
+			static cell_t CreateClientHint(IPluginContext* pContext, const cell_t* params);
+			static cell_t CreateClientHud(IPluginContext* pContext, const cell_t* params);
+			static cell_t PrecacheModel(IPluginContext* pContext, const cell_t* params);
+			static cell_t IgniteEntity(IPluginContext* pContext, const cell_t* params);
+			static cell_t ExtinguishEntity(IPluginContext* pContext, const cell_t* params);
 			static cell_t RemoveEntity(IPluginContext* pContext, const cell_t* params);
+			static cell_t PrecacheDecal(IPluginContext* pContext, const cell_t* params);
+			static cell_t PrecacheSound(IPluginContext* pContext, const cell_t* params);
+			static cell_t FindHullIntersection(IPluginContext* pContext, const cell_t* params);
+			static cell_t GetVelocityByAim(IPluginContext* pContext, const cell_t* params);
+			static cell_t IsOnSamePlane(IPluginContext* pContext, const cell_t* params);
+			static cell_t GetTraceEndPoint(IPluginContext* pContext, const cell_t* params);
+			static cell_t TraceRay(IPluginContext* pContext, const cell_t* params);
+			static cell_t GetDistanceBetween(IPluginContext* pContext, const cell_t* params);
+			static cell_t GetEffectIndex(IPluginContext* pContext, const cell_t* params);
+			static cell_t GetParticleEffectIndex(IPluginContext* pContext, const cell_t* params);
+			static cell_t PrecacheParticleFile(IPluginContext* pContext, const cell_t* params);
+			static cell_t PrecacheParticleEffect(IPluginContext* pContext, const cell_t* params);
+			static cell_t GetEffectName(IPluginContext* pContext, const cell_t* params);
+			static cell_t GetParticleEffectName(IPluginContext* pContext, const cell_t* params);
+			static cell_t GetEffectNameCount(IPluginContext* pContext, const cell_t* params);
+			static cell_t GetParticleEffectCount(IPluginContext* pContext, const cell_t* params);
 		}
 
 		inline CBaseEntity* CreateTrain(

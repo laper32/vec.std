@@ -7,8 +7,51 @@ namespace vec
 	namespace utils
 	{
 		sp_nativeinfo_t g_UTILNatives[] = {
+			{"UTIL_CreateTrain",		API::CreateTrain},
+			{"UTIL_CreatePath",			API::CreatePath},
+			{"UTIL_CreateMonster",		API::CreateMonster},
+			{"UTIL_CreatePhysics",		API::CreatePhysics},
+			{"UTIL_CreateDynamic",		API::CreateDynamic},
+			{"UTIL_CreateProjectile",	API::CreateProjectile},
+			{"UTIL_CreateSmoke",		API::CreateSmoke},
+			{"UTIL_CreateParticle",		API::CreateParticle},
+			{"UTIL_CreateExplosion",	API::CreateExplosion},
+			{"UTIL_CreateDamage",		API::CreateDamage},
+			{"UTIL_CreateSprite",		API::CreateSprite},
+			{"UTIL_CreateSpriteController", API::CreateSpriteController},
+			{"UTIL_CreateTesla",		API::CreateTesla},
+			{"UTIL_CreateShooter",		API::CreateShooter},
+			{"UTIL_CreateBeam",			API::CreateBeam},
 			{"UTIL_CreateLight",		API::CreateLight},
+			{"UTIL_CreateGlowing",		API::CreateGlowing},
+			{"UTIL_SetRenderColor",		API::SetRenderColor},
+			{"UTIL_GetRenderColor",		API::GetRenderColor},
+			{"UTIL_CreateTracer",		API::CreateTracer},
+			{"UTIL_CreateShakeScreen",	API::CreateShakeScreen},
+			{"UTIL_CreateFadeScreen",	API::CreateFadeScreen},
+			{"UTIL_CreatePhysForce",	API::CreatePhysForce},
+			{"UTIL_CreateClientHint",	API::CreateClientHint},
+			{"UTIL_CreateClientHud",	API::CreateClientHud},
+			{"UTIL_PrecacheModel",		API::PrecacheModel},
+			{"UTIL_IgniteEntity",		API::IgniteEntity},
+			{"UTIL_ExtinguishEntity",	API::ExtinguishEntity},
 			{"UTIL_RemoveEntity",		API::RemoveEntity},
+			//{"UTIL_PrecacheDecal",		API::PrecacheDecal},
+			//{"UTIL_PrecacheSound",		API::PrecacheSound},
+			//{"UTIL_FindHullIntersection", API::FindHullIntersection},
+			//{"UTIL_GetVelocityByAim",		API::GetVelocityByAim},
+			//UTIL_IsOnSamePlane
+			//UTIL_GetTraceEndPoint
+			//UTIL_TraceRay
+			//UTIL_GetDistanceBetween
+			//GetEffectIndex
+			//GetParticleEffectIndex
+			//PrecacheParticleFile
+			//PrecacheParticleEffect
+			//GetEffectName
+			//GetParticleEffectName
+			//GetEffectNameCount
+			//GetParticleEffectCount
 			{nullptr, nullptr}
 		};
 
@@ -20,6 +63,110 @@ namespace vec
 
 		namespace API
 		{
+			static cell_t CreateTrain(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t CreatePath(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t CreateMonster(IPluginContext* pContext, const cell_t* params)
+			{
+
+				return 0;
+			}
+
+			static cell_t CreatePhysics(IPluginContext* pContext, const cell_t* params)
+			{
+
+				return 0;
+			}
+
+			static cell_t CreateDynamic(IPluginContext* pContext, const cell_t* params)
+			{
+
+				return 0;
+			}
+
+			static cell_t CreateProjectile(IPluginContext* pContext, const cell_t* params)
+			{
+
+				return 0;
+			}
+
+			static cell_t CreateSmoke(IPluginContext* pContext, const cell_t* params)
+			{
+
+				return 0;
+			}
+
+			static cell_t CreateParticle(IPluginContext* pContext, const cell_t* params)
+			{
+				//inline CBaseEntity* CreateParticle(
+				//CBaseEntity * parent, Vector pos, Vector ang, std::string attach, std::string effectName, float duration)
+				CBaseEntity* parent = sm::ent_cast<CBaseEntity*>(params[1]);
+				sm::PrintToChatAllStr("API::CreateParticle Dump message broadcast: ");
+				sm::PrintToChatAllStr("ParentEntityMessage: ");
+				sm::PrintToChatAllStr((std::string() + "ParentEntity passed in: " + std::to_string(params[1])));
+				sm::PrintToChatAllStr((std::string() + "Transformed to CBaseEntity* is: " + std::to_string(sm::ent_cast<int>(parent))));
+				Vector pos, ang;
+				sm::interop::cell2native(pContext, params[2], pos);
+				sm::PrintToChatAll("vPositionMessage: ");
+				sm::PrintToChatAllStr(std::string() + "Position: <" + std::to_string(pos.x) + ", " + std::to_string(pos.y) + ", " + std::to_string(pos.z) + ">");
+				sm::interop::cell2native(pContext, params[3], ang);
+				sm::PrintToChatAllStr(std::string() + "Angles: <" + std::to_string(ang.x) + ", " + std::to_string(ang.y) + ", " + std::to_string(ang.z) + ">");
+				std::string attach, effectName;
+				sm::interop::cell2native(pContext, params[4], attach);
+				sm::PrintToChatAllStr(std::string() + "AttachPassedIn: " + attach);
+				sm::interop::cell2native(pContext, params[5], effectName);
+				sm::PrintToChatAllStr(std::string() + "EffectNamePassedIn: " + effectName);
+				float flDuration = sp_ctof(params[6]);
+				sm::PrintToChatAllStr(std::string() + "Duration: " + std::to_string(flDuration));
+				sm::PrintToChatAllStr("   ");
+				CBaseEntity* Ret = vec::utils::CreateParticle(parent, pos, ang, attach, effectName, flDuration);
+				return 0;
+				//return sm::ent_cast<cell_t>(Ret);
+			}
+
+			static cell_t CreateExplosion(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t CreateDamage(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t CreateSprite(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t CreateSpriteController(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t CreateTesla(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+
+			}
+
+			static cell_t CreateShooter(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t CreateBeam(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
 			static cell_t CreateLight(IPluginContext* pContext, const cell_t* params)
 			{
 				CBaseEntity* parent = sm::ent_cast<CBaseEntity*>(params[1]);
@@ -34,11 +181,153 @@ namespace vec
 
 				return sm::ent_cast<cell_t>(Ret);
 			}
+			static cell_t CreateGlowing(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t SetRenderColor(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t GetRenderColor(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t CreateTracer(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t CreateShakeScreen(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t CreateFadeScreen(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t CreatePhysForce(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t CreateClientHint(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+			
+			[[deprecated]]
+			static cell_t CreateClientHud(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t PrecacheModel(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t IgniteEntity(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t ExtinguishEntity(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
 			static cell_t RemoveEntity(IPluginContext* pContext, const cell_t* params)
 			{
 				vec::utils::RemoveEntity(sm::ent_cast<CBaseEntity*>(params[1]), sp_ctof(params[2]));
 				return 1;
 			}
+			
+			static cell_t PrecacheDecal(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t PrecacheSound(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t FindHullIntersection(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t GetVelocityByAim(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t IsOnSamePlane(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t GetTraceEndPoint(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t TraceRay(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t GetDistanceBetween(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t GetEffectIndex(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t GetParticleEffectIndex(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t PrecacheParticleFile(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t PrecacheParticleEffect(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t GetEffectName(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t GetParticleEffectName(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t GetEffectNameCount(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
+			static cell_t GetParticleEffectCount(IPluginContext* pContext, const cell_t* params)
+			{
+				return 0;
+			}
+
 		}
 
 		/**
@@ -60,7 +349,7 @@ namespace vec
 		{
 			CBaseEntity* pEntity = sm::sdktools::CreateEntityByName("func_tracktrain");
 
-			if (!pEntity)
+			if (pEntity)
 			{
 				sm::sdktools::DispatchKeyValue<Vector>(pEntity, "origin", position);
 				sm::sdktools::DispatchKeyValue<Vector>(pEntity, "angles", angle);
@@ -71,7 +360,7 @@ namespace vec
 				sm::sdktools::DispatchKeyValue<int>(pEntity, "bank", 20); // Make turning smoother
 				sm::sdktools::DispatchKeyValue<int>(pEntity, "orientationtype", 2); // Linear blend, add some smoothness
 				sm::sdktools::DispatchKeyValue<int>(pEntity, "spawnflags", flags); 
-				if (!sound.size()) sm::sdktools::DispatchKeyValue<const char*>(pEntity, "MoveSound", sound.c_str());
+				if (sound.size()) sm::sdktools::DispatchKeyValue<const char*>(pEntity, "MoveSound", sound.c_str());
 				
 				SetRenderColor(pEntity, RenderColorType_t::Color_Alpha, 0);
 
@@ -80,6 +369,7 @@ namespace vec
 			}
 			return pEntity;
 		}
+
 		/**
 		 * @brief Create a path entity.
 		 *
@@ -95,7 +385,7 @@ namespace vec
 		{
 			CBaseEntity* pEntity = sm::sdktools::CreateEntityByName("path_track");
 
-			if (!pEntity)
+			if (pEntity)
 			{
 				sm::sdktools::DispatchKeyValue<Vector>(pEntity, "origin", position);
 				sm::sdktools::DispatchKeyValue<Vector>(pEntity, "angle", angle);
@@ -124,7 +414,7 @@ namespace vec
 		inline CBaseEntity* CreateMonster(std::string classname, Vector position, Vector angle, std::string sModel, int iFlags)
 		{
 			CBaseEntity* entity = sm::sdktools::CreateEntityByName("monster_generic");
-			if (!entity)
+			if (entity)
 			{
 				sm::sdktools::DispatchKeyValue<const char*>(entity, "targetname", classname.c_str());
 				sm::sdktools::DispatchKeyValue<Vector>(entity, "origin", position);
@@ -154,7 +444,7 @@ namespace vec
 		{
 			CBaseEntity* entity = sm::sdktools::CreateEntityByName("prop_physics_multiplayer");
 
-			if (!entity)
+			if (entity)
 			{
 				sm::sdktools::DispatchKeyValue<const char*>(entity, "targetname", classname.c_str());
 				sm::sdktools::DispatchKeyValue<Vector>(entity, "origin", position);
@@ -189,7 +479,7 @@ namespace vec
 		{
 			CBaseEntity* entity = sm::sdktools::CreateEntityByName(bOverride ? "prop_dynamic_override" : "prop_dynamic");
 
-			if (!entity)
+			if (entity)
 			{
 				sm::sdktools::DispatchKeyValue<const char*>(entity, "targetname", classname.c_str());
 				sm::sdktools::DispatchKeyValue<Vector>(entity, "origin", position);
@@ -198,7 +488,7 @@ namespace vec
 				sm::sdktools::DispatchKeyValue<int>(entity, "spawnflags", iFlags);
 				sm::sdktools::DispatchKeyValue<int>(entity, "solid", bSolid ? 1 : 0);
 				sm::sdktools::DispatchKeyValue<int>(entity, "HoldAnimation", bHoldAnim ? 1 : 0);
-				if (!defaultAnim.size()) sm::sdktools::DispatchKeyValue(entity, "DefaultAnim", defaultAnim.c_str());
+				if (defaultAnim.size()) sm::sdktools::DispatchKeyValue(entity, "DefaultAnim", defaultAnim.c_str());
 
 				sm::sdktools::DispatchSpawn(entity);
 			}
@@ -218,13 +508,13 @@ namespace vec
 		{
 			CBaseEntity* entity = sm::sdktools::CreateEntityByName("hegrenade_projectile");
 
-			if (!entity)
+			if (entity)
 			{
 				sm::sdktools::DispatchSpawn(entity);
 
 				sm::sdktools::TeleportEntity(entity, pos, ang, {});
 				
-				if (!model.size()) sm::sdktools::SetEntityModel(entity, model.c_str());
+				if (model.size()) sm::sdktools::SetEntityModel(entity, model.c_str());
 			}
 
 			return entity;
@@ -260,7 +550,7 @@ namespace vec
 		{
 			CBaseEntity* entity = sm::sdktools::CreateEntityByName("env_smokestack");
 
-			if (!entity)
+			if (entity)
 			{
 				sm::sdktools::DispatchKeyValue<Vector>(entity, "origin", pos);
 				sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", ang);
@@ -280,15 +570,15 @@ namespace vec
 				sm::sdktools::DispatchSpawn(entity);
 				sm::sdktools::AcceptEntityInput(entity, "TurnOn");
 
-				if (!parent)
+				if (parent)
 				{
 					sm::sdktools::SetVariant("!activator");
 					sm::sdktools::AcceptEntityInput(entity, "SetParent", parent, entity);
 					sm::SetEntPropEnt(entity, sm::Prop_Data, "m_hOwnerEntity", parent);
 
-					if (!attach.size())
+					if (attach.size())
 					{
-						sm::sdktools::SetVariant(attach);
+						sm::sdktools::SetVariant(attach.c_str());
 						sm::sdktools::AcceptEntityInput(entity, "SetParentAttachment", parent, entity);
 					}
 				}
@@ -296,7 +586,7 @@ namespace vec
 				if (durationtime > 0.0 && removetime > 0.0)
 				{
 					std::string buffer = "OnUser2 !self:TurnOff::" + std::to_string(removetime) + ":1";
-					sm::sdktools::SetVariant(buffer);
+					sm::sdktools::SetVariant(buffer.c_str());
 					sm::sdktools::AcceptEntityInput(entity, "AddOutput");
 					sm::sdktools::AcceptEntityInput(entity, "FireUser2");
 					RemoveEntity(entity, durationtime);
@@ -318,25 +608,39 @@ namespace vec
 		 *
 		 * @return                  The entity index.
 		 **/
-		inline CBaseEntity* CreateParticle(CBaseEntity* parent, Vector pos, Vector ang, std::string attach, std::string effectName, float duration)
+		inline CBaseEntity* CreateParticle(
+			CBaseEntity* parent, Vector pos, Vector ang, 
+			std::string attach, std::string effectName, float duration
+		)
 		{
+			sm::PrintToChatAllStr("utils::CreateParticle Dump message broadcast: ");
+			sm::PrintToChatAllStr("ParentEntityMessage: ");
+			sm::PrintToChatAllStr((std::string() + "Transformed to CBaseEntity* is: " + std::to_string(sm::ent_cast<int>(parent))));
+			sm::PrintToChatAll("vPositionMessage: ");
+			sm::PrintToChatAllStr(std::string() + "Position: <" + std::to_string(pos.x) + ", " + std::to_string(pos.y) + ", " + std::to_string(pos.z) + ">");
+			sm::PrintToChatAllStr(std::string() + "Angles: <" + std::to_string(ang.x) + ", " + std::to_string(ang.y) + ", " + std::to_string(ang.z) + ">");
+			sm::PrintToChatAllStr(std::string() + "AttachPassedIn: " + attach);
+			sm::PrintToChatAllStr(std::string() + "EffectNamePassedIn: " + effectName);
+			sm::PrintToChatAllStr(std::string() + "Duration: " + std::to_string(duration));
 			CBaseEntity* entity = sm::sdktools::CreateEntityByName("info_particle_system");
-			if (!entity)
-			{
-				sm::sdktools::DispatchKeyValue<Vector>(entity, "origin", pos);
+			//CBaseEntity* entity = sm::sdktools::CreateEntityByName("info_particle_system");
+			//if (entity)
+			//{
+				
+				/*sm::sdktools::DispatchKeyValue<Vector>(entity, "origin", pos);
 				sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", ang);
 				sm::sdktools::DispatchKeyValue<int>(entity, "start_active", 1);
 				sm::sdktools::DispatchKeyValue<const char*>(entity, "effect_name", effectName.c_str());
 
 				sm::sdktools::DispatchSpawn(entity);
 
-				if (!parent)
+				if (parent)
 				{
 					sm::sdktools::SetVariant("!activator");
 					sm::sdktools::AcceptEntityInput(entity, "SetParent", parent, entity);
 					sm::SetEntPropEnt(entity, sm::Prop_Data, "m_hOwnerEntity", parent);
 
-					if (!attach.size())
+					if (attach.size())
 					{
 						sm::sdktools::SetVariant(attach);
 						sm::sdktools::AcceptEntityInput(entity, "SetParentAttachment", parent, entity);
@@ -345,9 +649,10 @@ namespace vec
 				sm::sdktools::ActivateEntity(entity);
 				sm::sdktools::AcceptEntityInput(entity, "Start");
 
-				if (duration > 0.f) RemoveEntity(entity, duration);
-			}
-			return entity;
+				if (duration > 0.f) RemoveEntity(entity, duration);*/
+			//}
+			//return entity;
+			return nullptr;
 		}
 
 		/**
@@ -373,7 +678,7 @@ namespace vec
 		{
 			CBaseEntity* entity = sm::sdktools::CreateEntityByName("env_explosion");
 
-			if (!entity)
+			if (entity)
 			{
 				sm::sdktools::DispatchKeyValue<Vector>(entity, "origin", vPosition);
 				//sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", vAngle);
@@ -389,8 +694,8 @@ namespace vec
 
 				sm::sdktools::DispatchSpawn(entity);
 
-				if (!attacker) sm::SetEntPropEnt(entity, sm::Prop_Data, "m_hOwnerEntity", attacker);
-				if (!inflictor) sm::SetEntPropEnt(entity, sm::Prop_Data, "m_hInflictor", inflictor);
+				if (attacker) sm::SetEntPropEnt(entity, sm::Prop_Data, "m_hOwnerEntity", attacker);
+				if (inflictor) sm::SetEntPropEnt(entity, sm::Prop_Data, "m_hInflictor", inflictor);
 
 				sm::sdktools::AcceptEntityInput(entity, "Explode");
 				sm::sdktools::AcceptEntityInput(entity, "Kill");
@@ -420,7 +725,7 @@ namespace vec
 		{
 			CBaseEntity* entity = sm::sdktools::CreateEntityByName("point_hurt");
 			
-			if (!entity)
+			if (entity)
 			{
 				/**
 				 * The specified amount of damage will be halved.
@@ -437,7 +742,7 @@ namespace vec
 
 				sm::SetEntProp(entity, sm::Prop_Data, "m_iHammerID", weaponID);
 
-				if (!parent)
+				if (parent)
 				{
 					sm::sdktools::SetVariant("!activator");
 					sm::sdktools::AcceptEntityInput(entity, "SetParent", parent, entity);
@@ -445,7 +750,7 @@ namespace vec
 					
 					if (sAttach.size())
 					{
-						sm::sdktools::SetVariant(sAttach);
+						sm::sdktools::SetVariant(sAttach.c_str());
 						sm::sdktools::AcceptEntityInput(entity, "SetParentAttachment", parent, entity);
 					}
 				}
@@ -477,7 +782,7 @@ namespace vec
 		{
 			CBaseEntity* entity = sm::sdktools::CreateEntityByName("env_sprite");
 
-			if (!entity)
+			if (entity)
 			{
 				sm::sdktools::DispatchKeyValue<Vector>(entity, "origin", pos);
 				sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", ang);
@@ -489,7 +794,7 @@ namespace vec
 
 				sm::sdktools::ActivateEntity(entity);
 
-				if (!parent)
+				if (parent)
 				{
 					sm::sdktools::SetVariant("!activator");
 					sm::sdktools::AcceptEntityInput(entity, "SetParent", parent, entity);
@@ -497,7 +802,7 @@ namespace vec
 
 					if (sAttach.size())
 					{
-						sm::sdktools::SetVariant(sAttach);
+						sm::sdktools::SetVariant(sAttach.c_str());
 						sm::sdktools::AcceptEntityInput(entity, "SetParentAttachment", parent, entity);
 					}
 				}
@@ -520,14 +825,14 @@ namespace vec
 		{
 			CBaseEntity* entity = sm::sdktools::CreateEntityByName("material_modify_control");
 
-			if (!entity)
+			if (entity)
 			{
 				sm::sdktools::DispatchKeyValue<const char*>(entity, "materialName", sprite.c_str());
 				sm::sdktools::DispatchKeyValue<const char*>(entity, "materialVar", var.c_str());
 
 				sm::sdktools::DispatchSpawn(entity);
 
-				if (!parent)
+				if (parent)
 				{
 					sm::sdktools::SetVariant("!activator");
 					sm::sdktools::AcceptEntityInput(entity, "SetParent", parent, entity);
@@ -633,7 +938,7 @@ namespace vec
 		)
 		{
 			CBaseEntity* entity = sm::sdktools::CreateEntityByName("env_beam");
-			if (!entity)
+			if (entity)
 			{
 				std::string classNameBuffer = sName + std::to_string(sm::ent_cast<int>(entity));
 
@@ -676,11 +981,11 @@ namespace vec
 				{
 					std::string VariantBuffer = "OnUser2 !self:TurnOff::" + std::to_string(flDelayTime - 0.001) + ":1";
 
-					sm::sdktools::SetVariant(VariantBuffer);
+					sm::sdktools::SetVariant(VariantBuffer.c_str());
 					sm::sdktools::AcceptEntityInput(entity, "AddOutput");
 
 					VariantBuffer = "OnUser2 !self:TurnOn::" + std::to_string(flDelayTime) + ":1";
-					sm::sdktools::SetVariant(VariantBuffer);
+					sm::sdktools::SetVariant(VariantBuffer.c_str());
 					sm::sdktools::AcceptEntityInput(entity, "AddOutput");
 					
 					// Execute touch hook tweak
@@ -743,7 +1048,7 @@ namespace vec
 
 					if (attach.size())
 					{
-						sm::sdktools::SetVariant(attach);
+						sm::sdktools::SetVariant(attach.c_str());
 						sm::sdktools::AcceptEntityInput(entity, "SetParentAttachment", parent, entity);
 					}
 				}
@@ -908,7 +1213,6 @@ namespace vec
 		{
 
 		}
-
 		/**
 		 * @brief Remove the entity from a world after some delay.
 		 *
@@ -918,7 +1222,10 @@ namespace vec
 		inline void RemoveEntity(CBaseEntity* entity, float flDelayTime)
 		{
 			//FormatEx(sFlags, sizeof(sFlags), "OnUser1 !self:Kill::%f:1", flDelayTime);
-			std::string buffer = "OnUser1 !self:Kill::" + std::to_string(flDelayTime) + ":1";
+			//std::string buffer = "OnUser1 !self:Kill::" + std::to_string(flDelayTime) + ":1";
+			//sm::PrintToChatAll(buffer.c_str());
+			char buffer[32];
+			smutils->Format(buffer, sizeof(buffer), "OnUser1 !self:Kill::%f:1", flDelayTime);
 			sm::sdktools::SetVariant(buffer);
 			sm::sdktools::AcceptEntityInput(entity, "AddOutput");
 			sm::sdktools::AcceptEntityInput(entity, "FireUser1");
