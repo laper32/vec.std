@@ -14,13 +14,9 @@
 
 #include "extension.h"
 
-#include "filesystem.h"
-
 #include "sm/sourcemod.h"
 
 #include "functions.h"
-
-
 
 CGlobalVars* gpGlobals = nullptr;
 KeyValues* kv = nullptr;
