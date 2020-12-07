@@ -108,24 +108,13 @@ namespace vec
 				//inline CBaseEntity* CreateParticle(
 				//CBaseEntity * parent, Vector pos, Vector ang, std::string attach, std::string effectName, float duration)
 				CBaseEntity* parent = sm::ent_cast<CBaseEntity*>(params[1]);
-				sm::PrintToChatAllStr("API::CreateParticle Dump message broadcast: ");
-				sm::PrintToChatAllStr("ParentEntityMessage: ");
-				sm::PrintToChatAllStr((std::string() + "ParentEntity passed in: " + std::to_string(params[1])));
-				sm::PrintToChatAllStr((std::string() + "Transformed to CBaseEntity* is: " + std::to_string(sm::ent_cast<int>(parent))));
 				Vector pos, ang;
 				sm::interop::cell2native(pContext, params[2], pos);
-				sm::PrintToChatAll("vPositionMessage: ");
-				sm::PrintToChatAllStr(std::string() + "Position: <" + std::to_string(pos.x) + ", " + std::to_string(pos.y) + ", " + std::to_string(pos.z) + ">");
 				sm::interop::cell2native(pContext, params[3], ang);
-				sm::PrintToChatAllStr(std::string() + "Angles: <" + std::to_string(ang.x) + ", " + std::to_string(ang.y) + ", " + std::to_string(ang.z) + ">");
 				std::string attach, effectName;
 				sm::interop::cell2native(pContext, params[4], attach);
-				sm::PrintToChatAllStr(std::string() + "AttachPassedIn: " + attach);
 				sm::interop::cell2native(pContext, params[5], effectName);
-				sm::PrintToChatAllStr(std::string() + "EffectNamePassedIn: " + effectName);
 				float flDuration = sp_ctof(params[6]);
-				sm::PrintToChatAllStr(std::string() + "Duration: " + std::to_string(flDuration));
-				sm::PrintToChatAllStr("   ");
 				CBaseEntity* Ret = vec::utils::CreateParticle(parent, pos, ang, attach, effectName, flDuration);
 				return 0;
 				//return sm::ent_cast<cell_t>(Ret);
@@ -613,21 +602,11 @@ namespace vec
 			std::string attach, std::string effectName, float duration
 		)
 		{
-			sm::PrintToChatAllStr("utils::CreateParticle Dump message broadcast: ");
-			sm::PrintToChatAllStr("ParentEntityMessage: ");
-			sm::PrintToChatAllStr((std::string() + "Transformed to CBaseEntity* is: " + std::to_string(sm::ent_cast<int>(parent))));
-			sm::PrintToChatAll("vPositionMessage: ");
-			sm::PrintToChatAllStr(std::string() + "Position: <" + std::to_string(pos.x) + ", " + std::to_string(pos.y) + ", " + std::to_string(pos.z) + ">");
-			sm::PrintToChatAllStr(std::string() + "Angles: <" + std::to_string(ang.x) + ", " + std::to_string(ang.y) + ", " + std::to_string(ang.z) + ">");
-			sm::PrintToChatAllStr(std::string() + "AttachPassedIn: " + attach);
-			sm::PrintToChatAllStr(std::string() + "EffectNamePassedIn: " + effectName);
-			sm::PrintToChatAllStr(std::string() + "Duration: " + std::to_string(duration));
 			CBaseEntity* entity = sm::sdktools::CreateEntityByName("info_particle_system");
-			//CBaseEntity* entity = sm::sdktools::CreateEntityByName("info_particle_system");
-			//if (entity)
-			//{
+			if (entity)
+			{
 				
-				/*sm::sdktools::DispatchKeyValue<Vector>(entity, "origin", pos);
+				sm::sdktools::DispatchKeyValue<Vector>(entity, "origin", pos);
 				sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", ang);
 				sm::sdktools::DispatchKeyValue<int>(entity, "start_active", 1);
 				sm::sdktools::DispatchKeyValue<const char*>(entity, "effect_name", effectName.c_str());
@@ -642,17 +621,16 @@ namespace vec
 
 					if (attach.size())
 					{
-						sm::sdktools::SetVariant(attach);
+						sm::sdktools::SetVariant(attach.c_str());
 						sm::sdktools::AcceptEntityInput(entity, "SetParentAttachment", parent, entity);
 					}
 				}
 				sm::sdktools::ActivateEntity(entity);
 				sm::sdktools::AcceptEntityInput(entity, "Start");
 
-				if (duration > 0.f) RemoveEntity(entity, duration);*/
-			//}
-			//return entity;
-			return nullptr;
+				if (duration > 0.f) RemoveEntity(entity, duration);
+			}
+			return entity;
 		}
 
 		/**
