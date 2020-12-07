@@ -105,8 +105,6 @@ namespace vec
 
 			static cell_t CreateParticle(IPluginContext* pContext, const cell_t* params)
 			{
-				//inline CBaseEntity* CreateParticle(
-				//CBaseEntity * parent, Vector pos, Vector ang, std::string attach, std::string effectName, float duration)
 				CBaseEntity* parent = sm::ent_cast<CBaseEntity*>(params[1]);
 				Vector pos, ang;
 				sm::interop::cell2native(pContext, params[2], pos);
@@ -116,8 +114,7 @@ namespace vec
 				sm::interop::cell2native(pContext, params[5], effectName);
 				float flDuration = sp_ctof(params[6]);
 				CBaseEntity* Ret = vec::utils::CreateParticle(parent, pos, ang, attach, effectName, flDuration);
-				return 0;
-				//return sm::ent_cast<cell_t>(Ret);
+				return sm::ent_cast<cell_t>(Ret);
 			}
 
 			static cell_t CreateExplosion(IPluginContext* pContext, const cell_t* params)
