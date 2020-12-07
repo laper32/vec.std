@@ -7,6 +7,8 @@ namespace vec
 	namespace utils
 	{
 		sp_nativeinfo_t g_UTILNatives[] = {
+			{"UTIL_CreateLight",		API::CreateLight},
+			{"UTIL_RemoveEntity",		API::RemoveEntity},
 			{nullptr, nullptr}
 		};
 
@@ -18,6 +20,20 @@ namespace vec
 
 		namespace API
 		{
+			static cell_t CreateLight(IPluginContext* pContext, const cell_t* params)
+			{
+				CBaseEntity* parent = sm::ent_cast<CBaseEntity*>(params[1]);
+				Vector pos;
+				sm::interop::cell2native(pContext, params[2], pos);
+				std::string attach;
+				sm::interop::cell2native(pContext, params[3], attach);
+				Color clr;
+				sm::interop::cell2native(pContext, params[10], clr);
+				CBaseEntity* Ret = vec::utils::CreateLight(parent, pos, attach, params[4], params[5], params[6], params[7],
+					params[8], params[9], clr, sp_ftoc(params[11]), sp_ftoc(params[12]), sp_ftoc(params[13]));
+
+				return sm::ent_cast<cell_t>(Ret);
+			}
 			static cell_t RemoveEntity(IPluginContext* pContext, const cell_t* params)
 			{
 				vec::utils::RemoveEntity(sm::ent_cast<CBaseEntity*>(params[1]), sp_ctof(params[2]));
@@ -702,7 +718,7 @@ namespace vec
 		{
 			CBaseEntity* entity = sm::sdktools::CreateEntityByName("light_dynamic");
 
-			if (!entity)
+			if (entity)
 			{
 				sm::sdktools::DispatchKeyValue<Vector>(entity, "origin", vPosition);
 				sm::sdktools::DispatchKeyValue<int>(entity, "spawnflags", iFlags);
@@ -719,7 +735,7 @@ namespace vec
 				sm::sdktools::DispatchSpawn(entity);
 				sm::sdktools::AcceptEntityInput(entity, "TurnOn");
 				
-				if (!parent)
+				if (parent)
 				{
 					sm::sdktools::SetVariant("!activator");
 					sm::sdktools::AcceptEntityInput(entity, "SetParent", parent, entity);
@@ -901,6 +917,7 @@ namespace vec
 		 **/
 		inline void RemoveEntity(CBaseEntity* entity, float flDelayTime)
 		{
+			//FormatEx(sFlags, sizeof(sFlags), "OnUser1 !self:Kill::%f:1", flDelayTime);
 			std::string buffer = "OnUser1 !self:Kill::" + std::to_string(flDelayTime) + ":1";
 			sm::sdktools::SetVariant(buffer);
 			sm::sdktools::AcceptEntityInput(entity, "AddOutput");

@@ -12,6 +12,7 @@ namespace vec
 		
 		namespace API 
 		{
+			static cell_t CreateLight(IPluginContext* pContext, const cell_t* params);
 			static cell_t RemoveEntity(IPluginContext* pContext, const cell_t* params);
 		}
 
@@ -38,17 +39,21 @@ namespace vec
 			Vector vPosition,			int iFlags,				std::string sSpriteName,
 			float flDamage,				float flRadius,			std::string sWeapon,
 			CBaseEntity* attacker,		CBaseEntity* inflictor, std::string sIgnore);
-		inline CBaseEntity* UTIL_CreateDamage(
-			CBaseEntity* parent, Vector pos, int attacker, float flDamage,
-			float flRadius, int iBits, int weaponID, std::string sAttach);
-		inline CBaseEntity* UTIL_CreateSprite(
+		inline CBaseEntity* CreateDamage(
+			CBaseEntity* parent,	Vector pos,		CBaseEntity* attacker,	float flDamage,
+			float flRadius,			int iBits,		int weaponID,			std::string sAttach);
+		inline CBaseEntity* CreateSprite(
 			CBaseEntity* parent, Vector pos,	Vector ang,		std::string sAttach, 
 			std::string sSprite, float scale,	int rendermode, float flDurationTime);
 		//inline int UTIL_CreateSpriteController(int parent, char[] sSprite, char[] sVar)
 		//inline int UTIL_CreateTesla(int parent = -1, float vPosition[3] = NULL_VECTOR, float vAngle[3] = NULL_VECTOR, char[] sAttach = "", char[] sRadius = "500.0", char[] sSound = "DoSpark", char[] sCountMin = "42", char[] sCountMax = "62", char[] sTextureName = "materials/sprites/physbeam.vmt", char[] sColor = "255 255 255", char[] sThickMin = "10.0", char[] sThickMax = "11.0", char[] sLifeMin = "0.3", char[] sLifeMax = "0.3", char[] sIntervalMin = "0.1", char[] sIntervalMax = "0.2", float flDurationTime = 0.0)
 		//inline int UTIL_CreateShooter(int parent, char[] sAttach, char[] sRender = "5", char[] sSound = "-1", int iSkin = 0, char[] sTextureName, float vAngle[3] = NULL_VECTOR, float vGibAngle[3] = NULL_VECTOR, float iGibs, float flDelay, float flVelocity, float flVariance, float flLife, float flDurationTime)
 		//inline int UTIL_CreateBeam(float vStartPosition[3], float vEndPosition[3], char[] sDamage = "0", char[] sFrame = "0", char[] sWidth = "4.0", char[] sRenderFX = "0", char[] sType = "3", char[] sRate = "0", char[] sDecalName = "Bigshot", char[] sScroll = "35", char[] sScale = "1.0", char[] sTextureName = "materials/sprites/purplelaser1.vmt", char[] sLife = "0", char[] sStrike = "1", int iFlags = 0, char[] sAmplitude = "0", char[] sRadius = "256", char[] sRenderAMT = "100", char[] sColor, float flDelayTime, float flDurationTime, char[] sName)
-		//inline int UTIL_CreateLight(int parent = -1, float vPosition[3] = NULL_VECTOR, char[] sAttach = "", char[] sInnerCone = "0", char[] sCone = "80", char[] sBrightness = "1", char[] sPitch = "90", char[] sStyle = "1", int iFlags = 0, char[] sColor, float flDistance, float flRadius, float flDurationTime = 0.0)
+		inline CBaseEntity* CreateLight(
+			CBaseEntity* parent,	Vector vPosition,	std::string attach, int iInnerCone, int iCone,			int iBrightness, 
+			int iPitch,				int iStyle,			int iFlags,			Color color,	float flDistance,	float flRadius, 
+			float flDurationTime
+		);
 		//inline void UTIL_CreateGlowing(int entity, bool enableState, int iType = 0, int iRed = 255, int iGreen = 255, int iBlue = 255, int iAlpha = 255)
 		inline void SetRenderColor(CBaseEntity* entity, RenderColorType_t color, int iRender);
 		inline int GetRenderColor(CBaseEntity* entity, RenderColorType_t color);
