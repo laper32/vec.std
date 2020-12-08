@@ -616,13 +616,7 @@ namespace vec
 				{
 					sm::sdktools::SetVariantString("!activator");
 					sm::sdktools::AcceptEntityInput(entity, "SetParent", parent, entity);
-
-					sm::PrintToChatAllStr("Parent index: " + std::to_string(sm::ent_cast<int>(parent)));
-
 					sm::SetEntPropEnt<CBaseEntity*>(entity, sm::Prop_Data, "m_hOwnerEntity", parent);
-
-					auto ent = sm::GetEntPropEnt<CBaseEntity*>(entity, sm::Prop_Data, "m_hOwnerEntity");
-					sm::PrintToChatAllStr("Parent: " + std::to_string(sm::ent_cast<int>(ent)));
 
 					if (attach.size())
 					{
@@ -1297,12 +1291,8 @@ namespace vec
 		 **/
 		inline void RemoveEntity(CBaseEntity* entity, float flDelayTime)
 		{
-			//FormatEx(sFlags, sizeof(sFlags), "OnUser1 !self:Kill::%f:1", flDelayTime);
-			//std::string buffer = "OnUser1 !self:Kill::" + std::to_string(flDelayTime) + ":1";
-			//sm::PrintToChatAll(buffer.c_str());
-			char buffer[32];
-			smutils->Format(buffer, sizeof(buffer), "OnUser1 !self:Kill::%f:1", flDelayTime);
-			sm::sdktools::SetVariantString(buffer);
+			std::string buffer = "OnUser1 !self:Kill::" + std::to_string(flDelayTime) + ":1";
+			sm::sdktools::SetVariantString(buffer.c_str());
 			sm::sdktools::AcceptEntityInput(entity, "AddOutput");
 			sm::sdktools::AcceptEntityInput(entity, "FireUser1");
 		}
