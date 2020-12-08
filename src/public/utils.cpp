@@ -2,6 +2,7 @@
 #include "sm/sourcemod.h"
 #include "sm/sdktools.h"
 #include <cmath>
+
 namespace vec
 {
 	namespace utils
@@ -189,6 +190,7 @@ namespace vec
 
 			static cell_t CreateShakeScreen(IPluginContext* pContext, const cell_t* params)
 			{
+
 				return 0;
 			}
 
@@ -842,12 +844,58 @@ namespace vec
 		 * @return                  The entity index.
 		 **/
 		inline CBaseEntity* UTIL_CreateTesla(
-			CBaseEntity* parent, Vector pos, Vector ang, std::string attach = "", float radius = 500.0, 
-			std::string sSound = "DoSpark", int countMin = 42, int countMax = 62, std::string sTextureName = "materials/sprites/physbeam.vmt", 
-			Color color = {255, 255, 255}, float ThickMin = 10.0, float ThinkMax = 11.0, float LifeMin = 0.3, 
-			float LifeMax = 0.3, float sIntervalMin = 0.1, float sIntervalMax = 0.2, float flDurationTime = 0.0)
+			CBaseEntity* parent,	Vector pos,			Vector ang,				std::string attach,			float radius, 
+			std::string sSound,		int countMin,		int countMax,			std::string sTextureName,	Color color,
+			float ThickMin,			float ThickMax,		float LifeMin,			float LifeMax,				float flIntervalMin, 
+			float flIntervalMax,	float flDurationTime
+		)
 		{
-			return nullptr;
+			CBaseEntity* entity = sm::sdktools::CreateEntityByName("point_tesla");
+
+			if (entity)
+			{
+				// Dispatch main values of the entity
+				sm::sdktools::DispatchKeyValue<Vector>(entity, "origin", pos);
+				sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", ang);
+				sm::sdktools::DispatchKeyValue<float>(entity, "m_flRadius", radius);
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "m_SoundName", sSound.c_str());
+				sm::sdktools::DispatchKeyValue<int>(entity, "beamcount_min", countMin);
+				sm::sdktools::DispatchKeyValue<int>(entity, "beamcount_max", countMax);
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "texture", sTextureName.c_str());
+				std::string ColorBuffer = std::string() + std::to_string(color.r()) + " " + std::to_string(color.g()) + " " + std::to_string(color.b());
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "m_Color", ColorBuffer.c_str());
+				sm::sdktools::DispatchKeyValue<int>(entity, "thick_min", ThickMin);
+				sm::sdktools::DispatchKeyValue<int>(entity, "thick_max", ThickMax);
+				sm::sdktools::DispatchKeyValue<int>(entity, "lifetime_min", LifeMin);
+				sm::sdktools::DispatchKeyValue<int>(entity, "lifetime_max", LifeMax);
+				sm::sdktools::DispatchKeyValue<float>(entity, "interval_min", flIntervalMin);
+				sm::sdktools::DispatchKeyValue<float>(entity, "interval_max", flIntervalMax);
+
+				// Spawn the entity into the world
+				sm::sdktools::DispatchSpawn(entity);
+
+				// Activate the entity
+				sm::sdktools::ActivateEntity(entity);
+				sm::sdktools::AcceptEntityInput(entity, "TurnOn");
+				sm::sdktools::AcceptEntityInput(entity, "DoSpark");
+
+				if (parent)
+				{
+					sm::sdktools::SetVariant("!activator");
+					sm::sdktools::AcceptEntityInput(entity, "SetParent", parent, entity);
+					sm::SetEntPropEnt(entity, sm::Prop_Data, "m_hOwnerEntity", parent);
+
+					if (attach.size())
+					{
+						sm::sdktools::SetVariant(attach.c_str());
+						sm::sdktools::AcceptEntityInput(entity, "SetParentAttachment", parent, entity);
+					}
+				}
+
+				if (flDurationTime > 0.f) RemoveEntity(entity, flDurationTime);
+			}
+
+			return entity;
 		}
 
 		/**
@@ -871,11 +919,52 @@ namespace vec
 		 * @return                  The entity index.
 		 **/
 		inline CBaseEntity* UTIL_CreateShooter(
-		CBaseEntity* parent, std::string sAttach, int iRender, int iSound, int iSkin, 
-		std::string sTextureName, Vector vAngle, Vector vGibAngle, float iGibs, 
-		float flDelay, float flVelocity, float flVariance, float flLife, float flDurationTime)
+		CBaseEntity* parent,		std::string sAttach,	int iRender,		int iSound,		int iSkin, 
+		std::string sTextureName,	Vector vAngle,			Vector vGibAngle,	float iGibs,	float flDelay,
+		float flVelocity,			float flVariance,		float flLife,		float flDurationTime
+		)
 		{
+			// Create a shooter entity
+			CBaseEntity* entity = sm::sdktools::CreateEntityByName("env_shooter");
 
+			// Validate entity
+			if (entity)
+			{
+				//sm::sdktools::DispatchKeyValue<Vector>(entity, "origin", vPosition);
+				sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", vAngle);
+				sm::sdktools::DispatchKeyValue<Vector>(entity, "gibangles", vGibAngle);
+				sm::sdktools::DispatchKeyValue<int>(entity, "rendermode", iRender);
+				//std::string ColorBuffer = std::string() + std::to_string(color.r()) + " " + std::to_string(color.g()) + " " + std::to_string(color.b());
+				//sm::sdktools::DispatchKeyValue<const char*>(entity, "rendercolor", ColorBuffer);
+				//sm::sdktools::DispatchKeyValue<int>(entity, "renderfx", iRenderFX);
+				sm::sdktools::DispatchKeyValue<int>(entity, "shootsounds", iSound);
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "shootmodel", sTextureName.c_str());
+				sm::sdktools::DispatchKeyValue<int>(entity, "skin", iSkin);
+				sm::sdktools::DispatchKeyValue<float>(entity, "delay", flDelay);
+				sm::sdktools::DispatchKeyValue<float>(entity, "m_flVelocity", flVelocity);
+				sm::sdktools::DispatchKeyValue<float>(entity, "m_flVariance", flVariance);
+				sm::sdktools::DispatchKeyValue<float>(entity, "m_flGibLife", flLife);
+
+				sm::sdktools::DispatchSpawn(entity);
+
+				sm::sdktools::ActivateEntity(entity);
+				sm::sdktools::AcceptEntityInput(entity, "Shoot");
+
+				sm::sdktools::SetVariant("!activator");
+				sm::sdktools::AcceptEntityInput(entity, "SetParent", parent, entity);
+				sm::SetEntPropEnt(entity, sm::Prop_Data, "m_hOwnerEntity", parent);
+
+				if (sAttach.size())
+				{
+					sm::sdktools::SetVariant(sAttach.c_str());
+					sm::sdktools::AcceptEntityInput(entity, "SetParentAttachment", parent, entity);
+				}
+
+				RemoveEntity(entity, flDurationTime);
+			}
+
+			// Return on the success
+			return entity;
 		}
 
 		/**
@@ -1112,19 +1201,8 @@ namespace vec
 		 **/
 		inline void CreateShakeScreen(CBasePlayer* client, float flAmplitude, float flFrequency, float flDurationTime)
 		{
-			
+			return sm::hudtext::CreateShakeScreen(sm::ent_cast<int>(client), flAmplitude, flFrequency, flDurationTime);
 		}
-
-		/**
-		 * @brief Fade a client screen with specific parameters.
-		 *
-		 * @param client            The client index.
-		 * @param flDuration        The duration of fade in the seconds.
-		 * @param flHoldTime        The holding time of fade in the seconds.
-		 * @param iFlags            The bits with some flags.
-		 * @param vColor            The array with RGB color.
-		 **/
-		//inline void UTIL_CreateShakeScreen(int client, float flAmplitude, float flFrequency, float flDurationTime)
 
 		/**
 		 * @brief Push a client with specific parameters.
@@ -1141,6 +1219,8 @@ namespace vec
 		/**
 		 * @brief Push a client with specific parameters.
 		 *
+		 * @note Looks like can be expand to the whole CBaseEntity(if movable).
+		 * Try it on.
 		 * @param client            The client index.
 		 * @param vPosition         The force origin.
 		 * @param vOrigin           The client origin.
@@ -1148,8 +1228,21 @@ namespace vec
 		 * @param flForce           The force amount.
 		 * @param flRadius          The radius amount.
 		 **/
-		//inline void UTIL_CreatePhysForce(int client, float vPosition[3], float vOrigin[3], float flDistance, float flForce, float flRadius)
-		
+		inline void UTIL_CreatePhysForce(
+			CBaseEntity* entity, Vector vPosition, Vector vOrigin, 
+			float flDistance, float flForce, float flRadius
+		)
+		{
+			Vector vVelocity = vOrigin - vPosition;
+
+			float flKnockback = flForce * (1.0 - (flDistance / flRadius));
+			vVelocity.Normalized();
+			float flMagnitude = vVelocity.Length();
+			float flScaleFactor = std::sqrt(std::pow(flKnockback, 2) / flMagnitude);
+			vVelocity.z *= flForce;
+			sm::sdktools::TeleportEntity(entity, {}, {}, vVelocity);
+		}
+
 		// DO NOT USE HERE.
 		//inline void UTIL_CreateClientHint(int client, char[] sMessage)
 		

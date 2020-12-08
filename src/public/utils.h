@@ -9,7 +9,7 @@ namespace vec
 	{
 		sp_nativeinfo_t g_UTILNatives[];
 		bool SDK_OnLoad(char* error, size_t maxlen, bool late);
-		
+
 		namespace API 
 		{
 			static cell_t CreateTrain(IPluginContext* pContext, const cell_t* params);
