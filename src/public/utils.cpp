@@ -560,13 +560,13 @@ namespace vec
 
 				if (parent)
 				{
-					sm::sdktools::SetVariant("!activator");
+					sm::sdktools::SetVariantString("!activator");
 					sm::sdktools::AcceptEntityInput(entity, "SetParent", parent, entity);
 					sm::SetEntPropEnt(entity, sm::Prop_Data, "m_hOwnerEntity", parent);
 
 					if (attach.size())
 					{
-						sm::sdktools::SetVariant(attach.c_str());
+						sm::sdktools::SetVariantString(attach.c_str());
 						sm::sdktools::AcceptEntityInput(entity, "SetParentAttachment", parent, entity);
 					}
 				}
@@ -574,7 +574,7 @@ namespace vec
 				if (durationtime > 0.0 && removetime > 0.0)
 				{
 					std::string buffer = "OnUser2 !self:TurnOff::" + std::to_string(removetime) + ":1";
-					sm::sdktools::SetVariant(buffer.c_str());
+					sm::sdktools::SetVariantString(buffer.c_str());
 					sm::sdktools::AcceptEntityInput(entity, "AddOutput");
 					sm::sdktools::AcceptEntityInput(entity, "FireUser2");
 					RemoveEntity(entity, durationtime);
@@ -614,13 +614,19 @@ namespace vec
 
 				if (parent)
 				{
-					sm::sdktools::SetVariant("!activator");
+					sm::sdktools::SetVariantString("!activator");
 					sm::sdktools::AcceptEntityInput(entity, "SetParent", parent, entity);
-					sm::SetEntPropEnt(entity, sm::Prop_Data, "m_hOwnerEntity", parent);
+
+					sm::PrintToChatAllStr("Parent index: " + std::to_string(sm::ent_cast<int>(parent)));
+
+					sm::SetEntPropEnt<CBaseEntity*>(entity, sm::Prop_Data, "m_hOwnerEntity", parent);
+
+					auto ent = sm::GetEntPropEnt<CBaseEntity*>(entity, sm::Prop_Data, "m_hOwnerEntity");
+					sm::PrintToChatAllStr("Parent: " + std::to_string(sm::ent_cast<int>(ent)));
 
 					if (attach.size())
 					{
-						sm::sdktools::SetVariant(attach.c_str());
+						sm::sdktools::SetVariantString(attach.c_str());
 						sm::sdktools::AcceptEntityInput(entity, "SetParentAttachment", parent, entity);
 					}
 				}
@@ -721,13 +727,13 @@ namespace vec
 
 				if (parent)
 				{
-					sm::sdktools::SetVariant("!activator");
+					sm::sdktools::SetVariantString("!activator");
 					sm::sdktools::AcceptEntityInput(entity, "SetParent", parent, entity);
 					sm::SetEntPropEnt(entity, sm::Prop_Data, "m_hOwnerEntity", parent);
 					
 					if (sAttach.size())
 					{
-						sm::sdktools::SetVariant(sAttach.c_str());
+						sm::sdktools::SetVariantString(sAttach.c_str());
 						sm::sdktools::AcceptEntityInput(entity, "SetParentAttachment", parent, entity);
 					}
 				}
@@ -773,13 +779,13 @@ namespace vec
 
 				if (parent)
 				{
-					sm::sdktools::SetVariant("!activator");
+					sm::sdktools::SetVariantString("!activator");
 					sm::sdktools::AcceptEntityInput(entity, "SetParent", parent, entity);
 					sm::SetEntPropEnt(entity, sm::Prop_Data, "m_hOwnerEntity", parent);
 
 					if (sAttach.size())
 					{
-						sm::sdktools::SetVariant(sAttach.c_str());
+						sm::sdktools::SetVariantString(sAttach.c_str());
 						sm::sdktools::AcceptEntityInput(entity, "SetParentAttachment", parent, entity);
 					}
 				}
@@ -811,7 +817,7 @@ namespace vec
 
 				if (parent)
 				{
-					sm::sdktools::SetVariant("!activator");
+					sm::sdktools::SetVariantString("!activator");
 					sm::sdktools::AcceptEntityInput(entity, "SetParent", parent, entity);
 					sm::SetEntPropEnt(entity, sm::Prop_Data, "m_hOwnerEntity", parent);
 				}
@@ -881,13 +887,13 @@ namespace vec
 
 				if (parent)
 				{
-					sm::sdktools::SetVariant("!activator");
+					sm::sdktools::SetVariantString("!activator");
 					sm::sdktools::AcceptEntityInput(entity, "SetParent", parent, entity);
 					sm::SetEntPropEnt(entity, sm::Prop_Data, "m_hOwnerEntity", parent);
 
 					if (attach.size())
 					{
-						sm::sdktools::SetVariant(attach.c_str());
+						sm::sdktools::SetVariantString(attach.c_str());
 						sm::sdktools::AcceptEntityInput(entity, "SetParentAttachment", parent, entity);
 					}
 				}
@@ -950,13 +956,13 @@ namespace vec
 				sm::sdktools::ActivateEntity(entity);
 				sm::sdktools::AcceptEntityInput(entity, "Shoot");
 
-				sm::sdktools::SetVariant("!activator");
+				sm::sdktools::SetVariantString("!activator");
 				sm::sdktools::AcceptEntityInput(entity, "SetParent", parent, entity);
 				sm::SetEntPropEnt(entity, sm::Prop_Data, "m_hOwnerEntity", parent);
 
 				if (sAttach.size())
 				{
-					sm::sdktools::SetVariant(sAttach.c_str());
+					sm::sdktools::SetVariantString(sAttach.c_str());
 					sm::sdktools::AcceptEntityInput(entity, "SetParentAttachment", parent, entity);
 				}
 
@@ -1045,17 +1051,17 @@ namespace vec
 				{
 					std::string VariantBuffer = "OnUser2 !self:TurnOff::" + std::to_string(flDelayTime - 0.001) + ":1";
 
-					sm::sdktools::SetVariant(VariantBuffer.c_str());
+					sm::sdktools::SetVariantString(VariantBuffer.c_str());
 					sm::sdktools::AcceptEntityInput(entity, "AddOutput");
 
 					VariantBuffer = "OnUser2 !self:TurnOn::" + std::to_string(flDelayTime) + ":1";
-					sm::sdktools::SetVariant(VariantBuffer.c_str());
+					sm::sdktools::SetVariantString(VariantBuffer.c_str());
 					sm::sdktools::AcceptEntityInput(entity, "AddOutput");
 					
 					// Execute touch hook tweak
-					sm::sdktools::SetVariant("OnTouchedByEntity !self:FireUser2::0.0:-1");
+					sm::sdktools::SetVariantString("OnTouchedByEntity !self:FireUser2::0.0:-1");
 					sm::sdktools::AcceptEntityInput(entity, "AddOutput");
-					sm::sdktools::SetVariant("OnTouchedByEntity !self:FireUser3::0.0:-1");
+					sm::sdktools::SetVariantString("OnTouchedByEntity !self:FireUser3::0.0:-1");
 					sm::sdktools::AcceptEntityInput(entity, "AddOutput");
 				}
 			}
@@ -1106,13 +1112,13 @@ namespace vec
 				
 				if (parent)
 				{
-					sm::sdktools::SetVariant("!activator");
+					sm::sdktools::SetVariantString("!activator");
 					sm::sdktools::AcceptEntityInput(entity, "SetParent", parent, entity);
 					sm::SetEntPropEnt(entity, sm::Prop_Data, "m_hOwnerEntity", parent);
 
 					if (attach.size())
 					{
-						sm::sdktools::SetVariant(attach.c_str());
+						sm::sdktools::SetVariantString(attach.c_str());
 						sm::sdktools::AcceptEntityInput(entity, "SetParentAttachment", parent, entity);
 					}
 				}
@@ -1296,7 +1302,7 @@ namespace vec
 			//sm::PrintToChatAll(buffer.c_str());
 			char buffer[32];
 			smutils->Format(buffer, sizeof(buffer), "OnUser1 !self:Kill::%f:1", flDelayTime);
-			sm::sdktools::SetVariant(buffer);
+			sm::sdktools::SetVariantString(buffer);
 			sm::sdktools::AcceptEntityInput(entity, "AddOutput");
 			sm::sdktools::AcceptEntityInput(entity, "FireUser1");
 		}
