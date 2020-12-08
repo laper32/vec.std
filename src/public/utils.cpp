@@ -1201,21 +1201,23 @@ namespace vec
 		 **/
 		inline void CreateShakeScreen(CBasePlayer* client, float flAmplitude, float flFrequency, float flDurationTime)
 		{
-			return sm::hudtext::CreateShakeScreen(sm::ent_cast<int>(client), flAmplitude, flFrequency, flDurationTime);
+			return sm::usermessages::CreateShakeScreen(sm::ent_cast<int>(client), flAmplitude, flFrequency, flDurationTime);
 		}
 
 		/**
-		 * @brief Push a client with specific parameters.
+		 * @brief Fade a client screen with specific parameters.
 		 *
 		 * @param client            The client index.
-		 * @param vPosition         The force origin.
-		 * @param vOrigin           The client origin.
-		 * @param flDistance        The distance amount.
-		 * @param flForce           The force amount.
-		 * @param flRadius          The radius amount.
+		 * @param flDuration        The duration of fade in the seconds.
+		 * @param flHoldTime        The holding time of fade in the seconds.
+		 * @param iFlags            The bits with some flags.
+		 * @param vColor            The array with RGB color.
 		 **/
-		//inline void UTIL_CreateFadeScreen(int client, float flDuration, float flHoldTime, int iFlags, int vColor[4])
-		
+		inline void CreateFadeScreen(CBasePlayer* client, float flDuration, float flHoldTime, int iFlags, Color vColor)
+		{
+			return sm::usermessages::CreateFadeScreen(sm::ent_cast<int>(client), std::round(flDuration * 1000.f), std::round(flHoldTime * 1000.f), iFlags, vColor);
+		}
+
 		/**
 		 * @brief Push a client with specific parameters.
 		 *
