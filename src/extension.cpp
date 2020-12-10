@@ -103,6 +103,17 @@ namespace debug
 			sm::PrintToChatAllStr(ConvertGBKToUTF8(std::string(g_DebugHintMessage[rg(rd)])));
 		}
 	}
+	
+	void SendDebugMessage()
+	{
+		sm::PrintToChatAllStr("RequestFrameBuffer");
+	}
+
+	void SendMessageWithFrame()
+	{
+		sm::RequestFrame(SendDebugMessage);
+	}
+
 }
 
 bool VECStandard::SDK_OnLoad(char* error, size_t maxlen, bool late)
@@ -111,8 +122,10 @@ bool VECStandard::SDK_OnLoad(char* error, size_t maxlen, bool late)
 	vec::functions::SDK_OnLoad(error, maxlen, late);
 	sharesys->RegisterLibrary(myself, "vec.std");
 	debug::Co_DebugHint();
+	
 	return SDKExtension::SDK_OnLoad(error, maxlen, late);
 }
+
 
 void VECStandard::SDK_OnUnload()
 {
