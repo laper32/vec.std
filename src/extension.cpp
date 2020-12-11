@@ -92,18 +92,6 @@ inline std::string UTF8_To_GBK(const std::string& strUtf8)
 namespace debug
 {
 	static std::shared_ptr<ITimer> g_DebugHint;
-
-	sm::coro::Task Co_DebugHint()
-	{
-		std::random_device rd;
-		std::uniform_int_distribution<std::size_t> rg(0, std::extent<decltype(g_DebugHintMessage)>::value - 1);
-		while (1)
-		{
-			co_await sm::coro::CreateTimer(std::uniform_real_distribution<float>(15, 30)(rd));
-			sm::PrintToChatAllStr(ConvertGBKToUTF8(std::string(g_DebugHintMessage[rg(rd)])));
-		}
-	}
-	
 	void SendDebugMessage()
 	{
 		sm::PrintToChatAllStr("RequestFrameBuffer");
@@ -114,6 +102,17 @@ namespace debug
 		sm::RequestFrame(SendDebugMessage);
 	}
 
+	sm::coro::Task Co_DebugHint()
+	{
+		std::random_device rd;
+		std::uniform_int_distribution<std::size_t> rg(0, std::extent<decltype(g_DebugHintMessage)>::value - 1);
+		while (1)
+		{
+			co_await sm::coro::CreateTimer(std::uniform_real_distribution<float>(15, 30)(rd));
+			sm::PrintToChatAllStr(ConvertGBKToUTF8(std::string(g_DebugHintMessage[rg(rd)])));
+			SendMessageWithFrame();
+		}
+	}
 }
 
 bool VECStandard::SDK_OnLoad(char* error, size_t maxlen, bool late)
