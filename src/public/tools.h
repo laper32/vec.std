@@ -1,63 +1,5 @@
 #pragma once
 
-// N->Not test yet
-// Y->Tested
-
-/*
-ToolsSetVelocity
-ToolsGetVelocity
-ToolsGetSpeed
-ToolsGetAbsOrigin
-ToolsGetAbsAngles
-ToolsGetMyWeapons
-ToolsGetWeapon
-ToolsGetHealth
-ToolsSetHealth
-ToolsGetLMV
-ToolsSetLMV
-ToolsGetArmor
-ToolsSetArmor
-ToolsGetTeam
-ToolsSetTeam
-ToolsGetNightVision
-ToolsSetNightVision
-ToolsGetDefuser
-ToolsSetDefuser
-ToolsGetHelmet
-ToolsSetHelmet
-ToolsGetHeavySuit
-ToolsSetHeavySuit
-ToolsGetActiveWeapon
-ToolsSetActiveWeapon
-ToolsGetAddonBits
-ToolsSetAddonBits
-ToolsGetObserverMode
-ToolsGetObserverTarget
-ToolsGetHitGroup
-ToolsGetScore // using GetFrags+GetDeaths combines
-ToolsSetScore // using SetFrags+SetDeaths combines
-ToolsSetGravity
-ToolsSetSpot
-ToolsSetDetecting
-ToolsSetHud
-ToolsSetArm
-ToolsSetAttack
-ToolsSetFlashLight
-ToolsSetFov
-ToolsSetTextures
-ToolsGetEffect
-ToolsSetEffect
-ToolsGetActivator
-ToolsSetModelIndex
-ToolsGetOwner
-ToolsSetOwner
-ToolsGetParent
-ToolsSetParent
-ToolsGetRagdollIndex
-ToolsGetCollisionGroup
-ToolsSetCollisionGroup
-*/
-
 #ifndef _VEC_STD_TOOLS_H_
 #define _VEC_STD_TOOLS_H_
 
@@ -71,6 +13,7 @@ ToolsSetCollisionGroup
 #include <algorithm>
 #include <ranges>
 #include "engine.h"
+#include "const.h"
 namespace vec
 {
 	namespace tools
@@ -610,8 +553,9 @@ namespace vec
 		 * @param pos               The hud part.
 		 * @param bEnable           Enable or disable an aspect of hud.
 		 */
-		inline void SetHud(CBasePlayer* player, int pos, bool enable) {
-
+		inline void SetHud(CBasePlayer* player, HideHUDElementFlags_t pos, bool enable) {
+			// Sets hud type on the entity
+			sm::SetEntProp<int>(player, sm::Prop_Send, "m_iHideHud", enable ? (sm::GetEntProp<int>(player, sm::Prop_Send, "m_iHideHud") & ~pos) : (sm::GetEntProp<int>(player, sm::Prop_Send, "m_iHideHud") | pos));
 		}
 
 		/**

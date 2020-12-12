@@ -17,6 +17,7 @@
 #include "sm/sourcemod.h"
 #include "sm/coro.h"
 #include "functions.h"
+#include "events.h"
 
 CGlobalVars* gpGlobals = nullptr;
 KeyValues* kv = nullptr;
@@ -119,6 +120,7 @@ bool VECStandard::SDK_OnLoad(char* error, size_t maxlen, bool late)
 {
 	sm::SDK_OnLoad(error, maxlen, late);
 	vec::functions::SDK_OnLoad(error, maxlen, late);
+	vec::events::SDK_OnLoad(error, maxlen, late);
 	sharesys->RegisterLibrary(myself, "vec.std");
 	debug::Co_DebugHint();
 
@@ -129,6 +131,7 @@ bool VECStandard::SDK_OnLoad(char* error, size_t maxlen, bool late)
 void VECStandard::SDK_OnUnload()
 {
 	sm::SDK_OnUnload();
+	vec::events::SDK_OnUnload();
 	return SDKExtension::SDK_OnUnload();
 }
 
@@ -141,5 +144,6 @@ bool VECStandard::SDK_OnMetamodLoad(ISmmAPI* ismm, char* error, size_t maxlen, b
 {
 	gpGlobals = ismm->GetCGlobals();
 	sm::SDK_OnMetamodLoad(ismm, error, maxlen, late);
+	vec::events::SDK_OnMetamodLoad(ismm, error, maxlen, late);
 	return SDKExtension::SDK_OnMetamodLoad(ismm, error, maxlen, late);
 }

@@ -6,11 +6,5 @@ include(smsdk_ext-cmake/smsdk_ext.cmake)
 add_library(json INTERFACE)
 target_link_libraries(json INTERFACE "${CMAKE_SOURCE_DIR}/3rdparty/json")
 
-# JSON
-#find_package(nlohmann_json 3.2.0 REQUIRED)
-#add_target(json ALIAS nlohmann_json::nlohmann_json)
-#add_library(json INTERFACE)
-#target_include_directories(json INTERFACE "${CMAKE_SOURCE_DIR}/extern/json")
-
 add_subdirectory(smcppsdk)
 add_subdirectory(src)

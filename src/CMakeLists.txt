@@ -8,6 +8,7 @@ add_subdirectory("public")
 add_library("vec.std" SHARED
 	${CMAKE_CURRENT_LIST_DIR}/extension.cpp
 	${CMAKE_CURRENT_LIST_DIR}/functions.cpp
+	${CMAKE_CURRENT_LIST_DIR}/events.cpp
 )
 
 target_include_directories("vec.std" PUBLIC
