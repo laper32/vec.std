@@ -41,20 +41,20 @@ namespace vec
 			//{"UTIL_PrecacheDecal",		API::PrecacheDecal},
 			//{"UTIL_PrecacheSound",		API::PrecacheSound},
 			//{"UTIL_FindHullIntersection", API::FindHullIntersection},
-			//{"UTIL_GetVelocityByAim",		API::GetVelocityByAim},
+			{"UTIL_GetVelocityByAim",		API::GetVelocityByAim},
 			//UTIL_IsOnSamePlane
 			//UTIL_GetTraceEndPoint
 			//UTIL_TraceRay
 			//UTIL_GetDistanceBetween
 			{"UTIL_GetDistanceBetween", API::GetDistanceBetween},
-			//GetEffectIndex
-			//GetParticleEffectIndex
-			//PrecacheParticleFile
-			//PrecacheParticleEffect
-			//GetEffectName
-			//GetParticleEffectName
-			//GetEffectNameCount
-			//GetParticleEffectCount
+			{"UTIL_GetEffectIndex", API::GetEffectIndex},
+			{"UTIL_GetParticleEffectIndex", API::GetParticleEffectIndex},
+			{"UTIL_PrecacheParticleFile", API::PrecacheParticleFile},
+			{"UTIL_PrecacheParticleEffect", API::PrecacheParticleEffect},
+			{"UTIL_GetEffectName", API::GetEffectName},
+			{"UTIL_GetParticleEffectName", API::GetParticleEffectName},
+			{"UTIL_GetEffectNameCount", API::GetEffectNameCount},
+			{"UTIL_GetParticleEffectCount", API::GetParticleEffectCount},
 			{nullptr, nullptr}
 		};
 
@@ -93,9 +93,7 @@ namespace vec
 				CBaseEntity* Ret = vec::utils::CreatePath(classname, pos, ang, NextTarget, flags);
 				return sm::ent_cast<cell_t>(Ret);
 			}
-
-			static cell_t CreateMonster(IPluginContext* pContext, const cell_t* params)
-			{
+			static cell_t CreateMonster(IPluginContext* pContext, const cell_t* params) {
 				std::string classname;
 				sm::interop::cell2native(pContext, params[1], classname);
 				Vector pos, ang;
@@ -284,11 +282,6 @@ namespace vec
 				return sm::ent_cast<cell_t>(Ret);
 			}
 			static cell_t CreateBeam(IPluginContext* pContext, const cell_t* params) {
-				/*inline CBaseEntity* CreateBeam(
-					Vector vStartPosition, Vector vEndPosition, int iDamage, int iFrame, float flWidth, int iRenderFX, int iType,
-					int iRate, std::string DecalName, int iScroll, float flScale, std::string TextureName, std::string sLife, std::string sStrike,
-					int iFlags, float flAmplitude, int iRadius, int iRenderAMT, Color color, float flDelayTime, float flDurationTime, std::string sName
-				)*/
 				Vector startPos, endPos;
 				sm::interop::cell2native(pContext, params[1], startPos);
 				sm::interop::cell2native(pContext, params[2], endPos);
@@ -420,6 +413,13 @@ namespace vec
 
 			static cell_t GetVelocityByAim(IPluginContext* pContext, const cell_t* params)
 			{
+				Vector startPos, endPos;
+				sm::interop::cell2native(pContext, params[1], startPos);
+				sm::interop::cell2native(pContext, params[2], endPos);
+				//Vector velocity = vec::utils::GetVelocityByAim()
+
+				
+
 				return 0;
 			}
 
@@ -440,47 +440,44 @@ namespace vec
 			static cell_t GetDistanceBetween(IPluginContext* pContext, const cell_t* params) {
 				return sp_ftoc(vec::utils::GetDistanceBetween(sm::ent_cast<CBaseEntity*>(params[1]), sm::ent_cast<CBaseEntity*>(params[2])));
 			}
-
-			static cell_t GetEffectIndex(IPluginContext* pContext, const cell_t* params)
-			{
+			static cell_t GetEffectIndex(IPluginContext* pContext, const cell_t* params) {
+				std::string effectName;
+				sm::interop::cell2native(pContext, params[1], effectName);
+				return vec::utils::GetEffectIndex(effectName.c_str());
+			}
+			static cell_t GetParticleEffectIndex(IPluginContext* pContext, const cell_t* params) {
+				std::string effectName;
+				sm::interop::cell2native(pContext, params[1], effectName);
+				return vec::utils::GetParticleEffectIndex(effectName.c_str());
+			}
+			static cell_t PrecacheParticleFile(IPluginContext* pContext, const cell_t* params) {
+				std::string effectName;
+				sm::interop::cell2native(pContext, params[2], effectName);
+				vec::utils::PrecacheParticleFile(sm::ent_cast<CBasePlayer*>(params[1]), effectName.c_str());
 				return 0;
 			}
-
-			static cell_t GetParticleEffectIndex(IPluginContext* pContext, const cell_t* params)
-			{
+			static cell_t PrecacheParticleEffect(IPluginContext* pContext, const cell_t* params) {
+				std::string effectName;
+				sm::interop::cell2native(pContext, params[1], effectName);
+				vec::utils::PrecacheParticleEffect(effectName.c_str());
 				return 0;
 			}
-
-			static cell_t PrecacheParticleFile(IPluginContext* pContext, const cell_t* params)
-			{
+			static cell_t GetEffectName(IPluginContext* pContext, const cell_t* params) {
+				std::string effect = vec::utils::GetEffectName(params[1]);
+				pContext->StringToLocalUTF8(params[2], params[3], effect.c_str(), nullptr);
 				return 0;
 			}
-
-			static cell_t PrecacheParticleEffect(IPluginContext* pContext, const cell_t* params)
-			{
+			static cell_t GetParticleEffectName(IPluginContext* pContext, const cell_t* params) {
+				std::string effect = vec::utils::GetParticleEffectName(params[1]);
+				pContext->StringToLocalUTF8(params[2], params[3], effect.c_str(), nullptr);
 				return 0;
 			}
-
-			static cell_t GetEffectName(IPluginContext* pContext, const cell_t* params)
-			{
-				return 0;
+			static cell_t GetEffectNameCount(IPluginContext* pContext, const cell_t* params) {
+				return vec::utils::GetEffectNameCount();
 			}
-
-			static cell_t GetParticleEffectName(IPluginContext* pContext, const cell_t* params)
-			{
-				return 0;
+			static cell_t GetParticleEffectCount(IPluginContext* pContext, const cell_t* params) {
+				return vec::utils::GetParticleEffectCount();
 			}
-
-			static cell_t GetEffectNameCount(IPluginContext* pContext, const cell_t* params)
-			{
-				return 0;
-			}
-
-			static cell_t GetParticleEffectCount(IPluginContext* pContext, const cell_t* params)
-			{
-				return 0;
-			}
-
 		}
 
 		/**
@@ -595,6 +592,7 @@ namespace vec
 		 **/
 		inline CBaseEntity* CreatePhysics(std::string classname, Vector position, Vector angle, std::string model, int flags)
 		{
+			// it should be multiplier but seems valve type it incorrectly, and not to fix, to keep it remains.
 			CBaseEntity* entity = sm::sdktools::CreateEntityByName("prop_physics_multiplayer");
 
 			if (entity)
@@ -1470,7 +1468,24 @@ namespace vec
 		 *
 		 * @return                  The decal index.
 		 **/
-		//inline void UTIL_PrecacheDecal(char[] sDecal)
+		inline void PrecacheDecal(const char* decal)
+		{
+			int iDecal = sm::PrecacheDecal(decal, true);
+			sm::sdktools::AddFileToDownloadsTable(decal);
+			char path[256];
+			smutils->Format(path, sizeof(path), "%s", decal);
+			// thinking later.
+			// before calling, must test what it actually is first.
+			/*
+			// Initialize path char
+	static char sPath[PLATFORM_MAX_PATH];
+	
+	// Adding other parts to download list
+	FormatEx(sPath, sizeof(sPath), "%s", sDecal);
+	ReplaceString(sPath, sizeof(sPath), ".vtf", ".vmt");
+	if (FileExists(sPath)) AddFileToDownloadsTable(sPath);
+			*/
+		}
 
 		/**
 		 * @brief Precache sounds and also adding them into the downloading table.
@@ -1496,12 +1511,27 @@ namespace vec
 		 *
 		 * @param vStartPosition    The starting position.
 		 * @param vEndPosition      The ending position.
-		 * @param vAngle            The calculated angle's vector output.
-		 * @param vVelocity         The calculated velocity's vector output.
 		 * @param flSpeedScale      The speed scale value.
 		 * @param verticalScale     Set to true for reversing vertical velocity's value, false to reset.
 		 **/
-		//inline void UTIL_GetVelocityByAim(float vStartPosition[3], float vEndPosition[3], float vAngle[3], float vVelocity[3], float flSpeedScale = 1.0, bool verticalScale = false)
+		// NOTE: There're something....return is undeclared, further discuss is needed
+		inline Vector GetVelocityByAim(Vector vStartPosition, Vector vEndPosition, float flSpeedScale, bool verticalScale)
+		{
+			Vector vVelocity;
+			// Calculate the velocity's vector
+			vVelocity = vStartPosition - vEndPosition;
+			
+			// Sets vertical scale
+			vVelocity.z = verticalScale ? -vVelocity.z : 0.f;
+
+			// Normalize the vector (equal magnitude at varying distances)
+			vVelocity.Normalized();
+
+			// Apply the magnitude by scaling the vector
+			vVelocity *= flSpeedScale;
+
+			return vVelocity;
+		}
 		
 		//inline bool UTIL_IsOnSamePlane(int entity, int target, float vPosition[3], TraceEntityFilter filter)
 		
@@ -1542,7 +1572,20 @@ namespace vec
 		 *
 		 * @return                  The string index.
 		 **/
-		//inline int GetEffectIndex(char[] sEffect)
+		inline int GetEffectIndex(const char* effect)
+		{
+			// Initialize the table index
+			int table = INVALID_STRING_TABLE;
+
+			// Validate table, if is invalid, string for a string table.
+			if (table == INVALID_STRING_TABLE) table = sm::sdktools::FindStringTable("EffectDispatch");
+
+			// Searches for the index of a given string in a string table
+			int item = sm::sdktools::FindStringIndex(table, effect);
+
+			// return the item idx when it's not -1, or 0 otherwise.
+			return (item != INVALID_STRING_INDEX) ? item : 0;
+		}
 		
 		/**
 		 * @brief Searches for the index of a given string in an effect table.
@@ -1551,54 +1594,140 @@ namespace vec
 		 *
 		 * @return                  The string index.
 		 **/
-		//inline int GetParticleEffectIndex(char[] sEffect)
-		
+		inline int GetParticleEffectIndex(const char* sEffect)
+		{
+			// Initialize the table index
+			int table = INVALID_STRING_TABLE;
+
+			// Validate table, if is invalid, string for a string table.
+			if (table == INVALID_STRING_TABLE) table = sm::sdktools::FindStringTable("ParticleEffectNames");
+
+			// Searches for the index of a given string in a string table
+			int item = sm::sdktools::FindStringIndex(table, sEffect);
+
+			// return the item idx when it's not -1, or 0 otherwise.
+			return (item != INVALID_STRING_INDEX) ? item : 0;
+		}
+
 		/**
 		 * @brief Precache the particle in the effect table. (for client)
 		 *
 		 * @param client            The client index.
 		 * @param sEffect           The effect name.
 		 **/
-		//inline void PrecacheParticleFile(int client = 0, char[] sEffect)
+		inline void PrecacheParticleFile(CBasePlayer* player, const char* sEffect)
+		{
+			// Initialize the table index
+			int table = INVALID_STRING_TABLE;
+
+			// Validate table, if is invalid, string for a string table.
+			if (table == INVALID_STRING_TABLE) table = sm::sdktools::FindStringTable("ExtraParticleFilesTable");
+
+			// once CBasePlayer* is nullptr, it must be server.
+			if (!player)
+			{
+				bool save = sm::sdktools::LockStringTables(false);
+				sm::sdktools::AddToStringTable(table, sEffect);
+				sm::sdktools::LockStringTables(save);
+			}
+			else // CBasePlayer* is not nullptr, this guys must exists, whatever it represents.
+			{
+				int count = sm::sdktools::GetStringTableNumStrings(table);
+				for (int i = 0; i < count; i++)
+				{
+					sm::sdktools::SetStringTableData(table, i, std::to_string(sm::ent_cast<int>(player)).c_str(), sizeof(std::to_string(sm::ent_cast<int>(player)).c_str()));
+				}
+			}
+		}
 		
 		/**
 		 * @brief Precache the particle in the effect table.
 		 *
 		 * @param sEffect           The effect name.
 		 **/
-		//inline void PrecacheParticleEffect(char[] sEffect)
+		inline void PrecacheParticleEffect(const char* sEffect)
+		{
+			// Initialize the table index
+			int table = INVALID_STRING_TABLE;
+
+			// Validate table, if is invalid, string for a string table.
+			if (table == INVALID_STRING_TABLE) table = sm::sdktools::FindStringTable("ParticleEffectNames");
+			
+			// Precache particle
+			bool save = sm::sdktools::LockStringTables(false);
+			sm::sdktools::AddToStringTable(table, sEffect);
+			sm::sdktools::LockStringTables(save);
+		}
 		
 		/**
 		 * @brief Gets a string of a given index in a dispatch table.
 		 *
 		 * @param iIndex            The string index.
-		 * @param sEffect           The string to return effect in.
-		 * @param iMaxLen           The lenght of string.
+		 * @return					The string of effect name.
 		 **/
-		//inline void GetEffectName(int iIndex, char[] sEffect, int iMaxLen)
+		inline std::string GetEffectName(int iIndex)
+		{
+			// Initialize the table index
+			int table = INVALID_STRING_TABLE;
+
+			// Validate table, if is invalid, string for a string table.
+			if (table == INVALID_STRING_TABLE) table = sm::sdktools::FindStringTable("EffectDispatch");
+
+			// Return the effect name.
+			return std::string(sm::sdktools::ReadStringTableSz(table, iIndex));
+		}
 		
 		/**
 		 * @brief Gets a string of a given index in an effect table.
 		 *
 		 * @param iIndex            The string index.
-		 * @param sEffect           The string to return effect in.
-		 * @param iMaxLen           The lenght of string.
+		 * @return					The particle effect name.
 		 **/
-		//inline void GetParticleEffectName(int iIndex, char[] sEffect, int iMaxLen)
+		inline std::string GetParticleEffectName(int iIndex)
+		{
+			// Initialize the table index
+			int table = INVALID_STRING_TABLE;
+
+			// Validate table, if is invalid, string for a string table.
+			if (table == INVALID_STRING_TABLE) table = sm::sdktools::FindStringTable("ParticleEffectNames");
+
+			// Return the effect name.
+			return std::string(sm::sdktools::ReadStringTableSz(table, iIndex));
+		}
 		
 		/**
 		 * @brief Gets a string count in a dispatch table.
 		 *
 		 * @return                  The table size.
 		 **/
-		//inline void GetEffectNameCount(/*void*/)
+		inline int GetEffectNameCount()
+		{
+			// Initialize the table index
+			int table = INVALID_STRING_TABLE;
+
+			// Validate table, if is invalid, string for a string table.
+			if (table == INVALID_STRING_TABLE) table = sm::sdktools::FindStringTable("EffectDispatch");
+			
+			// Returns the count of strings that exist in a given table
+			return sm::sdktools::GetStringTableNumStrings(table);
+		}
 		
 		/**
 		 * @brief Gets a string count in an effect table.
 		 *
 		 * @return                  The table size.
 		 **/
-		//inline int GetParticleEffectCount();
+		inline int GetParticleEffectCount()
+		{
+			// Initialize the table index
+			int table = INVALID_STRING_TABLE;
+
+			// Validate table, if is invalid, string for a string table.
+			if (table == INVALID_STRING_TABLE) table = sm::sdktools::FindStringTable("ParticleEffectNames");
+
+			// Returns the count of strings that exist in a given table
+			return sm::sdktools::GetStringTableNumStrings(table);
+		}
 		
 		//inline bool PlayersFilter(int entity, int contentsMask)
 	}

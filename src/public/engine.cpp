@@ -18,7 +18,7 @@ namespace vec
 		{
 			sm_sendprop_info_t info = {};
 			if (!gamehelpers->FindSendPropInfo(_class, _prop, &info))
-				throw std::runtime_error("Unable to find: " + (std::string() + _class + _prop));
+				throw std::runtime_error("Unable to find: " + (std::string() + _class + "::" + _prop));
 			offset = info.actual_offset;
 
 			if (offset < -1) throw std::runtime_error("Unable to find send prop: " + (std::string() + _prop));

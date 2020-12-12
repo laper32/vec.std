@@ -112,19 +112,19 @@ namespace vec
 		//inline void UTIL_PrecacheDecal(char[] sDecal)
 		//inline void UTIL_PrecacheSound(char[] sSound)
 		//inline void UTIL_FindHullIntersection(Handle &hTrace, float vPosition[3], const float vMins[3], const float vMaxs[3], TraceEntityFilter filter, any data)
-		//inline void UTIL_GetVelocityByAim(float vStartPosition[3], float vEndPosition[3], float vAngle[3], float vVelocity[3], float flSpeedScale = 1.0, bool verticalScale = false)
+		inline Vector GetVelocityByAim(Vector vStartPosition, Vector vEndPosition, float flSpeedScale, bool verticalScale);
 		//inline bool UTIL_IsOnSamePlane(int entity, int target, float vPosition[3], TraceEntityFilter filter)
 		//inline bool UTIL_GetTraceEndPoint(int entity, float vPosition[3])
 		//inline bool UTIL_TraceRay(int entity, int target, float vStartPosition[3], float vEndPosition[3], TraceEntityFilter filter)
 		inline float GetDistanceBetween(CBaseEntity* entity1, CBaseEntity* entity2);
-		//inline int GetEffectIndex(char[] sEffect)
-		//inline int GetParticleEffectIndex(char[] sEffect)
-		//inline void PrecacheParticleFile(int client = 0, char[] sEffect)
-		//inline void PrecacheParticleEffect(char[] sEffect)
-		//inline void GetEffectName(int iIndex, char[] sEffect, int iMaxLen)
-		//inline void GetParticleEffectName(int iIndex, char[] sEffect, int iMaxLen)
-		//inline void GetEffectNameCount(/*void*/)
-		//inline int GetParticleEffectCount();
+		inline int GetEffectIndex(const char* effect);
+		inline int GetParticleEffectIndex(const char* sEffect);
+		inline void PrecacheParticleFile(CBasePlayer* player, const char* sEffect);
+		inline void PrecacheParticleEffect(const char* sEffect);
+		inline std::string GetEffectName(int iIndex);
+		inline std::string GetParticleEffectName(int iIndex);
+		inline int GetEffectNameCount();
+		inline int GetParticleEffectCount();
 		//inline bool PlayersFilter(int entity, int contentsMask)
 	}
 }
