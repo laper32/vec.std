@@ -2,6 +2,7 @@
 #include "sm/sourcemod.h"
 #include "sm/sdktools.h"
 #include <cmath>
+#include "tools.h"
 
 namespace vec
 {
@@ -45,6 +46,7 @@ namespace vec
 			//UTIL_GetTraceEndPoint
 			//UTIL_TraceRay
 			//UTIL_GetDistanceBetween
+			{"UTIL_GetDistanceBetween", API::GetDistanceBetween},
 			//GetEffectIndex
 			//GetParticleEffectIndex
 			//PrecacheParticleFile
@@ -64,48 +66,113 @@ namespace vec
 
 		namespace API
 		{
-			static cell_t CreateTrain(IPluginContext* pContext, const cell_t* params)
-			{
-				return 0;
+			static cell_t CreateTrain(IPluginContext* pContext, const cell_t* params) {
+				std::string classname;
+				sm::interop::cell2native(pContext, params[1], classname);
+				Vector pos, ang;
+				sm::interop::cell2native(pContext, params[2], pos);
+				sm::interop::cell2native(pContext, params[3], ang);
+				std::string path;
+				sm::interop::cell2native(pContext, params[4], path);
+				float speed = sp_ctof(params[5]);
+				std::string sound;
+				sm::interop::cell2native(pContext, params[6], sound);
+				int flags = params[7];
+				CBaseEntity* Ret = vec::utils::CreateTrain(classname, pos, ang, path, speed, sound, flags);
+				return sm::ent_cast<cell_t>(Ret);
 			}
-
-			static cell_t CreatePath(IPluginContext* pContext, const cell_t* params)
-			{
-				return 0;
+			static cell_t CreatePath(IPluginContext* pContext, const cell_t* params) {
+				std::string classname;
+				sm::interop::cell2native(pContext, params[1], classname);
+				Vector pos, ang;
+				sm::interop::cell2native(pContext, params[2], pos);
+				sm::interop::cell2native(pContext, params[3], ang);
+				std::string NextTarget;
+				sm::interop::cell2native(pContext, params[4], NextTarget);
+				int flags = params[7];
+				CBaseEntity* Ret = vec::utils::CreatePath(classname, pos, ang, NextTarget, flags);
+				return sm::ent_cast<cell_t>(Ret);
 			}
 
 			static cell_t CreateMonster(IPluginContext* pContext, const cell_t* params)
 			{
+				std::string classname;
+				sm::interop::cell2native(pContext, params[1], classname);
+				Vector pos, ang;
+				sm::interop::cell2native(pContext, params[2], pos);
+				sm::interop::cell2native(pContext, params[3], ang);
+				std::string model;
+				sm::interop::cell2native(pContext, params[4], model);
+				int flags = params[5];
+				CBaseEntity* Ret = vec::utils::CreateMonster(classname, pos, ang, model, flags);
 
-				return 0;
+				return sm::ent_cast<cell_t>(Ret);
 			}
-
-			static cell_t CreatePhysics(IPluginContext* pContext, const cell_t* params)
-			{
-
-				return 0;
+			static cell_t CreatePhysics(IPluginContext* pContext, const cell_t* params) {
+				std::string classname;
+				sm::interop::cell2native(pContext, params[1], classname);
+				Vector pos, ang;
+				sm::interop::cell2native(pContext, params[2], pos);
+				sm::interop::cell2native(pContext, params[3], ang);
+				std::string model;
+				sm::interop::cell2native(pContext, params[4], model);
+				int flags = params[5];
+				CBaseEntity* Ret = vec::utils::CreatePhysics(classname, pos, ang, model, flags);
+				return sm::ent_cast<cell_t>(Ret);
 			}
-
-			static cell_t CreateDynamic(IPluginContext* pContext, const cell_t* params)
-			{
-
-				return 0;
+			static cell_t CreateDynamic(IPluginContext* pContext, const cell_t* params) {
+				std::string classname;
+				sm::interop::cell2native(pContext, params[1], classname);
+				Vector pos, ang;
+				sm::interop::cell2native(pContext, params[2], pos);
+				sm::interop::cell2native(pContext, params[3], ang);
+				std::string model;
+				sm::interop::cell2native(pContext, params[4], model);
+				std::string defaultAnim;
+				sm::interop::cell2native(pContext, params[5], defaultAnim);
+				bool bOverride	= params[6];
+				bool bHoldAnim	= params[7];
+				bool bSolid		= params[8];
+				int  flags		= params[9];
+				CBaseEntity* Ret = vec::utils::CreateDynamic(classname, pos, ang, model, defaultAnim, bOverride, bHoldAnim, bSolid, flags);
+				return sm::ent_cast<cell_t>(Ret);
 			}
-
-			static cell_t CreateProjectile(IPluginContext* pContext, const cell_t* params)
-			{
-
-				return 0;
+			static cell_t CreateProjectile(IPluginContext* pContext, const cell_t* params) {
+				Vector pos, ang;
+				sm::interop::cell2native(pContext, params[1], pos);
+				sm::interop::cell2native(pContext, params[2], ang);
+				std::string model;
+				sm::interop::cell2native(pContext, params[3], model);
+				CBaseEntity* Ret = vec::utils::CreateProjectile(pos, ang, model);
+				return sm::ent_cast<cell_t>(Ret);
 			}
-
-			static cell_t CreateSmoke(IPluginContext* pContext, const cell_t* params)
-			{
-
-				return 0;
+			static cell_t CreateSmoke(IPluginContext* pContext, const cell_t* params) {
+				CBaseEntity* parent = sm::ent_cast<CBaseEntity*>(params[1]);
+				Vector pos, ang;
+				sm::interop::cell2native(pContext, params[2], pos);
+				sm::interop::cell2native(pContext, params[3], ang);
+				std::string attach;
+				sm::interop::cell2native(pContext, params[4], attach);
+				int spreadbase = params[5]; int spreadspeed = params[6];
+				int speed = params[7];
+				int startsize = params[8]; int endsize = params[9];
+				int density = params[10];
+				int length = params[11];
+				int twist = params[12];
+				Color color;
+				sm::interop::cell2native(pContext, params[13], color);
+				int transparency = params[14];
+				std::string spritename;
+				sm::interop::cell2native(pContext, params[15], spritename);
+				float removetime = sp_ctof(params[16]);
+				float durationtime = sp_ctof(params[17]);
+				CBaseEntity* Ret = vec::utils::CreateSmoke(
+					parent, pos, ang, attach, spreadbase, spreadspeed, speed, startsize, 
+					endsize, density, length, twist, color, transparency, spritename, 
+					removetime, durationtime);
+				return sm::ent_cast<cell_t>(Ret);
 			}
-
-			static cell_t CreateParticle(IPluginContext* pContext, const cell_t* params)
-			{
+			static cell_t CreateParticle(IPluginContext* pContext, const cell_t* params) {
 				CBaseEntity* parent = sm::ent_cast<CBaseEntity*>(params[1]);
 				Vector pos, ang;
 				sm::interop::cell2native(pContext, params[2], pos);
@@ -117,45 +184,146 @@ namespace vec
 				CBaseEntity* Ret = vec::utils::CreateParticle(parent, pos, ang, attach, effectName, flDuration);
 				return sm::ent_cast<cell_t>(Ret);
 			}
-
-			static cell_t CreateExplosion(IPluginContext* pContext, const cell_t* params)
-			{
-				return 0;
+			static cell_t CreateExplosion(IPluginContext* pContext, const cell_t* params) {
+				Vector pos;
+				sm::interop::cell2native(pContext, params[1], pos);
+				int flags = params[2];
+				std::string spritename;
+				sm::interop::cell2native(pContext, params[3], spritename);
+				float damage = sp_ctof(params[4]);
+				float radius = sp_ctof(params[5]);
+				std::string weapon;
+				sm::interop::cell2native(pContext, params[6], weapon);
+				CBaseEntity* attacker = sm::ent_cast<CBaseEntity*>(params[7]);
+				CBaseEntity* inflictor = sm::ent_cast<CBaseEntity*>(params[8]);
+				std::string ignore;
+				sm::interop::cell2native(pContext, params[9], ignore);
+				CBaseEntity* Ret = vec::utils::CreateExplosion(
+					pos, flags, spritename, damage, radius, 
+					weapon, attacker, inflictor, ignore);
+				return sm::ent_cast<cell_t>(Ret);
 			}
-
-			static cell_t CreateDamage(IPluginContext* pContext, const cell_t* params)
-			{
-				return 0;
+			static cell_t CreateDamage(IPluginContext* pContext, const cell_t* params) {
+				CBaseEntity* parent = sm::ent_cast<CBaseEntity*>(params[1]);
+				Vector pos;
+				sm::interop::cell2native(pContext, params[2], pos);
+				CBaseEntity* attacker = sm::ent_cast<CBaseEntity*>(params[3]);
+				float damage = sp_ctof(params[4]); float radius = sp_ctof(params[5]);
+				int bits = params[6]; int weaponid = params[7];
+				std::string attach;
+				sm::interop::cell2native(pContext, params[8], attach);
+				CBaseEntity* Ret = vec::utils::CreateDamage(parent, pos, attacker, damage, radius, bits, weaponid, attach);
+				return sm::ent_cast<cell_t>(Ret);
 			}
-
-			static cell_t CreateSprite(IPluginContext* pContext, const cell_t* params)
-			{
-				return 0;
+			static cell_t CreateSprite(IPluginContext* pContext, const cell_t* params) {
+				CBaseEntity* parent = sm::ent_cast<CBaseEntity*>(params[1]);
+				Vector pos, ang;
+				sm::interop::cell2native(pContext, params[2], pos);
+				sm::interop::cell2native(pContext, params[3], ang);
+				std::string attach, sprite;
+				sm::interop::cell2native(pContext, params[4], attach);
+				sm::interop::cell2native(pContext, params[5], sprite);
+				float scale = sp_ctof(params[6]);
+				int rendermode = params[7];
+				float duration = sp_ctof(params[8]);
+				CBaseEntity* Ret = vec::utils::CreateSprite(parent, pos, ang, attach, sprite, scale, rendermode, duration);
+				return sm::ent_cast<cell_t>(Ret);
 			}
-
-			static cell_t CreateSpriteController(IPluginContext* pContext, const cell_t* params)
-			{
-				return 0;
+			static cell_t CreateSpriteController(IPluginContext* pContext, const cell_t* params) {
+				CBaseEntity* parent = sm::ent_cast<CBaseEntity*>(params[1]);
+				std::string sprite, var;
+				sm::interop::cell2native(pContext, params[2], sprite);
+				sm::interop::cell2native(pContext, params[3], var);
+				CBaseEntity* Ret = vec::utils::CreateSpriteController(parent, sprite, var);
+				return sm::ent_cast<cell_t>(Ret);
 			}
-
-			static cell_t CreateTesla(IPluginContext* pContext, const cell_t* params)
-			{
-				return 0;
-
+			static cell_t CreateTesla(IPluginContext* pContext, const cell_t* params) {
+				CBaseEntity* parent = sm::ent_cast<CBaseEntity*>(params[1]);
+				Vector pos, ang;
+				sm::interop::cell2native(pContext, params[2], pos);
+				sm::interop::cell2native(pContext, params[3], ang);
+				std::string attach;
+				sm::interop::cell2native(pContext, params[4], attach);
+				float radius = sp_ctof(params[5]);
+				std::string sound;
+				sm::interop::cell2native(pContext, params[6], sound);
+				int countMin = params[7]; int countMax = params[8];
+				std::string textureName;
+				sm::interop::cell2native(pContext, params[9], textureName);
+				Color color;
+				sm::interop::cell2native(pContext, params[10], color);
+				float thickMin = sp_ctof(params[11]); float thickMax = sp_ctof(params[12]);
+				float lifeMin = sp_ctof(params[13]); float lifeMax = sp_ctof(params[14]);
+				float intervalMin = sp_ctof(params[15]); float intervalMax = sp_ctof(params[16]);
+				float durationTime = sp_ctof(params[17]);
+				CBaseEntity* Ret = vec::utils::CreateTesla(parent, pos, ang,
+					attach, radius, sound, countMin, countMax, textureName, color, thickMin, thickMax,
+					lifeMin, lifeMax, intervalMin, intervalMax, durationTime);
+				return sm::ent_cast<cell_t>(Ret);
 			}
-
-			static cell_t CreateShooter(IPluginContext* pContext, const cell_t* params)
-			{
-				return 0;
+			static cell_t CreateShooter(IPluginContext* pContext, const cell_t* params) {
+				CBaseEntity* parent = sm::ent_cast<CBaseEntity*>(params[1]);
+				std::string attach;
+				sm::interop::cell2native(pContext, params[2], attach);
+				int render = params[3];
+				int sound = params[4];
+				int skin = params[5];
+				std::string textureName;
+				sm::interop::cell2native(pContext, params[6], textureName);
+				Vector ang, gibAng;
+				sm::interop::cell2native(pContext, params[7], ang);
+				sm::interop::cell2native(pContext, params[8], gibAng);
+				float flGibs = sp_ctof(params[9]);
+				float delay = sp_ctof(params[10]);
+				float velocity = sp_ctof(params[11]); // here should be magnitude.
+				float variance = sp_ctof(params[12]); // error.
+				float life = sp_ctof(params[13]);
+				float duration = sp_ctof(params[14]);
+				CBaseEntity* Ret = vec::utils::CreateShooter(parent, attach, render, sound, skin,
+					textureName, ang, gibAng, flGibs, delay, velocity, variance, life, duration);
+				return sm::ent_cast<cell_t>(Ret);
 			}
-
-			static cell_t CreateBeam(IPluginContext* pContext, const cell_t* params)
-			{
-				return 0;
+			static cell_t CreateBeam(IPluginContext* pContext, const cell_t* params) {
+				/*inline CBaseEntity* CreateBeam(
+					Vector vStartPosition, Vector vEndPosition, int iDamage, int iFrame, float flWidth, int iRenderFX, int iType,
+					int iRate, std::string DecalName, int iScroll, float flScale, std::string TextureName, std::string sLife, std::string sStrike,
+					int iFlags, float flAmplitude, int iRadius, int iRenderAMT, Color color, float flDelayTime, float flDurationTime, std::string sName
+				)*/
+				Vector startPos, endPos;
+				sm::interop::cell2native(pContext, params[1], startPos);
+				sm::interop::cell2native(pContext, params[2], endPos);
+				int dmg = params[3];
+				int frame = params[4];
+				float width = sp_ctof(params[5]);
+				int renderFX = params[6];
+				int type = params[7];
+				int rate = params[8];
+				std::string decalName;
+				sm::interop::cell2native(pContext, params[9], decalName);
+				int scroll = params[10];
+				float scale = sp_ctof(params[11]);
+				std::string textureName;
+				sm::interop::cell2native(pContext, params[12], textureName);
+				std::string life; // yes, here is string, idk why, but param is so.
+				sm::interop::cell2native(pContext, params[13], life);
+				std::string strike; // same as life param, as i have described
+				sm::interop::cell2native(pContext, params[14], strike);
+				int flags = params[15];
+				float amplitude = sp_ctof(params[16]);
+				int radius = params[17];
+				int renderAMT = params[18];
+				Color color;
+				sm::interop::cell2native(pContext, params[19], color);
+				float flDelayTime = sp_ctof(params[20]);
+				float flDurationTime = sp_ctof(params[21]);
+				std::string sName;
+				sm::interop::cell2native(pContext, params[22], sName);
+				CBaseEntity* Ret = vec::utils::CreateBeam(startPos, endPos, dmg, frame, width, renderFX, type, rate,
+					decalName, scroll, scale, textureName, life, strike, flags, amplitude, radius, renderAMT, color,
+					flDelayTime, flDurationTime, sName);
+				return sm::ent_cast<cell_t>(Ret);
 			}
-
-			static cell_t CreateLight(IPluginContext* pContext, const cell_t* params)
-			{
+			static cell_t CreateLight(IPluginContext* pContext, const cell_t* params) {
 				CBaseEntity* parent = sm::ent_cast<CBaseEntity*>(params[1]);
 				Vector pos;
 				sm::interop::cell2native(pContext, params[2], pos);
@@ -168,44 +336,45 @@ namespace vec
 
 				return sm::ent_cast<cell_t>(Ret);
 			}
-			static cell_t CreateGlowing(IPluginContext* pContext, const cell_t* params)
-			{
+			static cell_t CreateGlowing(IPluginContext* pContext, const cell_t* params) {
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				vec::utils::CreateGlowing(entity, params[2], params[3], params[4], params[5], params[6], params[7]);
 				return 0;
 			}
-
-			static cell_t SetRenderColor(IPluginContext* pContext, const cell_t* params)
-			{
+			static cell_t SetRenderColor(IPluginContext* pContext, const cell_t* params) {
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				vec::utils::SetRenderColor(entity, static_cast<RenderColorType_t>(params[2]), params[3]);
 				return 0;
 			}
-
-			static cell_t GetRenderColor(IPluginContext* pContext, const cell_t* params)
-			{
+			static cell_t GetRenderColor(IPluginContext* pContext, const cell_t* params) {
+				return vec::utils::GetRenderColor(sm::ent_cast<CBaseEntity*>(params[1]), static_cast<RenderColorType_t>(params[2]));
+			}
+			static cell_t CreateTracer(IPluginContext* pContext, const cell_t* params) {
 				return 0;
 			}
-
-			static cell_t CreateTracer(IPluginContext* pContext, const cell_t* params)
-			{
+			static cell_t CreateShakeScreen(IPluginContext* pContext, const cell_t* params) {
+				vec::utils::CreateShakeScreen(sm::ent_cast<CBasePlayer*>(params[1]), sp_ctof(params[2]), sp_ctof(params[3]), sp_ctof(params[4]));
 				return 0;
 			}
-
-			static cell_t CreateShakeScreen(IPluginContext* pContext, const cell_t* params)
-			{
-
+			static cell_t CreateFadeScreen(IPluginContext* pContext, const cell_t* params) {
+				Color color;
+				sm::interop::cell2native(pContext, params[5], color);
+				vec::utils::CreateFadeScreen(sm::ent_cast<CBasePlayer*>(params[1]), sp_ctof(params[2]), sp_ctof(params[3]), params[4], color);
 				return 0;
 			}
-
-			static cell_t CreateFadeScreen(IPluginContext* pContext, const cell_t* params)
-			{
+			static cell_t CreatePhysForce(IPluginContext* pContext, const cell_t* params) {
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				Vector pos, origin;
+				sm::interop::cell2native(pContext, params[2], pos);
+				sm::interop::cell2native(pContext, params[3], origin);
+				vec::utils::CreatePhysForce(entity, pos, origin, sp_ctof(params[4]), sp_ctof(params[5]), sp_ctof(params[6]));
 				return 0;
 			}
-
-			static cell_t CreatePhysForce(IPluginContext* pContext, const cell_t* params)
-			{
-				return 0;
-			}
-
 			static cell_t CreateClientHint(IPluginContext* pContext, const cell_t* params)
 			{
+#if SOURCE_ENGINE == SE_CSGO
+				
+#endif
 				return 0;
 			}
 			
@@ -229,9 +398,7 @@ namespace vec
 			{
 				return 0;
 			}
-
-			static cell_t RemoveEntity(IPluginContext* pContext, const cell_t* params)
-			{
+			static cell_t RemoveEntity(IPluginContext* pContext, const cell_t* params) {
 				vec::utils::RemoveEntity(sm::ent_cast<CBaseEntity*>(params[1]), sp_ctof(params[2]));
 				return 1;
 			}
@@ -270,10 +437,8 @@ namespace vec
 			{
 				return 0;
 			}
-
-			static cell_t GetDistanceBetween(IPluginContext* pContext, const cell_t* params)
-			{
-				return 0;
+			static cell_t GetDistanceBetween(IPluginContext* pContext, const cell_t* params) {
+				return sp_ftoc(vec::utils::GetDistanceBetween(sm::ent_cast<CBaseEntity*>(params[1]), sm::ent_cast<CBaseEntity*>(params[2])));
 			}
 
 			static cell_t GetEffectIndex(IPluginContext* pContext, const cell_t* params)
@@ -326,14 +491,14 @@ namespace vec
 		* @param vAngle            The angle to the spawn.
 		* @param sPath             The name of the first path_track in the train's path.
 		* @param sSpeed            The maximum speed that this train can move.
-		* @param sSound            (Optional) The sound path.
-		* @param iFlags            (Optional) The bits with some flags.
+		* @param sSound            The sound path.
+		* @param iFlags            The bits with some flags.
 		*
 		* @return                  The entity pointer.
 		**/
 		inline CBaseEntity* CreateTrain(
 			std::string classname,	Vector position,			Vector angle,	std::string path, 
-			float speed,			std::string sound = "",		int flags = -1)
+			float speed,			std::string sound,			int flags)
 		{
 			CBaseEntity* pEntity = sm::sdktools::CreateEntityByName("func_tracktrain");
 
@@ -365,11 +530,11 @@ namespace vec
 		 * @param vPosition         The position to the spawn.
 		 * @param vAngle            The angle to the spawn.
 		 * @param sNextTarget       The next '_track' in the path.
-		 * @param iFlags            (Optional) The bits with some flags.
+		 * @param iFlags            The bits with some flags.
 		 *
 		 * @return                  The entity index.
 		 **/
-		inline CBaseEntity* CreatePath(std::string classname, Vector position, Vector angle, std::string NextTarget, int flag = 0)
+		inline CBaseEntity* CreatePath(std::string classname, Vector position, Vector angle, std::string NextTarget, int flag)
 		{
 			CBaseEntity* pEntity = sm::sdktools::CreateEntityByName("path_track");
 
@@ -395,7 +560,7 @@ namespace vec
 		 * @param vPosition         The position to the spawn.
 		 * @param vAngle            The angle to the spawn.
 		 * @param sModel            The model path.
-		 * @param iFlags            (Optional) The bits with some flags.
+		 * @param iFlags            The bits with some flags.
 		 *
 		 * @return                  The entity index.
 		 **/
@@ -424,7 +589,7 @@ namespace vec
 		 * @param vPosition         The position to the spawn.
 		 * @param vAngle            The angle to the spawn.
 		 * @param sModel            The model path.
-		 * @param iFlags            (Optional) The bits with some flags.
+		 * @param iFlags            The bits with some flags.
 		 *
 		 * @return                  The entity index.
 		 **/
@@ -453,11 +618,11 @@ namespace vec
 		 * @param vPosition         The position to the spawn.
 		 * @param vAngle            The angle to the spawn.
 		 * @param sModel            The model path.
-		 * @param sDefaultAnim      (Optional) The default animation.
-		 * @param bOverride         (Optional) True for models with physics, false for fully dynamic models.
-		 * @param bHoldAnim         (Optional) If set, the prop will not loop its animation, but hold the last frame.
-		 * @param bSolid            (Optional) If set, the prop will be solid.
-		 * @param iFlags            (Optional) The bits with some flags.
+		 * @param sDefaultAnim      The default animation.
+		 * @param bOverride         True for models with physics, false for fully dynamic models.
+		 * @param bHoldAnim         If set, the prop will not loop its animation, but hold the last frame.
+		 * @param bSolid            If set, the prop will be solid.
+		 * @param iFlags            The bits with some flags.
 		 *
 		 * @return                  The entity index.
 		 **/
@@ -488,7 +653,7 @@ namespace vec
 		 *
 		 * @param vPosition         The position to the spawn.
 		 * @param vAngle            The angle to the spawn.
-		 * @param sModel            (Optional) The model path.
+		 * @param sModel            The model path.
 		 *
 		 * @return                  The entity index.
 		 **/
@@ -511,23 +676,23 @@ namespace vec
 		/**
 		 * @brief Create a stack of the smoke entity.
 		 *
-		 * @param parent            (Optional) The parent index.
-		 * @param vPosition         (Optional) The position to the spawn.
-		 * @param vAngle            (Optional) The angle to the spawn.
-		 * @param sAttach           (Optional) The attachment name.
-		 * @param sSpreadBase       (Optional) The amount of random spread in the origins of the smoke particles when they're spawned.
-		 * @param sSpreadSpeed      (Optional) The amount of random spread in the velocity of the smoke particles after they're spawned.
-		 * @param sSpeed            (Optional) The speed at which the smoke particles move after they're spawned.
-		 * @param sStartSize        (Optional) The size of the smoke particles when they're first emitted.
-		 * @param sEndSize          (Optional) The size of the smoke particles at the point they fade out completely.
-		 * @param sDensity          (Optional) The rate at which to emit smoke particles (i.e. particles to emit per second).
-		 * @param sLength           (Optional) The length of the smokestack. Lifetime of the smoke particles is derived from this & particle speed.
-		 * @param sTwist            (Optional) The amount, in degrees per second, that the smoke particles twist around the origin.
+		 * @param parent            The parent index.
+		 * @param vPosition         The position to the spawn.
+		 * @param vAngle            The angle to the spawn.
+		 * @param sAttach           The attachment name.
+		 * @param sSpreadBase       The amount of random spread in the origins of the smoke particles when they're spawned.
+		 * @param sSpreadSpeed      The amount of random spread in the velocity of the smoke particles after they're spawned.
+		 * @param sSpeed            The speed at which the smoke particles move after they're spawned.
+		 * @param sStartSize        The size of the smoke particles when they're first emitted.
+		 * @param sEndSize          The size of the smoke particles at the point they fade out completely.
+		 * @param sDensity          The rate at which to emit smoke particles (i.e. particles to emit per second).
+		 * @param sLength           The length of the smokestack. Lifetime of the smoke particles is derived from this & particle speed.
+		 * @param sTwist            The amount, in degrees per second, that the smoke particles twist around the origin.
 		 * @param sColor            The color of the light. (RGB)
 		 * @param sTransparency     The amount of an alpha (0-255)
 		 * @param sSpriteName       The sprite path.
-		 * @param flRemoveTime      (Optional) The removing of the smoke.
-		 * @param flDurationTime    (Optional) The duration of the smoke.
+		 * @param flRemoveTime      The removing of the smoke.
+		 * @param flDurationTime    The duration of the smoke.
 		 *
 		 * @return                  The entity index.
 		 **/
@@ -587,12 +752,12 @@ namespace vec
 		/**
 		 * @brief Create a particle entity.
 		 *
-		 * @param parent            (Optional) The parent index.
-		 * @param vPosition         (Optional) The origin of the spawn.
-		 * @param vAngle            (Optional) The angle to the spawn.
-		 * @param sAttach           (Optional) The attachment name.
+		 * @param parent            The parent index.
+		 * @param vPosition         The origin of the spawn.
+		 * @param vAngle            The angle to the spawn.
+		 * @param sAttach           The attachment name.
 		 * @param sEffect           The particle name.
-		 * @param flDurationTime    (Optional) The duration of an effect.
+		 * @param flDurationTime    The duration of an effect.
 		 *
 		 * @return                  The entity index.
 		 **/
@@ -636,15 +801,15 @@ namespace vec
 		 * @brief Create an explosion entity.
 		 *
 		 * @param vPosition         The position to the spawn.
-		 * @param vAngle            (Optional) The angle to the spawn.
-		 * @param iFlags            (Optional) The bits with some flags.
-		 * @param sSpriteName       (Optional) The sprite path.
-		 * @param flDamage          (Optional) The amount of damage done by the explosion.
-		 * @param flRadius          (Optional) If set, the radius in which the explosion damages entities. If unset, the radius will be based on the magnitude.
-		 * @param sWeapon           (Optional) The classname defines the type of entity.
-		 * @param attacker          (Optional) The attacker index.
-		 * @param inflictor         (Optional) The inflictor index.
-		 * @param sIgnore           (Optional) Do not harm or affect the named entity.
+		 * @param vAngle            The angle to the spawn.
+		 * @param iFlags            The bits with some flags.
+		 * @param sSpriteName       The sprite path.
+		 * @param flDamage          The amount of damage done by the explosion.
+		 * @param flRadius          If set, the radius in which the explosion damages entities. If unset, the radius will be based on the magnitude.
+		 * @param sWeapon           The classname defines the type of entity.
+		 * @param attacker          The attacker index.
+		 * @param inflictor         The inflictor index.
+		 * @param sIgnore           Do not harm or affect the named entity.
 		 *
 		 * @return                  The entity index.
 		 **/
@@ -684,14 +849,14 @@ namespace vec
 		/**
 		 * @brief Create a point hurt entity.
 		 *
-		 * @param parent            (Optional) The parent index.
-		 * @param vPosition         (Optional) The origin of the spawn.
+		 * @param parent            The parent index.
+		 * @param vPosition         The origin of the spawn.
 		 * @param attacker          The attacker index.
 		 * @param flDamage          The amount of damage inflicted.
 		 * @param flRadius          The radius in which the hurt damages entities.
-		 * @param iBits             (Optional) The ditfield of damage types.
-		 * @param weaponID          (Optional) The weapon index or -1 for unspecified.
-		 * @param sAttach           (Optional) The attachment name.
+		 * @param iBits             The ditfield of damage types.
+		 * @param weaponID          The weapon index or -1 for unspecified.
+		 * @param sAttach           The attachment name.
 		 *
 		 * @return                  The entity index.
 		 **/
@@ -742,14 +907,14 @@ namespace vec
 		/**
 		 * @brief Create a sprite entity.
 		 *
-		 * @param parent            (Optional) The parent index.
-		 * @param vPosition         (Optional) The origin of the spawn.
-		 * @param vAngle            (Optional) The angle to the spawn.
-		 * @param sAttach           (Optional) The attachment name.
+		 * @param parent            The parent index.
+		 * @param vPosition         The origin of the spawn.
+		 * @param vAngle            The angle to the spawn.
+		 * @param sAttach           The attachment name.
 		 * @param sSprite           The sprite path.
 		 * @param sScale            The scale multiplier of the sprite.
 		 * @param sRender           Set a non-standard rendering mode on this entity.
-		 * @param flDurationTime    (Optional) The duration of the beam.
+		 * @param flDurationTime    The duration of the beam.
 		 *
 		 * @return                  The entity index.
 		 **/
@@ -823,27 +988,27 @@ namespace vec
 		/**
 		 * @brief Create a tesla entity.
 		 *
-		 * @param parent            (Optional) The parent index.
-		 * @param vPosition         (Optional) The origin of the spawn.
-		 * @param vAngle            (Optional) The angle to the spawn.
-		 * @param sAttach           (Optional) The attachment name.
-		 * @param sRadius           (Optional) The radius around the origin to find a point to strike with a tesla lightning beam.
-		 * @param sSound            (Optional) The sound to be played whenever lightning is created.
-		 * @param sCountMin         (Optional) The minimum number of tesla lightning beams to create when creating an arc.
-		 * @param sCountMax         (Optional) The maximum number of tesla lightning beams to create when creating an arc.
-		 * @param sTextureName      (Optional) The material to use for the tesla lightning beams.
-		 * @param sColor            (Optional) The beam color.
-		 * @param sThickMin         (Optional) The minimum width of the tesla lightning beams.
-		 * @param sThinkMax         (Optional) The maximum width of the tesla lightning beams.
-		 * @param sLifeMin          (Optional) The minimum lifetime of the tesla lightning beams.
-		 * @param sLifeMax          (Optional) The maximum lifetime of the tesla lightning beams.
-		 * @param sIntervalMin      (Optional) The minimum time delay between random arcing.
-		 * @param sIntervalMax      (Optional) The maximum time delay between random arcing.
-		 * @param flDurationTime    (Optional) The duration of the beam.
+		 * @param parent            The parent index.
+		 * @param vPosition         The origin of the spawn.
+		 * @param vAngle            The angle to the spawn.
+		 * @param sAttach           The attachment name.
+		 * @param sRadius           The radius around the origin to find a point to strike with a tesla lightning beam.
+		 * @param sSound            The sound to be played whenever lightning is created.
+		 * @param sCountMin         The minimum number of tesla lightning beams to create when creating an arc.
+		 * @param sCountMax         The maximum number of tesla lightning beams to create when creating an arc.
+		 * @param sTextureName      The material to use for the tesla lightning beams.
+		 * @param sColor            The beam color.
+		 * @param sThickMin         The minimum width of the tesla lightning beams.
+		 * @param sThinkMax         The maximum width of the tesla lightning beams.
+		 * @param sLifeMin          The minimum lifetime of the tesla lightning beams.
+		 * @param sLifeMax          The maximum lifetime of the tesla lightning beams.
+		 * @param sIntervalMin      The minimum time delay between random arcing.
+		 * @param sIntervalMax      The maximum time delay between random arcing.
+		 * @param flDurationTime    The duration of the beam.
 		 *
 		 * @return                  The entity index.
 		 **/
-		inline CBaseEntity* UTIL_CreateTesla(
+		inline CBaseEntity* CreateTesla(
 			CBaseEntity* parent,	Vector pos,			Vector ang,				std::string attach,			float radius, 
 			std::string sSound,		int countMin,		int countMax,			std::string sTextureName,	Color color,
 			float ThickMin,			float ThickMax,		float LifeMin,			float LifeMax,				float flIntervalMin, 
@@ -903,12 +1068,12 @@ namespace vec
 		 *
 		 * @param parent            The parent index.
 		 * @param sAttach           The attachment bone of the entity parent.
-		 * @param sRender           (Optional) Used to set a non-standard rendering mode on this entity. See also 'FX Amount' and 'FX Color'.
-		 * @param sSound            (Optional) Material Sound. (-1: None | 0: Glass | 1: Wood | 2: Metal | 3: Flesh | 4: Concrete)
-		 * @param iSkin             (Optional) Some models have multiple skins.
+		 * @param sRender           Used to set a non-standard rendering mode on this entity. See also 'FX Amount' and 'FX Color'.
+		 * @param sSound            Material Sound. (-1: None | 0: Glass | 1: Wood | 2: Metal | 3: Flesh | 4: Concrete)
+		 * @param iSkin             Some models have multiple skins.
 		 * @param sTextureName      Thing to shoot out. Can be a .mdl (model) or a .vmt (material/sprite).
-		 * @param vAngle            (Optional) The direction the gibs will fly.
-		 * @param vGibAngle         (Optional) The orientation of the spawned gibs.
+		 * @param vAngle            The direction the gibs will fly.
+		 * @param vGibAngle         The orientation of the spawned gibs.
 		 * @param iGibs             The number of gibs - Total number of gibs to shoot each time it's activated
 		 * @param flDelay           The delay (in seconds) between shooting each gib. If 0, all gibs shoot at once.
 		 * @param flVelocity        The speed of the fired gibs.
@@ -918,9 +1083,9 @@ namespace vec
 		 *
 		 * @return                  The entity index.
 		 **/
-		inline CBaseEntity* UTIL_CreateShooter(
+		inline CBaseEntity* CreateShooter(
 		CBaseEntity* parent,		std::string sAttach,	int iRender,		int iSound,		int iSkin, 
-		std::string sTextureName,	Vector vAngle,			Vector vGibAngle,	float iGibs,	float flDelay,
+		std::string sTextureName,	Vector vAngle,			Vector vGibAngle,	float flGibs,	float flDelay,
 		float flVelocity,			float flVariance,		float flLife,		float flDurationTime
 		)
 		{
@@ -940,6 +1105,7 @@ namespace vec
 				sm::sdktools::DispatchKeyValue<int>(entity, "shootsounds", iSound);
 				sm::sdktools::DispatchKeyValue<const char*>(entity, "shootmodel", sTextureName.c_str());
 				sm::sdktools::DispatchKeyValue<int>(entity, "skin", iSkin);
+				sm::sdktools::DispatchKeyValue<float>(entity, "m_iGibs", flGibs); // don't ask me why here is float, ask fucking valve.
 				sm::sdktools::DispatchKeyValue<float>(entity, "delay", flDelay);
 				sm::sdktools::DispatchKeyValue<float>(entity, "m_flVelocity", flVelocity);
 				sm::sdktools::DispatchKeyValue<float>(entity, "m_flVariance", flVariance);
@@ -972,22 +1138,22 @@ namespace vec
 		 *
 		 * @param vStartPosition    The start position of the beam.
 		 * @param vEndPosition      The end position of the beam.
-		 * @param sDamage           (Optional) How much damage this beam does per second to things it hits when it is continually on, or instantaneously if it strikes. For continuous damage, the value should be greater than 10 or it may not work.
-		 * @param sFrame            (Optional) The framerate at which the beam texture should animate, if it has multiple frames.
-		 * @param sWidth            (Optional) The pixel width of the beam. Range: 1 to MAX_BEAM_WIDTH.
-		 * @param sRenderFX         (Optional) The several GoldSrc-era visibility modes which change the way the entity is rendered, typically by fading it in and out.
-		 * @param sType             (Optional) If you want the beam to fire an output when touched by entities, choose the entity type here. (0: Not a tripwire | 1: Player Only | 2: NPC Only | 3: Player or NPC | 4: Player or NPC or Physprop)
-		 * @param sRate             (Optional) The framerate at which the beam texture should animate, if it has multiple frames.
-		 * @param sDecalName        (Optional) The decal to be applied at the end of the beam
-		 * @param sScroll           (Optional) The rate at which the beam texture should scroll along the beam. Range: 0 to MAX_BEAM_SCROLLSPEED.
-		 * @param sScale            (Optional) The float value to multiply sprite color by when running in HDR mode.
-		 * @param sTextureName      (Optional) The material used to draw the beam.
-		 * @param sLife             (Optional) The amount of time before the beam dies. Setting to zero will make the beam stay forever.
-		 * @param sStrike           (Optional) The refire time between random strikes of the beam. Only used if the 'Random Strike' spawnflag is set.
-		 * @param iFlags            (Optional) The bits with some flags.
-		 * @param sAmplitude        (Optional) The amount of noise in the beam. 0 is a perfectly straight beam. Range: 0 to MAX_BEAM_NOISEAMPLITUDE.
-		 * @param sRadius           (Optional) If the LightningStart and/or LightningEnd values are omitted, this radius determines the area within which the endpoints will randomly strike. A new random position will be appointed for every strike.
-		 * @param sRenderAMT        (Optional) The beam brightness. Useless when set to 0.
+		 * @param sDamage           How much damage this beam does per second to things it hits when it is continually on, or instantaneously if it strikes. For continuous damage, the value should be greater than 10 or it may not work.
+		 * @param sFrame            The framerate at which the beam texture should animate, if it has multiple frames.
+		 * @param sWidth            The pixel width of the beam. Range: 1 to MAX_BEAM_WIDTH.
+		 * @param sRenderFX         The several GoldSrc-era visibility modes which change the way the entity is rendered, typically by fading it in and out.
+		 * @param sType             If you want the beam to fire an output when touched by entities, choose the entity type here. (0: Not a tripwire | 1: Player Only | 2: NPC Only | 3: Player or NPC | 4: Player or NPC or Physprop)
+		 * @param sRate             The framerate at which the beam texture should animate, if it has multiple frames.
+		 * @param sDecalName        The decal to be applied at the end of the beam
+		 * @param sScroll           The rate at which the beam texture should scroll along the beam. Range: 0 to MAX_BEAM_SCROLLSPEED.
+		 * @param sScale            The float value to multiply sprite color by when running in HDR mode.
+		 * @param sTextureName      The material used to draw the beam.
+		 * @param sLife             The amount of time before the beam dies. Setting to zero will make the beam stay forever.
+		 * @param sStrike           The refire time between random strikes of the beam. Only used if the 'Random Strike' spawnflag is set.
+		 * @param iFlags            The bits with some flags.
+		 * @param sAmplitude        The amount of noise in the beam. 0 is a perfectly straight beam. Range: 0 to MAX_BEAM_NOISEAMPLITUDE.
+		 * @param sRadius           If the LightningStart and/or LightningEnd values are omitted, this radius determines the area within which the endpoints will randomly strike. A new random position will be appointed for every strike.
+		 * @param sRenderAMT        The beam brightness. Useless when set to 0.
 		 * @param sColor            The beam color.
 		 * @param flDelayTime       The delay after the touch.
 		 * @param flDurationTime    The duration of the beam.
@@ -1064,19 +1230,19 @@ namespace vec
 		/**
 		 * @brief Create a light dynamic entity.
 		 *
-		 * @param parent            (Optional) The parent index.
-		 * @param vPosition         (Optional) The origin of the spawn.
-		 * @param sAttach           (Optional) The attachment name.
-		 * @param sInnerCone        (Optional) The inner (bright) angle.
-		 * @param sCone             (Optional) The outer (fading) angle.
-		 * @param sBrightness       (Optional) The intensity of the spotlight.
-		 * @param sPitch            (Optional) Used instead of Pitch Yaw Roll's value for reasons unknown.
-		 * @param sStyle            (Optional) The lightstyle (see Appearance field for possible values).
-		 * @param iFlags            (Optional) The bits with some flags.
+		 * @param parent            The parent index.
+		 * @param vPosition         The origin of the spawn.
+		 * @param sAttach           The attachment name.
+		 * @param sInnerCone        The inner (bright) angle.
+		 * @param sCone             The outer (fading) angle.
+		 * @param sBrightness       The intensity of the spotlight.
+		 * @param sPitch            Used instead of Pitch Yaw Roll's value for reasons unknown.
+		 * @param sStyle            The lightstyle (see Appearance field for possible values).
+		 * @param iFlags            The bits with some flags.
 		 * @param sColor            The color of the light. (RGBA)
 		 * @param flDistance        The distance of the light.
 		 * @param flRadius          The radius of the light.
-		 * @param flDurationTime    (Optional) The duration of the light.
+		 * @param flDurationTime    The duration of the light.
 		 *
 		 * @return                  The entity index.
 		 **/
@@ -1127,13 +1293,13 @@ namespace vec
 		 *
 		 * @param entity            The entity index.
 		 * @param enableState       Sets to true to enable glowing, false to disable.
-		 * @param iType             (Optional) The type of the glowing.
-		 * @param iRed              (Optional) Amount of a red (0-255)
-		 * @param iGreen            (Optional) Amount of a green (0-255)
-		 * @param iBlue             (Optional) Amount of a blue (0-255)
-		 * @param iAlpha            (Optional) Amount of an alpha (0-255)
+		 * @param iType             The type of the glowing.
+		 * @param iRed              Amount of a red (0-255)
+		 * @param iGreen            Amount of a green (0-255)
+		 * @param iBlue             Amount of a blue (0-255)
+		 * @param iAlpha            Amount of an alpha (0-255)
 		 **/
-		inline void CreateGlowing(CBaseEntity* entity, bool enableState, int iType = 0, int iRed = 255, int iGreen = 255, int iBlue = 255, int iAlpha = 255)
+		inline void CreateGlowing(CBaseEntity* entity, bool enableState, int iType, int iRed, int iGreen, int iBlue, int iAlpha)
 		{
 			static int iGlowOffset = 0;
 			if (!iGlowOffset && (iGlowOffset = sm::GetEntSendPropOffs(entity, "m_clrGlow")) == -1) return;
@@ -1230,7 +1396,7 @@ namespace vec
 		 * @param flForce           The force amount.
 		 * @param flRadius          The radius amount.
 		 **/
-		inline void UTIL_CreatePhysForce(
+		inline void CreatePhysForce(
 			CBaseEntity* entity, Vector vPosition, Vector vOrigin, 
 			float flDistance, float flForce, float flRadius
 		)
@@ -1332,8 +1498,8 @@ namespace vec
 		 * @param vEndPosition      The ending position.
 		 * @param vAngle            The calculated angle's vector output.
 		 * @param vVelocity         The calculated velocity's vector output.
-		 * @param flSpeedScale      (Optional) The speed scale value.
-		 * @param verticalScale     (Optional) Set to true for reversing vertical velocity's value, false to reset.
+		 * @param flSpeedScale      The speed scale value.
+		 * @param verticalScale     Set to true for reversing vertical velocity's value, false to reset.
 		 **/
 		//inline void UTIL_GetVelocityByAim(float vStartPosition[3], float vEndPosition[3], float vAngle[3], float vVelocity[3], float flSpeedScale = 1.0, bool verticalScale = false)
 		
@@ -1346,12 +1512,28 @@ namespace vec
 		/**
 		 * @brief Calculates the distance between two entities.
 		 *
-		 * @param client            The client index.
-		 * @param entity            The entity index.
+		 * @param client            The entity 1 pointer.
+		 * @param entity            The entity 2 pointer.
 		 *
 		 * @return                  The distance amount.
 		 **/
-		//inline float UTIL_GetDistanceBetween(int client, int entity)
+		inline float GetDistanceBetween(CBaseEntity* entity1, CBaseEntity* entity2)
+		{
+			Vector ent_1_pos = vec::tools::GetAbsOrigin(entity1);
+			Vector ent_2_pos = vec::tools::GetAbsOrigin(entity2);
+
+			Vector ent_1_mins = vec::tools::GetMins(entity1);
+			Vector ent_1_maxs = vec::tools::GetMaxs(entity1);
+			
+			float flHeight = ent_1_mins.z - ent_1_maxs.z + 10.f;
+			float flDistance = ent_1_pos.z - ent_2_pos.z;
+
+			if (flDistance > flHeight) ent_1_pos.z -= flHeight;
+			else if (flDistance < (-1.f * flHeight)) ent_1_pos.z -= flHeight;
+			else ent_1_pos.z = ent_2_pos.z;
+
+			return ent_1_pos.DistTo(ent_2_pos);
+		}
 		
 		/**
 		 * @brief Searches for the index of a given string in a dispatch table.
@@ -1374,7 +1556,7 @@ namespace vec
 		/**
 		 * @brief Precache the particle in the effect table. (for client)
 		 *
-		 * @param client            (Optional) The client index.
+		 * @param client            The client index.
 		 * @param sEffect           The effect name.
 		 **/
 		//inline void PrecacheParticleFile(int client = 0, char[] sEffect)

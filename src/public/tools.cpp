@@ -41,11 +41,12 @@ namespace vec
 			{"ToolsSetFrags",						API::SetFrags},
 			{"ToolsGetDeaths",						API::GetDeaths},
 			{"ToolsSetDeaths",						API::SetDeaths},
+			{"ToolsGetGravity",						API::GetGravity},
 			{"ToolsSetGravity",						API::SetGravity},
 			{"ToolsSetSpot",						API::SetSpot},
 			{"ToolsSetDetecting",					API::SetDetecting},
 			{"ToolsSetHud",							API::SetHud},
-			{"ToolsSetArms",						API::SetArms},
+			{"ToolsSetArm",							API::SetArm},
 			{"ToolsSetAttack",						API::SetAttack},
 			{"ToolsSetFlashLight",					API::SetFlashLight},
 			{"ToolsSetFov",							API::SetFov},
@@ -236,11 +237,15 @@ namespace vec
 				vec::tools::SetDeaths(sm::ent_cast<CBaseEntity*>(params[1]), params[2]);
 				return 0;
 			}
+			static cell_t GetGravity(IPluginContext* pContext, const cell_t* params) {
+				return sp_ftoc(vec::tools::GetGravity(sm::ent_cast<CBaseEntity*>(params[1])));
+			}
 			static cell_t SetGravity(IPluginContext* pContext, const cell_t* params) {
 				vec::tools::SetGravity(sm::ent_cast<CBaseEntity*>(params[1]), sp_ctof(params[2]));
 				return 0;
 			}
 			static cell_t SetSpot(IPluginContext* pContext, const cell_t* params) {
+				vec::tools::SetSpot(sm::ent_cast<CBaseEntity*>(params[1]), params[2]);
 				return 0;
 			}
 			static cell_t SetDetecting(IPluginContext* pContext, const cell_t* params) {
@@ -250,10 +255,10 @@ namespace vec
 			static cell_t SetHud(IPluginContext* pContext, const cell_t* params) {
 				return 0;
 			}
-			static cell_t SetArms(IPluginContext* pContext, const cell_t* params) {
+			static cell_t SetArm(IPluginContext* pContext, const cell_t* params) {
 				std::string out;
 				sm::interop::cell2native(pContext, params[2], out);
-				vec::tools::SetArms(sm::ent_cast<CBasePlayer*>(params[1]), out.c_str());
+				vec::tools::SetArm(sm::ent_cast<CBasePlayer*>(params[1]), out.c_str());
 				return 0;
 			}
 			static cell_t SetAttack(IPluginContext* pContext, const cell_t* params) {
@@ -310,13 +315,11 @@ namespace vec
 				vec::tools::SetCollisionGroup(sm::ent_cast<CBaseEntity*>(params[1]), params[2]);
 				return 0;
 			}
-			static cell_t SetProgressBarTime(IPluginContext*pContext, const cell_t* params)
-			{
+			static cell_t SetProgressBarTime(IPluginContext*pContext, const cell_t* params) {
 				vec::tools::SetProgressBarTime(sm::ent_cast<CBasePlayer*>(params[1]), params[2]);
 				return 0;
 			}
-			static cell_t ResetProgressBarTime(IPluginContext* pContext, const cell_t* params)
-			{
+			static cell_t ResetProgressBarTime(IPluginContext* pContext, const cell_t* params) {
 				vec::tools::ResetProgressBarTime(sm::ent_cast<CBasePlayer*>(params[1]));
 				return 0;
 			}
