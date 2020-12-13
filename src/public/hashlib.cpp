@@ -72,7 +72,7 @@ namespace vec
 
 				return status;
 			}
-			static cell_t API_CheckCRC32(IPluginContext* pContext, const cell_t* params)
+			static cell_t CheckCRC32(IPluginContext* pContext, const cell_t* params)
 			{
 				char* memblock;
 				char* filePath;

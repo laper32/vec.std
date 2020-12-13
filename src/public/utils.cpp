@@ -64,6 +64,8 @@ namespace vec
 			return true;
 		}
 
+		// API的变量封装就没必要看了......
+		// 反正只是给SP的 丑就丑了
 		namespace API
 		{
 			static cell_t CreateTrain(IPluginContext* pContext, const cell_t* params) {
@@ -416,9 +418,21 @@ namespace vec
 				Vector startPos, endPos;
 				sm::interop::cell2native(pContext, params[1], startPos);
 				sm::interop::cell2native(pContext, params[2], endPos);
-				//Vector velocity = vec::utils::GetVelocityByAim()
+				Vector vVelocity; QAngle vAngle;
 
+				vec::utils::GetVelocityByAim(startPos, endPos, vAngle, vVelocity, sp_ctof(params[5]), params[6]);
+
+				cell_t* ang_addr;
+				pContext->LocalToPhysAddr(params[3], &ang_addr);
+				ang_addr[0] = sp_ftoc(vAngle.x);
+				ang_addr[1] = sp_ftoc(vAngle.y);
+				ang_addr[2] = sp_ftoc(vAngle.z);
 				
+				cell_t* vec_addr;
+				pContext->LocalToPhysAddr(params[4], &vec_addr);
+				vec_addr[0] = sp_ftoc(vVelocity.x);
+				vec_addr[1] = sp_ftoc(vVelocity.y);
+				vec_addr[2] = sp_ftoc(vVelocity.z);
 
 				return 0;
 			}
@@ -1511,26 +1525,27 @@ namespace vec
 		 *
 		 * @param vStartPosition    The starting position.
 		 * @param vEndPosition      The ending position.
+		 * @param vAngle            The calculated angle's vector output.
+		 * @param vVelocity         The calculated velocity's vector output.
 		 * @param flSpeedScale      The speed scale value.
 		 * @param verticalScale     Set to true for reversing vertical velocity's value, false to reset.
 		 **/
-		// NOTE: There're something....return is undeclared, further discuss is needed
-		inline Vector GetVelocityByAim(Vector vStartPosition, Vector vEndPosition, float flSpeedScale, bool verticalScale)
+		inline void GetVelocityByAim(Vector vStartPosition, Vector vEndPosition, QAngle vAngle, Vector vVelocity, float flSpeedScale, bool verticalScale)
 		{
-			Vector vVelocity;
 			// Calculate the velocity's vector
 			vVelocity = vStartPosition - vEndPosition;
 			
 			// Sets vertical scale
 			vVelocity.z = verticalScale ? -vVelocity.z : 0.f;
 
+			VectorAngles(vVelocity, vAngle);
+			vAngle.x = vAngle.z = 0.f;
+
 			// Normalize the vector (equal magnitude at varying distances)
 			vVelocity.Normalized();
 
 			// Apply the magnitude by scaling the vector
 			vVelocity *= flSpeedScale;
-
-			return vVelocity;
 		}
 		
 		//inline bool UTIL_IsOnSamePlane(int entity, int target, float vPosition[3], TraceEntityFilter filter)

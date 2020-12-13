@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef _VEC_STD_CRYPTOLIB_MD5_H_
-#define _VEC_STD_CRYPTOLIB_MD5_H_
+#ifndef _VEC_STD_HASHLIB_MD5_H_
+#define _VEC_STD_HASHLIB_MD5_H_
 
 // //////////////////////////////////////////////////////////
 // md5.h
@@ -83,4 +83,4 @@ namespace vec
 	}
 }
 
-#endif // !_VEC_STD_CRYPTOLIB_MD5_H_
+#endif // !_VEC_STD_HASHLIB_MD5_H_

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _VEC_STD_BASE64_H_
-#define _VEC_STD_BASE64_H_
+#ifndef _VEC_STD_HASHLIB_BASE64_H_
+#define _VEC_STD_HASHLIB_BASE64_H_
 
 #include <string>
 
@@ -36,4 +36,4 @@ namespace vec
 		}
 	}
 }
-#endif // !_VEC_STD_BASE64_H_
+#endif // !_VEC_STD_HASHLIB_BASE64_H_

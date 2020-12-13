@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _VEC_STD_CRC32_H_
-#define _VEC_STD_CRC32_H_
+#ifndef _VEC_STD_HASHLIB_CRC32_H_
+#define _VEC_STD_HASHLIB_CRC32_H_
 
 #include <string>
 #include <sstream>
@@ -19,4 +19,4 @@ namespace vec
 	}
 }
 
-#endif // !_VEC_STD_CRC32_H_
+#endif // !_VEC_STD_HASHLIB_CRC32_H_

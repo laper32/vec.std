@@ -112,7 +112,7 @@ namespace vec
 		//inline void UTIL_PrecacheDecal(char[] sDecal)
 		//inline void UTIL_PrecacheSound(char[] sSound)
 		//inline void UTIL_FindHullIntersection(Handle &hTrace, float vPosition[3], const float vMins[3], const float vMaxs[3], TraceEntityFilter filter, any data)
-		inline Vector GetVelocityByAim(Vector vStartPosition, Vector vEndPosition, float flSpeedScale, bool verticalScale);
+		inline void GetVelocityByAim(Vector vStartPosition, Vector vEndPosition, QAngle vAngle, Vector vVelocity, float flSpeedScale, bool verticalScale);
 		//inline bool UTIL_IsOnSamePlane(int entity, int target, float vPosition[3], TraceEntityFilter filter)
 		//inline bool UTIL_GetTraceEndPoint(int entity, float vPosition[3])
 		//inline bool UTIL_TraceRay(int entity, int target, float vStartPosition[3], float vEndPosition[3], TraceEntityFilter filter)
