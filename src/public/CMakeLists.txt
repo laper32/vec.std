@@ -21,3 +21,6 @@ target_sources("vec.std.public" INTERFACE
 )
 
 target_include_directories("vec.std.public" INTERFACE ${CMAKE_CURRENT_LIST_DIR})
+
+add_subdirectory(hashlib)
+target_link_libraries("vec.std.public" INTERFACE "vec.std.public.hashlib")
