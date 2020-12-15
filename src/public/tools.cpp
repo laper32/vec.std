@@ -1,5 +1,5 @@
 #include "tools.h"
-#include "tools/glowshell.h"
+
 namespace vec
 {
 	namespace tools

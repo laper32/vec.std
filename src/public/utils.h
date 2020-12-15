@@ -35,7 +35,7 @@ namespace vec
 			static cell_t CreateShakeScreen(IPluginContext* pContext, const cell_t* params);
 			static cell_t CreateFadeScreen(IPluginContext* pContext, const cell_t* params);
 			static cell_t CreatePhysForce(IPluginContext* pContext, const cell_t* params);
-			static cell_t CreateClientHint(IPluginContext* pContext, const cell_t* params);
+			static cell_t SendClientHintText(IPluginContext* pContext, const cell_t* params);
 			static cell_t CreateClientHud(IPluginContext* pContext, const cell_t* params);
 			static cell_t PrecacheModel(IPluginContext* pContext, const cell_t* params);
 			static cell_t IgniteEntity(IPluginContext* pContext, const cell_t* params);
@@ -103,7 +103,7 @@ namespace vec
 		inline void CreateShakeScreen(CBasePlayer* client, float flAmplitude, float flFrequency, float flDurationTime);
 		inline void CreateFadeScreen(CBasePlayer* client, float flDuration, float flHoldTime, int iFlags, Color vColor);
 		inline void CreatePhysForce(CBaseEntity* entity, Vector vPosition, Vector vOrigin, float flDistance, float flForce, float flRadius);
-		//inline void UTIL_CreateClientHint(int client, char[] sMessage)
+		inline void SendClientHintText(CBasePlayer* player, const char* msg);
 		//inline void UTIL_CreateClientHud(Handle hSync, int client, float x, float y, float holdTime, int r, int g, int b, int a, int effect, float fxTime, float fadeIn, float fadeOut, char[] sMessage)
 		//inline int UTIL_PrecacheModel(char[] sModel)
 		//inline void UTIL_IgniteEntity(int entity, float flDurationTime)

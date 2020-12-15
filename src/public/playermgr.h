@@ -41,14 +41,14 @@ namespace vec
 		{
 			std::size_t count = 0;
 
-			for (int i : sm::ranges::Players()) count++;
+			for (int i : sm::ranges::Players() | sm::ranges::Connected()) count++;
 			return count;
 		}
 
 		inline std::size_t GetAliveCount()
 		{
 			std::size_t count = 0;
-			for (int i : sm::ranges::Players() | sm::ranges::Alive()) count++;
+			for (int i : sm::ranges::Players() | sm::ranges::Connected() | sm::ranges::Alive()) count++;
 
 			return count;
 		}

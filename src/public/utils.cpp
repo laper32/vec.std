@@ -32,7 +32,7 @@ namespace vec
 			{"UTIL_CreateShakeScreen",	API::CreateShakeScreen},
 			{"UTIL_CreateFadeScreen",	API::CreateFadeScreen},
 			{"UTIL_CreatePhysForce",	API::CreatePhysForce},
-			{"UTIL_CreateClientHint",	API::CreateClientHint},
+			{"UTIL_SendClientHintText",	API::SendClientHintText},
 			{"UTIL_CreateClientHud",	API::CreateClientHud},
 			{"UTIL_PrecacheModel",		API::PrecacheModel},
 			{"UTIL_IgniteEntity",		API::IgniteEntity},
@@ -365,11 +365,11 @@ namespace vec
 				vec::utils::CreatePhysForce(entity, pos, origin, sp_ctof(params[4]), sp_ctof(params[5]), sp_ctof(params[6]));
 				return 0;
 			}
-			static cell_t CreateClientHint(IPluginContext* pContext, const cell_t* params)
+			static cell_t SendClientHintText(IPluginContext* pContext, const cell_t* params)
 			{
-#if SOURCE_ENGINE == SE_CSGO
-				
-#endif
+				std::string msg;
+				sm::interop::cell2native(pContext, params[2], msg);
+				vec::utils::SendClientHintText(sm::ent_cast<CBasePlayer*>(params[1]), msg.c_str());
 				return 0;
 			}
 			
@@ -1424,7 +1424,10 @@ namespace vec
 			sm::sdktools::TeleportEntity(entity, {}, {}, vVelocity);
 		}
 
-		// DO NOT USE HERE.
+		inline void SendClientHintText(CBasePlayer* player, const char* msg)
+		{
+			return sm::usermessages::CreateHintText(sm::ent_cast<int>(player), msg);
+		}
 		//inline void UTIL_CreateClientHint(int client, char[] sMessage)
 		
 		// DO NOT USE HERE.
