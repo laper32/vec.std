@@ -14,6 +14,7 @@
 #include <ranges>
 #include "engine.h"
 #include "const.h"
+#include "utils.h"
 namespace vec
 {
 	namespace tools
@@ -21,6 +22,8 @@ namespace vec
 		// core caller
 		sp_nativeinfo_t g_ToolNatives[];
 		bool SDK_OnLoad(char* error, size_t maxlen, bool late);
+		
+		void OnClientInit(int client);
 
 		// API extern
 		namespace API
@@ -84,6 +87,9 @@ namespace vec
 			static cell_t SetCollisionGroup(IPluginContext*, const cell_t*);
 			static cell_t SetProgressBarTime(IPluginContext*, const cell_t*);
 			static cell_t ResetProgressBarTime(IPluginContext*, const cell_t*);
+			static cell_t GetMaxs(IPluginContext*, const cell_t*);
+			static cell_t GetMins(IPluginContext*, const cell_t*);
+			static cell_t GetModelName(IPluginContext*, const cell_t*);
 		}
 
 		// Header-SDK Functions.
@@ -149,9 +155,9 @@ namespace vec
 		 * @param entity            The entity ptr.
 		 * @return		            The angle vector.
 		 */
-		inline Vector GetAbsAngles(CBaseEntity* pEntity)
+		inline QAngle GetAbsAngles(CBaseEntity* pEntity)
 		{
-			return sm::GetEntProp<Vector>(pEntity, sm::Prop_Data, "m_angAbsRotation");
+			return sm::GetEntProp<QAngle>(pEntity, sm::Prop_Data, "m_angAbsRotation");
 		}
 
 		/**
@@ -757,17 +763,22 @@ namespace vec
 			if (sm::ent_cast<int>(entity) <= sm::GetMaxClients()) Ret = sm::GetClientMaxs(entity);
 			else
 				Ret = sm::GetEntProp<Vector>(entity, sm::Prop_Data, "m_vecMaxs");
-			Ret.z /= 2.f;
+			//Ret.z /= 2.f;
 			return Ret;
 		}
+
 		inline Vector GetMins(CBaseEntity* entity)
 		{
 			Vector Ret;
 			if (sm::ent_cast<int>(entity) <= sm::GetMaxClients()) Ret = sm::GetClientMins(entity);
 			else
 				Ret = sm::GetEntProp<Vector>(entity, sm::Prop_Data, "m_vecMins");
-			Ret.z /= 2.f;
+			//Ret.z /= 2.f;
 			return Ret;
+		}
+		inline const char* GetModelName(CBaseEntity* entity)
+		{
+			return sm::GetEntProp<const char*>(entity, sm::Prop_Data, "m_ModelName");
 		}
 	}
 }

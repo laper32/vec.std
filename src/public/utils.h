@@ -59,31 +59,31 @@ namespace vec
 			static cell_t GetParticleEffectCount(IPluginContext* pContext, const cell_t* params);
 		}
 
-		inline CBaseEntity* CreateTrain(std::string classname, Vector position, Vector angle, std::string path, float speed, std::string sound, int flags);
-		inline CBaseEntity* CreatePath(std::string classname, Vector position, Vector angle, std::string NextTarget, int flag);
-		inline CBaseEntity* CreateMonster(std::string classname, Vector position, Vector angle, std::string sModel, int iFlags);
-		inline CBaseEntity* CreatePhysics(std::string classname, Vector position, Vector angle, std::string model, int flags);
-		inline CBaseEntity* CreateDynamic(std::string classname, Vector position, Vector angle, std::string model, std::string defaultAnim, bool bOverride, bool bHoldAnim, bool bSolid, int iFlags);
-		inline CBaseEntity* CreateProjectile(Vector pos, Vector ang, std::string model);
-		inline CBaseEntity* CreateSmoke(CBaseEntity* parent, Vector pos, Vector ang, std::string attach, int spradbase, int spradspeed, int speed, int startsize, int endsize, int density, int length, int twist, Color color, int transparency, std::string spritename, float removetime, float durationtime);
-		inline CBaseEntity* CreateParticle(CBaseEntity* parent, Vector pos, Vector ang, std::string attach, std::string effectName, float duration);
+		inline CBaseEntity* CreateTrain(std::string classname, Vector position, QAngle angle, std::string path, float speed, std::string sound, int flags);
+		inline CBaseEntity* CreatePath(std::string classname, Vector position, QAngle angle, std::string NextTarget, int flag);
+		inline CBaseEntity* CreateMonster(std::string classname, Vector position, QAngle angle, std::string sModel, int iFlags);
+		inline CBaseEntity* CreatePhysics(std::string classname, Vector position, QAngle angle, std::string model, int flags);
+		inline CBaseEntity* CreateDynamic(std::string classname, Vector position, QAngle angle, std::string model, std::string defaultAnim, bool bOverride, bool bHoldAnim, bool bSolid, int iFlags);
+		inline CBaseEntity* CreateProjectile(Vector pos, QAngle ang, std::string model);
+		inline CBaseEntity* CreateSmoke(CBaseEntity* parent, Vector pos, QAngle ang, std::string attach, int spradbase, int spradspeed, int speed, int startsize, int endsize, int density, int length, int twist, Color color, int transparency, std::string spritename, float removetime, float durationtime);
+		inline CBaseEntity* CreateParticle(CBaseEntity* parent, Vector pos, QAngle ang, std::string attach, std::string effectName, float duration);
 		inline CBaseEntity* CreateExplosion(Vector vPosition, int iFlags, std::string sSpriteName, float flDamage, float flRadius, std::string sWeapon, CBaseEntity* attacker, CBaseEntity* inflictor, std::string sIgnore);
 		inline CBaseEntity* CreateDamage(
 			CBaseEntity* parent,	Vector pos,		CBaseEntity* attacker,	float flDamage,
 			float flRadius,			int iBits,		int weaponID,			std::string sAttach);
 		inline CBaseEntity* CreateSprite(
-			CBaseEntity* parent, Vector pos,	Vector ang,		std::string sAttach, 
+			CBaseEntity* parent, Vector pos,	QAngle ang,		std::string sAttach,
 			std::string sSprite, float scale,	int rendermode, float flDurationTime);
 		inline CBaseEntity* CreateSpriteController(CBaseEntity* parent, std::string sprite, std::string var);
 		inline CBaseEntity* CreateTesla(
-			CBaseEntity* parent, Vector pos, Vector ang, std::string attach, float radius,
+			CBaseEntity* parent, Vector pos, QAngle ang, std::string attach, float radius,
 			std::string sSound, int countMin, int countMax, std::string sTextureName, Color color,
 			float ThickMin, float ThickMax, float LifeMin, float LifeMax, float flIntervalMin,
 			float flIntervalMax, float flDurationTime
 		);
 		inline CBaseEntity* CreateShooter(
 			CBaseEntity* parent, std::string sAttach, int iRender, int iSound, int iSkin,
-			std::string sTextureName, Vector vAngle, Vector vGibAngle, float iGibs, float flDelay,
+			std::string sTextureName, QAngle vAngle, QAngle vGibAngle, float iGibs, float flDelay,
 			float flVelocity, float flVariance, float flLife, float flDurationTime
 		);
 		inline CBaseEntity* CreateBeam(

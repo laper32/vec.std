@@ -1,5 +1,5 @@
 #include "tools.h"
-
+#include "tools/glowshell.h"
 namespace vec
 {
 	namespace tools
@@ -64,8 +64,18 @@ namespace vec
 			{"ToolsSetCollisionGroup",				API::SetCollisionGroup},
 			{"ToolsSetProgressBarTime",				API::SetProgressBarTime},
 			{"ToolsResetProgressBarTime",			API::ResetProgressBarTime},
+			{"ToolsGetMaxs",						API::GetMaxs},
+			{"ToolsGetMins",						API::GetMins},
+			{"ToolsGetModelName",					API::GetModelName},
 			{nullptr, nullptr}
 		};
+		
+		
+
+		void OnClientInit(int client)
+		{
+
+		}
 
 		bool SDK_OnLoad(char* error, size_t maxlen, bool late)
 		{
@@ -105,12 +115,12 @@ namespace vec
 				return 1;
 			}
 			static cell_t GetAbsAngles(IPluginContext* pContext, const cell_t* params) {
-				Vector pos = vec::tools::GetAbsAngles(sm::ent_cast<CBaseEntity*>(params[1]));
+				QAngle ang = vec::tools::GetAbsAngles(sm::ent_cast<CBaseEntity*>(params[1]));
 				cell_t* addr;
 				pContext->LocalToPhysAddr(params[2], &addr);
-				addr[0] = sp_ftoc(pos.x);
-				addr[1] = sp_ftoc(pos.y);
-				addr[2] = sp_ftoc(pos.z);
+				addr[0] = sp_ftoc(ang.x);
+				addr[1] = sp_ftoc(ang.y);
+				addr[2] = sp_ftoc(ang.z);
 				return 1;
 			}
 			// 因为一些原因 (如ZP等), 我们必须用GetEntPropArraySize类似的方式
@@ -322,6 +332,32 @@ namespace vec
 			static cell_t ResetProgressBarTime(IPluginContext* pContext, const cell_t* params) {
 				vec::tools::ResetProgressBarTime(sm::ent_cast<CBasePlayer*>(params[1]));
 				return 0;
+			}
+			static cell_t GetMaxs(IPluginContext* pContext, const cell_t* params)
+			{
+				Vector maxs = vec::tools::GetMaxs(sm::ent_cast<CBaseEntity*>(params[1]));
+				cell_t* addr;
+				pContext->LocalToPhysAddr(params[2], &addr);
+				addr[0] = sp_ftoc(maxs.x);
+				addr[1] = sp_ftoc(maxs.y);
+				addr[2] = sp_ftoc(maxs.z);
+				return 0;
+			}
+			static cell_t GetMins(IPluginContext* pContext, const cell_t* params)
+			{
+				Vector mins = vec::tools::GetMins(sm::ent_cast<CBaseEntity*>(params[1]));
+				cell_t* addr;
+				pContext->LocalToPhysAddr(params[2], &addr);
+				addr[0] = sp_ftoc(mins.x);
+				addr[1] = sp_ftoc(mins.y);
+				addr[2] = sp_ftoc(mins.z);
+				return 0;
+			}
+			static cell_t GetModelName(IPluginContext* pContext, const cell_t* params)
+			{
+				const char* name = vec::tools::GetModelName(sm::ent_cast<CBaseEntity*>(params[1]));
+
+				return pContext->StringToLocalUTF8(params[2], params[3], name, nullptr);
 			}
 		}
 	}

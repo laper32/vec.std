@@ -71,7 +71,7 @@ namespace vec
 			static cell_t CreateTrain(IPluginContext* pContext, const cell_t* params) {
 				std::string classname;
 				sm::interop::cell2native(pContext, params[1], classname);
-				Vector pos, ang;
+				Vector pos; QAngle ang;
 				sm::interop::cell2native(pContext, params[2], pos);
 				sm::interop::cell2native(pContext, params[3], ang);
 				std::string path;
@@ -86,7 +86,7 @@ namespace vec
 			static cell_t CreatePath(IPluginContext* pContext, const cell_t* params) {
 				std::string classname;
 				sm::interop::cell2native(pContext, params[1], classname);
-				Vector pos, ang;
+				Vector pos; QAngle ang;
 				sm::interop::cell2native(pContext, params[2], pos);
 				sm::interop::cell2native(pContext, params[3], ang);
 				std::string NextTarget;
@@ -98,7 +98,7 @@ namespace vec
 			static cell_t CreateMonster(IPluginContext* pContext, const cell_t* params) {
 				std::string classname;
 				sm::interop::cell2native(pContext, params[1], classname);
-				Vector pos, ang;
+				Vector pos; QAngle ang;
 				sm::interop::cell2native(pContext, params[2], pos);
 				sm::interop::cell2native(pContext, params[3], ang);
 				std::string model;
@@ -111,7 +111,7 @@ namespace vec
 			static cell_t CreatePhysics(IPluginContext* pContext, const cell_t* params) {
 				std::string classname;
 				sm::interop::cell2native(pContext, params[1], classname);
-				Vector pos, ang;
+				Vector pos; QAngle ang;
 				sm::interop::cell2native(pContext, params[2], pos);
 				sm::interop::cell2native(pContext, params[3], ang);
 				std::string model;
@@ -123,7 +123,7 @@ namespace vec
 			static cell_t CreateDynamic(IPluginContext* pContext, const cell_t* params) {
 				std::string classname;
 				sm::interop::cell2native(pContext, params[1], classname);
-				Vector pos, ang;
+				Vector pos; QAngle ang;
 				sm::interop::cell2native(pContext, params[2], pos);
 				sm::interop::cell2native(pContext, params[3], ang);
 				std::string model;
@@ -138,7 +138,7 @@ namespace vec
 				return sm::ent_cast<cell_t>(Ret);
 			}
 			static cell_t CreateProjectile(IPluginContext* pContext, const cell_t* params) {
-				Vector pos, ang;
+				Vector pos; QAngle ang;
 				sm::interop::cell2native(pContext, params[1], pos);
 				sm::interop::cell2native(pContext, params[2], ang);
 				std::string model;
@@ -148,7 +148,7 @@ namespace vec
 			}
 			static cell_t CreateSmoke(IPluginContext* pContext, const cell_t* params) {
 				CBaseEntity* parent = sm::ent_cast<CBaseEntity*>(params[1]);
-				Vector pos, ang;
+				Vector pos; QAngle ang;
 				sm::interop::cell2native(pContext, params[2], pos);
 				sm::interop::cell2native(pContext, params[3], ang);
 				std::string attach;
@@ -174,7 +174,7 @@ namespace vec
 			}
 			static cell_t CreateParticle(IPluginContext* pContext, const cell_t* params) {
 				CBaseEntity* parent = sm::ent_cast<CBaseEntity*>(params[1]);
-				Vector pos, ang;
+				Vector pos; QAngle ang;
 				sm::interop::cell2native(pContext, params[2], pos);
 				sm::interop::cell2native(pContext, params[3], ang);
 				std::string attach, effectName;
@@ -217,7 +217,7 @@ namespace vec
 			}
 			static cell_t CreateSprite(IPluginContext* pContext, const cell_t* params) {
 				CBaseEntity* parent = sm::ent_cast<CBaseEntity*>(params[1]);
-				Vector pos, ang;
+				Vector pos; QAngle ang;
 				sm::interop::cell2native(pContext, params[2], pos);
 				sm::interop::cell2native(pContext, params[3], ang);
 				std::string attach, sprite;
@@ -239,7 +239,7 @@ namespace vec
 			}
 			static cell_t CreateTesla(IPluginContext* pContext, const cell_t* params) {
 				CBaseEntity* parent = sm::ent_cast<CBaseEntity*>(params[1]);
-				Vector pos, ang;
+				Vector pos; QAngle ang;
 				sm::interop::cell2native(pContext, params[2], pos);
 				sm::interop::cell2native(pContext, params[3], ang);
 				std::string attach;
@@ -270,7 +270,7 @@ namespace vec
 				int skin = params[5];
 				std::string textureName;
 				sm::interop::cell2native(pContext, params[6], textureName);
-				Vector ang, gibAng;
+				QAngle ang, gibAng;
 				sm::interop::cell2native(pContext, params[7], ang);
 				sm::interop::cell2native(pContext, params[8], gibAng);
 				float flGibs = sp_ctof(params[9]);
@@ -508,15 +508,16 @@ namespace vec
 		* @return                  The entity pointer.
 		**/
 		inline CBaseEntity* CreateTrain(
-			std::string classname,	Vector position,			Vector angle,	std::string path, 
+			std::string classname,	Vector position,			QAngle angle,	std::string path, 
 			float speed,			std::string sound,			int flags)
 		{
 			CBaseEntity* pEntity = sm::sdktools::CreateEntityByName("func_tracktrain");
 
 			if (pEntity)
 			{
+				
 				sm::sdktools::DispatchKeyValue<Vector>(pEntity, "origin", position);
-				sm::sdktools::DispatchKeyValue<Vector>(pEntity, "angles", angle);
+				sm::sdktools::DispatchKeyValue<Vector>(pEntity, "angles", Vector(angle.x, angle.y, angle.z));
 				sm::sdktools::DispatchKeyValue<const char*>(pEntity, "targetname", classname.c_str());
 				sm::sdktools::DispatchKeyValue<const char*>(pEntity, "target", path.c_str());
 				sm::sdktools::DispatchKeyValue<float>(pEntity, "speed", speed);
@@ -545,14 +546,14 @@ namespace vec
 		 *
 		 * @return                  The entity index.
 		 **/
-		inline CBaseEntity* CreatePath(std::string classname, Vector position, Vector angle, std::string NextTarget, int flag)
+		inline CBaseEntity* CreatePath(std::string classname, Vector position, QAngle angle, std::string NextTarget, int flag)
 		{
 			CBaseEntity* pEntity = sm::sdktools::CreateEntityByName("path_track");
 
 			if (pEntity)
 			{
 				sm::sdktools::DispatchKeyValue<Vector>(pEntity, "origin", position);
-				sm::sdktools::DispatchKeyValue<Vector>(pEntity, "angle", angle);
+				sm::sdktools::DispatchKeyValue<Vector>(pEntity, "angle", Vector(angle.x, angle.y, angle.z));
 				sm::sdktools::DispatchKeyValue<const char*>(pEntity, "targetname", classname.c_str());
 				sm::sdktools::DispatchKeyValue<const char*>(pEntity, "target", NextTarget.c_str());
 				sm::sdktools::DispatchKeyValue<int>(pEntity, "flags", flag);
@@ -575,14 +576,14 @@ namespace vec
 		 *
 		 * @return                  The entity index.
 		 **/
-		inline CBaseEntity* CreateMonster(std::string classname, Vector position, Vector angle, std::string sModel, int iFlags)
+		inline CBaseEntity* CreateMonster(std::string classname, Vector position, QAngle angle, std::string sModel, int iFlags)
 		{
 			CBaseEntity* entity = sm::sdktools::CreateEntityByName("monster_generic");
 			if (entity)
 			{
 				sm::sdktools::DispatchKeyValue<const char*>(entity, "targetname", classname.c_str());
 				sm::sdktools::DispatchKeyValue<Vector>(entity, "origin", position);
-				sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", angle);
+				sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", Vector(angle.x, angle.y, angle.z));
 				sm::sdktools::DispatchKeyValue<const char*>(entity, "model", sModel.c_str());
 				sm::sdktools::DispatchKeyValue<int>(entity, "spawnflags", iFlags);
 				
@@ -604,7 +605,7 @@ namespace vec
 		 *
 		 * @return                  The entity index.
 		 **/
-		inline CBaseEntity* CreatePhysics(std::string classname, Vector position, Vector angle, std::string model, int flags)
+		inline CBaseEntity* CreatePhysics(std::string classname, Vector position, QAngle angle, std::string model, int flags)
 		{
 			// it should be multiplier but seems valve type it incorrectly, and not to fix, to keep it remains.
 			CBaseEntity* entity = sm::sdktools::CreateEntityByName("prop_physics_multiplayer");
@@ -613,7 +614,7 @@ namespace vec
 			{
 				sm::sdktools::DispatchKeyValue<const char*>(entity, "targetname", classname.c_str());
 				sm::sdktools::DispatchKeyValue<Vector>(entity, "origin", position);
-				sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", angle);
+				sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", Vector(angle.x, angle.y, angle.z));
 				sm::sdktools::DispatchKeyValue<const char*>(entity, "model", model.c_str());
 				sm::sdktools::DispatchKeyValue<int>(entity, "spawnflags", flags);
 
@@ -639,7 +640,7 @@ namespace vec
 		 * @return                  The entity index.
 		 **/
 		inline CBaseEntity* CreateDynamic(
-			std::string classname,		Vector position,	Vector angle,	std::string model, 
+			std::string classname,		Vector position,	QAngle angle,	std::string model,
 			std::string defaultAnim,	bool bOverride,		bool bHoldAnim, bool bSolid, int iFlags)
 		{
 			CBaseEntity* entity = sm::sdktools::CreateEntityByName(bOverride ? "prop_dynamic_override" : "prop_dynamic");
@@ -648,7 +649,7 @@ namespace vec
 			{
 				sm::sdktools::DispatchKeyValue<const char*>(entity, "targetname", classname.c_str());
 				sm::sdktools::DispatchKeyValue<Vector>(entity, "origin", position);
-				sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", angle);
+				sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", Vector(angle.x, angle.y, angle.z));
 				sm::sdktools::DispatchKeyValue<const char*>(entity, "model", model.c_str());
 				sm::sdktools::DispatchKeyValue<int>(entity, "spawnflags", iFlags);
 				sm::sdktools::DispatchKeyValue<int>(entity, "solid", bSolid ? 1 : 0);
@@ -669,7 +670,7 @@ namespace vec
 		 *
 		 * @return                  The entity index.
 		 **/
-		inline CBaseEntity* CreateProjectile(Vector pos, Vector ang, std::string model)
+		inline CBaseEntity* CreateProjectile(Vector pos, QAngle ang, std::string model)
 		{
 			CBaseEntity* entity = sm::sdktools::CreateEntityByName("hegrenade_projectile");
 
@@ -709,7 +710,7 @@ namespace vec
 		 * @return                  The entity index.
 		 **/
 		inline CBaseEntity* CreateSmoke(
-			CBaseEntity* parent,	Vector pos,			Vector ang,				std::string attach,		int spreadbase, int spreadspeed,
+			CBaseEntity* parent,	Vector pos,			QAngle angle,			std::string attach,		int spreadbase, int spreadspeed,
 			int speed,				int startsize,		int endsize,			int density,			int length,		int twist,		
 			Color color,			int transparency,	std::string spritename, float removetime,		float durationtime)
 		{
@@ -718,7 +719,7 @@ namespace vec
 			if (entity)
 			{
 				sm::sdktools::DispatchKeyValue<Vector>(entity, "origin", pos);
-				sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", ang);
+				sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", Vector(angle.x, angle.y, angle.z));
 				sm::sdktools::DispatchKeyValue<int>(entity, "BaseSpread", spreadbase);
 				sm::sdktools::DispatchKeyValue<int>(entity, "SpreadSpeed", spreadspeed);
 				sm::sdktools::DispatchKeyValue<int>(entity, "Speed", speed);
@@ -774,7 +775,7 @@ namespace vec
 		 * @return                  The entity index.
 		 **/
 		inline CBaseEntity* CreateParticle(
-			CBaseEntity* parent, Vector pos, Vector ang, 
+			CBaseEntity* parent, Vector pos, QAngle angle, 
 			std::string attach, std::string effectName, float duration
 		)
 		{
@@ -783,7 +784,7 @@ namespace vec
 			{
 				
 				sm::sdktools::DispatchKeyValue<Vector>(entity, "origin", pos);
-				sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", ang);
+				sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", Vector(angle.x, angle.y, angle.z));
 				sm::sdktools::DispatchKeyValue<int>(entity, "start_active", 1);
 				sm::sdktools::DispatchKeyValue<const char*>(entity, "effect_name", effectName.c_str());
 
@@ -835,7 +836,7 @@ namespace vec
 			if (entity)
 			{
 				sm::sdktools::DispatchKeyValue<Vector>(entity, "origin", vPosition);
-				//sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", vAngle);
+				//sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", Vector(angle.x, angle.y, angle.z));
 				sm::sdktools::DispatchKeyValue<int>(entity, "spawnflags", iFlags);
 				sm::sdktools::DispatchKeyValue<const char*>(entity, "fireballsprite", sSpriteName.c_str());
 				if (!(iFlags & ExplosionFlags::EXP_NODAMAGE))
@@ -931,7 +932,7 @@ namespace vec
 		 * @return                  The entity index.
 		 **/
 		inline CBaseEntity* CreateSprite(
-			CBaseEntity* parent, Vector pos, Vector ang, std::string sAttach, 
+			CBaseEntity* parent, Vector pos, QAngle angle, std::string sAttach,
 			std::string sSprite, float scale, int rendermode, float flDurationTime)
 		{
 			CBaseEntity* entity = sm::sdktools::CreateEntityByName("env_sprite");
@@ -939,7 +940,7 @@ namespace vec
 			if (entity)
 			{
 				sm::sdktools::DispatchKeyValue<Vector>(entity, "origin", pos);
-				sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", ang);
+				sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", Vector(angle.x, angle.y, angle.z));
 				sm::sdktools::DispatchKeyValue<const char*>(entity, "model", sSprite.c_str());
 				sm::sdktools::DispatchKeyValue<float>(entity, "scale", scale);
 				sm::sdktools::DispatchKeyValue<int>(entity, "rendermode", rendermode);
@@ -1021,7 +1022,7 @@ namespace vec
 		 * @return                  The entity index.
 		 **/
 		inline CBaseEntity* CreateTesla(
-			CBaseEntity* parent,	Vector pos,			Vector ang,				std::string attach,			float radius, 
+			CBaseEntity* parent,	Vector pos,			QAngle angle,			std::string attach,			float radius,
 			std::string sSound,		int countMin,		int countMax,			std::string sTextureName,	Color color,
 			float ThickMin,			float ThickMax,		float LifeMin,			float LifeMax,				float flIntervalMin, 
 			float flIntervalMax,	float flDurationTime
@@ -1033,7 +1034,7 @@ namespace vec
 			{
 				// Dispatch main values of the entity
 				sm::sdktools::DispatchKeyValue<Vector>(entity, "origin", pos);
-				sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", ang);
+				sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", Vector(angle.x, angle.y, angle.z));
 				sm::sdktools::DispatchKeyValue<float>(entity, "m_flRadius", radius);
 				sm::sdktools::DispatchKeyValue<const char*>(entity, "m_SoundName", sSound.c_str());
 				sm::sdktools::DispatchKeyValue<int>(entity, "beamcount_min", countMin);
@@ -1097,7 +1098,7 @@ namespace vec
 		 **/
 		inline CBaseEntity* CreateShooter(
 		CBaseEntity* parent,		std::string sAttach,	int iRender,		int iSound,		int iSkin, 
-		std::string sTextureName,	Vector vAngle,			Vector vGibAngle,	float flGibs,	float flDelay,
+		std::string sTextureName,	QAngle vAngle,			QAngle vGibAngle,	float flGibs,	float flDelay,
 		float flVelocity,			float flVariance,		float flLife,		float flDurationTime
 		)
 		{
@@ -1108,8 +1109,8 @@ namespace vec
 			if (entity)
 			{
 				//sm::sdktools::DispatchKeyValue<Vector>(entity, "origin", vPosition);
-				sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", vAngle);
-				sm::sdktools::DispatchKeyValue<Vector>(entity, "gibangles", vGibAngle);
+				sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", Vector(vAngle.x, vAngle.y, vAngle.z));
+				sm::sdktools::DispatchKeyValue<Vector>(entity, "gibangles", Vector(vGibAngle.x, vGibAngle.y, vGibAngle.z));
 				sm::sdktools::DispatchKeyValue<int>(entity, "rendermode", iRender);
 				//std::string ColorBuffer = std::string() + std::to_string(color.r()) + " " + std::to_string(color.g()) + " " + std::to_string(color.b());
 				//sm::sdktools::DispatchKeyValue<const char*>(entity, "rendercolor", ColorBuffer);
