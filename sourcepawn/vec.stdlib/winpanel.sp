@@ -121,7 +121,7 @@ methodmap WinPanel < Event
     }
 }
 
-inline void ConstructWinPanel(int client, int holdtime, const char[] msg, any ...)
+inline void CreateWinPanelText(int client, int holdtime, const char[] msg, any ...)
 {
     char buffer[256];
     VFormat(buffer, sizeof(buffer), msg, 4);
@@ -134,6 +134,27 @@ inline void ConstructWinPanel(int client, int holdtime, const char[] msg, any ..
     
     delete msgHandle[client];
     msgHandle[client] = CreateTimer(float(panel.timer_time), EraseExistingMessage, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+}
+
+inline void CreateWinPanelTextAll(int holdtime, const char[] msg, any ...)
+{
+    char buffer[256];
+    VFormat(buffer, sizeof(buffer), msg, 3);
+
+    WinPanel panel = new WinPanel();
+    panel.Init();
+    panel.timer_time = holdtime;
+    panel.DisplayAll(msg);
+    panel.Destroy();
+
+    for (int i = 0; i < MaxClients; i++)
+    {
+        if (IsPlayerExist(i, false))
+        {
+            delete msgHandle[i];
+            msgHandle[i] = CreateTimer(float(panel.timer_time), EraseExistingMessage, GetClientUserId(i), TIMER_FLAG_NO_MAPCHANGE);
+        }
+    }
 }
 
 void WinPanelOnUnLoad()
@@ -153,15 +174,14 @@ public Action EraseExistingMessage(Handle timer, int userid)
 {
     int client = GetClientOfUserId(userid);
 
-    msgHandle[client] = null;
-
     if (client)
     {
         WinPanel panel = new WinPanel();
         panel.Init();
         panel.Display(client, "");
         panel.Destroy();
-        delete panel;
     }
+
+    msgHandle[client] = null;
     return Plugin_Stop;
 }
