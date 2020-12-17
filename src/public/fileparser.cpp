@@ -164,7 +164,9 @@ namespace vec
 				smutils->LogError(myself, "[fileparser::PrecacheResources] The first occurence should not > 4 (sizeof(.mdl)==4).\nFile path: \"%s\"", path.c_str());
 			}
 
-			std::string resources = path.replace(path.begin() + first_occurence, path.end(), "");
+			path.erase(path.begin() + first_occurence, path.end());
+
+			std::string resources = path;
 
 			for (auto& i : suffix)
 			{
@@ -187,7 +189,8 @@ namespace vec
 			}
 			
 			std::string resource = path;
-			std::string local_cache = resource.replace(resource.begin() + first_occurence, resource.end(), "") + "_sounds.txt";
+			resource.erase(resource.begin() + first_occurence, resource.end());
+			std::string local_cache = resource + "_sounds.txt";
 
 			bool exist = sm::filesystem::FileExists(local_cache.c_str());
 
@@ -244,7 +247,7 @@ namespace vec
 
 				while (std::getline(local_fs, lines))
 				{
-					if (lines.rfind("//") != std::string::npos) lines.replace(lines.begin() + lines.rfind("//"), lines.end(), "");
+					if (lines.rfind("//") != std::string::npos) lines.erase(lines.begin() + lines.rfind("//"), lines.end());
 					std::remove_if(lines.begin(), lines.end(), isspace);
 
 					if (!lines.size()) continue;
@@ -259,6 +262,87 @@ namespace vec
 
 		bool PrecacheMaterials(std::string path)
 		{
+			std::size_t first_occurence = path.rfind('.');
+			if (path.size() - first_occurence > 4)
+			{
+				smutils->LogError(myself, "[fileparser::PrecacheEffects] The first occurence should not > 4, because it's vmt's suffix size.\nFile path: \"%s\"", path.c_str());
+				return false;
+			}
+
+			std::string resource = path;
+			resource.erase(resource.begin() + first_occurence, resource.end());
+			std::string local_cache = resource + "_materials.txt";
+
+			bool exist = sm::filesystem::FileExists(local_cache.c_str());
+
+			if (!exist)
+			{
+				sm::SystemFile* file = sm::SystemFile::Open(path.c_str(), "rb");
+				std::ofstream local_fs(local_cache, std::ofstream::app);
+
+				if (!file)
+				{
+					local_fs.close();
+					sm::filesystem::DeleteFile(local_cache.c_str());
+					smutils->LogError(myself, "Unable to find the file: \"%s\"", path.c_str());
+					return false;
+				}
+
+				char sMaterial[256] = {}; int32_t iNumMat = 0; int8_t iChar = 0;
+
+				file->Seek(204, SEEK_SET);
+				file->Read(&iNumMat, sizeof(iNumMat));
+				file->Seek(0, SEEK_END);
+
+				do
+				{
+					file->Seek(2, SEEK_CUR);
+					file->Read(&iChar, sizeof(iChar));
+				} while (!iChar);
+
+				file->Seek(1, SEEK_CUR);
+
+				do
+				{
+					file->Seek(2, SEEK_CUR);
+					file->Read(&iChar, sizeof(iChar));
+				} while (iChar);
+
+				int iPosIndex = file->Tell();
+				sm::ReadFileString(file, sMaterial, sizeof(sMaterial));
+				file->Seek(iPosIndex, SEEK_SET);
+				file->Seek(-1, SEEK_CUR);
+
+				std::vector<std::string> hList;
+
+				char sTemp[256] = {};
+				while (file->Tell() > 1 && hList.size() < iNumMat)
+				{
+					do
+					{
+						file->Seek(-2, SEEK_CUR);
+						file->Read(&iChar, sizeof(iChar));
+					} while (iChar);
+
+					iPosIndex = file->Tell();
+					sm::ReadFileString(file, sTemp, sizeof(sTemp));
+					file->Seek(iPosIndex, SEEK_SET);
+					file->Seek(-1, SEEK_CUR);
+					
+					std::string sMaterialPath(sTemp);
+					if (!sMaterialPath.size()) continue;
+
+					if (sMaterialPath.rfind('.'))
+					{
+						sMaterialPath = "materials\\" + sMaterialPath;
+					}
+				}
+			}
+			else
+			{
+
+			}
+
 			return bool();
 		}
 		
@@ -270,8 +354,10 @@ namespace vec
 				smutils->LogError(myself, "[fileparser::PrecacheEffects] The first occurence should not > 4, because it's vmt's suffix size.\nFile path: \"%s\"", path.c_str());
 				return false;
 			}
+
 			std::string resource = path;
-			std::string local_cache = resource.replace(resource.begin() + first_occurence, resource.end(), "") + "_particles.txt";
+			resource.erase(resource.begin() + first_occurence, resource.end());
+			std::string local_cache = resource + "_particles.txt";
 
 			bool exist = sm::filesystem::FileExists(local_cache.c_str());
 
@@ -304,7 +390,7 @@ namespace vec
 					file->Read(&iChar, sizeof(iChar));
 				} while (iChar);
 
-				char temp[256];
+				char temp[256] = {};
 				while (!file->EndOfFile())
 				{
 					sm::ReadFileString(file, temp, sizeof(temp));
@@ -319,6 +405,7 @@ namespace vec
 				}
 
 				local_fs.close();
+				file->Close();
 				delete file;
 			}
 			else
@@ -328,7 +415,7 @@ namespace vec
 
 				while (std::getline(local_fs, lines))
 				{
-					if (lines.rfind("//") != std::string::npos) lines.replace(lines.begin() + lines.rfind("//"), lines.end(), "");
+					if (lines.rfind("//") != std::string::npos) lines.erase(lines.begin() + lines.rfind("//"), lines.end());
 					std::remove_if(lines.begin(), lines.end(), isspace);
 
 					if (!lines.size()) continue;
@@ -342,8 +429,9 @@ namespace vec
 
 		bool PrecacheTextures(std::string modelname, std::string path)
 		{
-			std::size_t iSlash = std::max<std::size_t>(modelname.rfind('/'), modelname.rfind('\\'));
-			if (!iSlash) iSlash++;
+			int iSlash = std::max<int>(modelname.rfind('/'), modelname.rfind('\\'));
+			if (iSlash == -1) iSlash = 0; else iSlash++;
+			modelname.erase(modelname.begin(), modelname.begin() + iSlash);
 
 			std::string sTexture = path;
 
@@ -353,38 +441,79 @@ namespace vec
 				{
 					return true;
 				}
-
-				smutils->LogError(myself, "[fileparser::PrecacheTextures] Invalid material path. File not found: \"%s\" in \"%s\"", sTexture.c_str(), modelname.at(iSlash));
+				
+				smutils->LogError(myself, "[fileparser::PrecacheTextures] Invalid material path. File not found: \"%s\" in \"%s\"", sTexture.c_str(), modelname);
 				return false;
 			}
 
-			sm::sdktools::AddFileToDownloadsTable(sTexture.c_str());
+			//sm::sdktools::AddFileToDownloadsTable(sTexture.c_str());
 
-			static char sTypes[4][32] = { "$baseTexture", "$bumpmap", "$lightwarptexture", "$REFRACTTINTtexture" };
-			bool bFound[sizeof(sTypes)] = { false };
+			std::vector<std::string> sTypes = { "$baseTexture", "$bumpmap", "$lightwarptexture", "$REFRACTTINTtexture" };
+
+			std::vector<bool> bFound(sTypes.size(), false);
 			int iShift = 0;
 
-			sm::SystemFile* file = sm::SystemFile::Open(sTexture.c_str(), "rt");
-			if (!file)
+			char temp[256];
+			g_pSM->BuildPath(Path_Game, temp, sizeof(temp), "%s", sTexture.c_str());
+			std::ifstream in(temp);
+
+			if (in.bad())
 			{
-				smutils->LogError(myself, "[fileparser::PrecacheTextures] Error opening file: \"%s\"", sTexture.c_str());
+				smutils->LogError(myself, "[fileparser::PrecacheTexture] Error opening file: %s", temp);
 				return false;
 			}
 
-			std::ifstream ifs(sTexture);
-			while (std::getline(ifs, sTexture))
-			{
-				if (sTexture.rfind("//") != std::string::npos) sTexture.replace(sTexture.begin() + sTexture.rfind("//"), sTexture.end(), "");
-				
-				int iSize = sizeof(sTypes);
-				for (int x = 0; x < iSize; x++)
-				{
-					// avoid reoccurence
-					if (bFound[x]) continue;
+			int cnt = 0;
 
-					// TODO here.
+			while (std::getline(in, sTexture))
+			{
+				if (sTexture.find("//") != std::string::npos) sTexture.erase(sTexture.begin() + sTexture.rfind("//"), sTexture.end());
+				for (std::size_t i = 0; i < sTypes.size(); i++)
+				{
+					if (bFound[i]) continue;
+					
+					if ((iShift = sm::StrContains(sTexture, sTypes[i])) != -1)
+					{
+						iShift += sTypes[i].size() + 1;
+
+						std::size_t iQuotes = std::count(sTexture.begin() + iShift, sTexture.end(), '"');
+						if (iQuotes != 2)
+						{
+							smutils->LogError(myself, "Error with parsing \"%s\" in file: \"%s\"", sTypes[i].c_str(), path.c_str());
+							return false;
+						}
+						else
+						{
+							bFound[i] = true;
+
+							sTexture.replace(sTexture.begin(), sTexture.begin() + iShift, "");
+
+							sTexture.erase(std::remove(sTexture.begin(), sTexture.end(), '\"'), sTexture.end());
+
+							sTexture.erase(std::remove_if(sTexture.begin(), sTexture.end(), isspace), sTexture.end());
+
+							if (!sTexture.size()) continue;
+
+							sTexture = "materials\\" + sTexture + ".vtf";
+							std::replace(sTexture.begin(), sTexture.end(), '/', '\\');
+
+							if (sm::filesystem::FileExists(sTexture.c_str()))
+							{
+
+								sm::sdktools::AddFileToDownloadsTable(sTexture.c_str());
+							}
+							else
+							{
+								if (!sm::filesystem::FileExists(sTexture.c_str()))
+								{
+									smutils->LogError(myself, "[fileparser::PrecacheTextures] Invalid texture path. File not found: \"%s\" in \"%s\"", sTexture.c_str(), modelname);
+								}
+							}
+						}
+					}
 				}
 			}
+
 			return true;
 		}
 
