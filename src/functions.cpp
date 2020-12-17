@@ -5,6 +5,7 @@
 #include "public/utils.h"
 #include "public/playermgr.h"
 #include "public/hashlib.h"
+#include "public/fileparser.h"
 namespace vec
 {
 	namespace functions
@@ -34,6 +35,7 @@ namespace vec
 			vec::utils::SDK_OnLoad(error, maxlen, late);
 			vec::playermgr::SDK_OnLoad(error, maxlen, late);
 			vec::hashlib::SDK_OnLoad(error, maxlen, late);
+			vec::fileparser::SDK_OnLoad(error, maxlen, late);
 			return true;
 		}
 	}

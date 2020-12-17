@@ -247,14 +247,18 @@ namespace vec
 				float radius = sp_ctof(params[5]);
 				std::string sound;
 				sm::interop::cell2native(pContext, params[6], sound);
-				int countMin = params[7]; int countMax = params[8];
+				int countMin = params[7]; 
+				int countMax = params[8];
 				std::string textureName;
 				sm::interop::cell2native(pContext, params[9], textureName);
 				Color color;
 				sm::interop::cell2native(pContext, params[10], color);
-				float thickMin = sp_ctof(params[11]); float thickMax = sp_ctof(params[12]);
-				float lifeMin = sp_ctof(params[13]); float lifeMax = sp_ctof(params[14]);
-				float intervalMin = sp_ctof(params[15]); float intervalMax = sp_ctof(params[16]);
+				float thickMin = sp_ctof(params[11]);
+				float thickMax = sp_ctof(params[12]);
+				float lifeMin = sp_ctof(params[13]);
+				float lifeMax = sp_ctof(params[14]);
+				float intervalMin = sp_ctof(params[15]);
+				float intervalMax = sp_ctof(params[16]);
 				float durationTime = sp_ctof(params[17]);
 				CBaseEntity* Ret = vec::utils::CreateTesla(parent, pos, ang,
 					attach, radius, sound, countMin, countMax, textureName, color, thickMin, thickMax,
@@ -284,39 +288,48 @@ namespace vec
 				return sm::ent_cast<cell_t>(Ret);
 			}
 			static cell_t CreateBeam(IPluginContext* pContext, const cell_t* params) {
-				Vector startPos, endPos;
-				sm::interop::cell2native(pContext, params[1], startPos);
-				sm::interop::cell2native(pContext, params[2], endPos);
-				int dmg = params[3];
-				int frame = params[4];
-				float width = sp_ctof(params[5]);
-				int renderFX = params[6];
-				int type = params[7];
-				int rate = params[8];
-				std::string decalName;
-				sm::interop::cell2native(pContext, params[9], decalName);
-				int scroll = params[10];
-				float scale = sp_ctof(params[11]);
-				std::string textureName;
-				sm::interop::cell2native(pContext, params[12], textureName);
-				std::string life; // yes, here is string, idk why, but param is so.
-				sm::interop::cell2native(pContext, params[13], life);
-				std::string strike; // same as life param, as i have described
-				sm::interop::cell2native(pContext, params[14], strike);
-				int flags = params[15];
-				float amplitude = sp_ctof(params[16]);
-				int radius = params[17];
-				int renderAMT = params[18];
+				/*
+			inline CBaseEntity* CreateBeam(
+			Vector vStartPosition, Vector vEndPosition, std::string sDamage, std::string sFrame, float flWidth,
+			std::string sRenderFX, std::string sType, std::string sRate, std::string sDecalName, std::string sScroll, std::string sScale,
+			std::string sTextureName, std::string sLife, std::string sStrike, int iFlags, std::string sAmplitude, std::string sRadius,
+			std::string sRenderAMT, Color color, float flDelayTime, float flDurationTime, std::string sName) 
+				*/
+				Vector vStartPosition, vEndPosition;
+				sm::interop::cell2native(pContext, params[1], vStartPosition);
+				sm::interop::cell2native(pContext, params[2], vEndPosition);
+				std::string sDamage, sFrame;
+				sm::interop::cell2native(pContext, params[3], sDamage);
+				sm::interop::cell2native(pContext, params[4], sFrame);
+				float flWidth = sp_ctof(params[5]);
+				std::string sRenderFX, sType, sRate, sDecalName, sScroll, sScale, sTextureName, sLife, sStrike;
+				sm::interop::cell2native(pContext, params[5], sRenderFX);
+				sm::interop::cell2native(pContext, params[6], sType);
+				sm::interop::cell2native(pContext, params[7], sRate);
+				sm::interop::cell2native(pContext, params[8], sDecalName);
+				sm::interop::cell2native(pContext, params[9], sScroll);
+				sm::interop::cell2native(pContext, params[10], sScale);
+				sm::interop::cell2native(pContext, params[11], sTextureName);
+				sm::interop::cell2native(pContext, params[12], sLife);
+				sm::interop::cell2native(pContext, params[13], sStrike);
+				int iFlags = params[14];
+				std::string sAmplitude, sRadius, sRenderAMT;
+				sm::interop::cell2native(pContext, params[15], sAmplitude);
+				sm::interop::cell2native(pContext, params[16], sRadius);
+				sm::interop::cell2native(pContext, params[17], sRenderAMT);
 				Color color;
-				sm::interop::cell2native(pContext, params[19], color);
-				float flDelayTime = sp_ctof(params[20]);
-				float flDurationTime = sp_ctof(params[21]);
+				sm::interop::cell2native(pContext, params[18], color);
+				float flDelayTime = sp_ctof(params[19]);
+				float flDurationTime = sp_ctof(params[20]);
 				std::string sName;
-				sm::interop::cell2native(pContext, params[22], sName);
-				CBaseEntity* Ret = vec::utils::CreateBeam(startPos, endPos, dmg, frame, width, renderFX, type, rate,
-					decalName, scroll, scale, textureName, life, strike, flags, amplitude, radius, renderAMT, color,
-					flDelayTime, flDurationTime, sName);
-				return sm::ent_cast<cell_t>(Ret);
+				sm::interop::cell2native(pContext, params[21], sName);
+				CBaseEntity* Ret = vec::utils::CreateBeam(
+					vStartPosition, vEndPosition, sDamage, sFrame, flWidth,
+					sRenderFX, sType, sRate, sDecalName, sScroll, sScale,
+					sTextureName, sLife, sStrike, iFlags, sAmplitude, sRadius,
+					sRenderAMT, color, flDelayTime, flDurationTime, sName
+				);
+				return 0;
 			}
 			static cell_t CreateLight(IPluginContext* pContext, const cell_t* params) {
 				CBaseEntity* parent = sm::ent_cast<CBaseEntity*>(params[1]);
@@ -1035,19 +1048,19 @@ namespace vec
 				// Dispatch main values of the entity
 				sm::sdktools::DispatchKeyValue<Vector>(entity, "origin", pos);
 				sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", Vector(angle.x, angle.y, angle.z));
-				sm::sdktools::DispatchKeyValue<float>(entity, "m_flRadius", radius);
+				sm::sdktools::DispatchKeyValue<int>(entity, "m_flRadius", std::round(radius));
 				sm::sdktools::DispatchKeyValue<const char*>(entity, "m_SoundName", sSound.c_str());
 				sm::sdktools::DispatchKeyValue<int>(entity, "beamcount_min", countMin);
 				sm::sdktools::DispatchKeyValue<int>(entity, "beamcount_max", countMax);
 				sm::sdktools::DispatchKeyValue<const char*>(entity, "texture", sTextureName.c_str());
 				std::string ColorBuffer = std::string() + std::to_string(color.r()) + " " + std::to_string(color.g()) + " " + std::to_string(color.b());
 				sm::sdktools::DispatchKeyValue<const char*>(entity, "m_Color", ColorBuffer.c_str());
-				sm::sdktools::DispatchKeyValue<int>(entity, "thick_min", ThickMin);
-				sm::sdktools::DispatchKeyValue<int>(entity, "thick_max", ThickMax);
-				sm::sdktools::DispatchKeyValue<int>(entity, "lifetime_min", LifeMin);
-				sm::sdktools::DispatchKeyValue<int>(entity, "lifetime_max", LifeMax);
-				sm::sdktools::DispatchKeyValue<float>(entity, "interval_min", flIntervalMin);
-				sm::sdktools::DispatchKeyValue<float>(entity, "interval_max", flIntervalMax);
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "thick_min", std::to_string(ThickMin).c_str());
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "thick_max", std::to_string(ThickMax).c_str());
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "lifetime_min", std::to_string(LifeMin).c_str());
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "lifetime_max", std::to_string(LifeMax).c_str());
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "interval_min", std::to_string(flIntervalMin).c_str());
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "interval_max", std::to_string(flIntervalMax).c_str());
 
 				// Spawn the entity into the world
 				sm::sdktools::DispatchSpawn(entity);
@@ -1175,63 +1188,63 @@ namespace vec
 		 * @return                  The entity index.
 		 **/
 		inline CBaseEntity* CreateBeam(
-			Vector vStartPosition, Vector vEndPosition, int iDamage, int iFrame, float flWidth, int iRenderFX, int iType,
-			int iRate, std::string DecalName, int iScroll, float flScale, std::string TextureName, std::string sLife, std::string sStrike,
-			int iFlags, float flAmplitude, int iRadius, int iRenderAMT, Color color, float flDelayTime, float flDurationTime, std::string sName
-		)
+			Vector vStartPosition, Vector vEndPosition, std::string sDamage, std::string sFrame, float flWidth,
+			std::string sRenderFX, std::string sType, std::string sRate, std::string sDecalName, std::string sScroll, std::string sScale,
+			std::string sTextureName, std::string sLife, std::string sStrike, int iFlags, std::string sAmplitude, std::string sRadius,
+			std::string sRenderAMT, Color color, float flDelayTime, float flDurationTime, std::string sName) 
 		{
 			CBaseEntity* entity = sm::sdktools::CreateEntityByName("env_beam");
 			if (entity)
 			{
-				std::string classNameBuffer = sName + std::to_string(sm::ent_cast<int>(entity));
-
+				std::string sClassname = sName + std::to_string(sm::ent_cast<int>(entity));
 				sm::sdktools::DispatchKeyValue<Vector>(entity, "origin", vStartPosition);
-				sm::sdktools::DispatchKeyValue<const char*>(entity, "targetname", classNameBuffer.c_str());
-				sm::sdktools::DispatchKeyValue<int>(entity, "damage", iDamage);
-				sm::sdktools::DispatchKeyValue<int>(entity, "framestart", iFrame);
-				sm::sdktools::DispatchKeyValue<float>(entity, "BoltWidth", flWidth);
-				sm::sdktools::DispatchKeyValue<int>(entity, "renderfx", iRenderFX);
-				sm::sdktools::DispatchKeyValue<int>(entity, "TouchType", iType);
-				sm::sdktools::DispatchKeyValue<int>(entity, "framerate", iRate);
-				sm::sdktools::DispatchKeyValue<const char*>(entity, "decalname", DecalName.c_str());
-				sm::sdktools::DispatchKeyValue<int>(entity, "TextureScroll", iScroll);
-				sm::sdktools::DispatchKeyValue<float>(entity, "HDRColorScale", flScale);
-				sm::sdktools::DispatchKeyValue<const char*>(entity, "texture", TextureName.c_str());
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "targetname", sClassname.c_str());
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "damage", sDamage.c_str());
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "framestart", sFrame.c_str());
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "BoltWidth", std::to_string(flWidth).c_str());
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "renderfx", sRenderFX.c_str());
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "TouchType", sType.c_str());
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "framerate", sRate.c_str());
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "decalname", sDecalName.c_str());
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "TextureScroll", sScroll.c_str());
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "HDRColorScale", sScale.c_str());
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "texture", sTextureName.c_str());
 				sm::sdktools::DispatchKeyValue<const char*>(entity, "life", sLife.c_str());
-				sm::sdktools::DispatchKeyValue<const char*>(entity, "StrikeTime", sStrike.c_str());
-				sm::sdktools::DispatchKeyValue<const char*>(entity, "LightningStart", classNameBuffer.c_str());
-				sm::sdktools::DispatchKeyValue<int>(entity, "spawnflags", iFlags);
-				sm::sdktools::DispatchKeyValue<float>(entity, "NoiseAmplitude", flAmplitude);
-				sm::sdktools::DispatchKeyValue<int>(entity, "Radius", iRadius);
-				sm::sdktools::DispatchKeyValue<int>(entity, "renderamt", iRenderAMT);
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "StrikeTime", sStrike.c_str()); 
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "LightningStart", sClassname.c_str());
+				sm::sdktools::DispatchKeyValue<int>(entity, "spawnflags", iFlags); 
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "NoiseAmplitude", sAmplitude.c_str()); 
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "Radius", sRadius.c_str());
+				sm::sdktools::DispatchKeyValue<const char*>(entity, "renderamt", sRenderAMT.c_str());
 				std::string ColorBuffer = std::string() + std::to_string(color.r()) + " " + std::to_string(color.g()) + " " + std::to_string(color.b());
 				sm::sdktools::DispatchKeyValue<const char*>(entity, "rendercolor", ColorBuffer.c_str());
-				
+
+				// Spawn the entity into the world
 				sm::sdktools::DispatchSpawn(entity);
-				
+
+				// Activate the entity
 				sm::sdktools::AcceptEntityInput(entity, "TurnOff");
 				sm::sdktools::AcceptEntityInput(entity, "TurnOn");
-				
-				sm::sdktools::SetEntityModel(entity, TextureName.c_str());
-				
-				sm::SetEntProp<float>(entity, sm::Prop_Data, "m_flWidth", flWidth);
-				sm::SetEntProp<float>(entity, sm::Prop_Data, "m_flEndWidth", flWidth);
+
+				// Sets model
+				sm::sdktools::SetEntityModel(entity, sTextureName.c_str());
+
+				sm::SetEntProp<float>(entity, sm::Prop_Data, "m_fWidth", flWidth);
+				sm::SetEntProp<float>(entity, sm::Prop_Data, "m_fEndWidth", flWidth);
 				sm::SetEntProp<Vector>(entity, sm::Prop_Data, "m_vecEndPos", vEndPosition);
 
 				if (flDurationTime > 0.f) RemoveEntity(entity, flDurationTime);
 
 				if (flDelayTime > 0.f)
 				{
-					std::string VariantBuffer = "OnUser2 !self:TurnOff::" + std::to_string(flDelayTime - 0.001) + ":1";
-
-					sm::sdktools::SetVariantString(VariantBuffer.c_str());
+					std::string timeBuffer = "OnUser2 !self:TurnOff::" + std::to_string(flDelayTime - 0.001) + ":1";
+					sm::sdktools::SetVariantString(timeBuffer.c_str());
 					sm::sdktools::AcceptEntityInput(entity, "AddOutput");
 
-					VariantBuffer = "OnUser2 !self:TurnOn::" + std::to_string(flDelayTime) + ":1";
-					sm::sdktools::SetVariantString(VariantBuffer.c_str());
+					timeBuffer.clear();
+					timeBuffer = "OnUser3 !self:TurnOn::" + std::to_string(flDelayTime) + ":1";
+					sm::sdktools::SetVariantString(timeBuffer.c_str());
 					sm::sdktools::AcceptEntityInput(entity, "AddOutput");
-					
-					// Execute touch hook tweak
 					sm::sdktools::SetVariantString("OnTouchedByEntity !self:FireUser2::0.0:-1");
 					sm::sdktools::AcceptEntityInput(entity, "AddOutput");
 					sm::sdktools::SetVariantString("OnTouchedByEntity !self:FireUser3::0.0:-1");
@@ -1240,6 +1253,8 @@ namespace vec
 			}
 			return entity;
 		}
+
+		
 		/**
 		 * @brief Create a light dynamic entity.
 		 *

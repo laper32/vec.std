@@ -87,10 +87,10 @@ namespace vec
 			float flVelocity, float flVariance, float flLife, float flDurationTime
 		);
 		inline CBaseEntity* CreateBeam(
-			Vector vStartPosition, Vector vEndPosition, int iDamage, int iFrame, float flWidth, int iRenderFX, int iType,
-			int iRate, std::string DecalName, int iScroll, float flScale, std::string TextureName, std::string sLife, std::string sStrike,
-			int iFlags, float flAmplitude, int iRadius, int iRenderAMT, Color color, float flDelayTime, float flDurationTime, std::string sName
-		);
+			Vector vStartPosition, Vector vEndPosition, std::string sDamage, std::string sFrame, float flWidth,
+			std::string sRenderFX, std::string sType, std::string sRate, std::string sDecalName, std::string sScroll, std::string sScale,
+			std::string sTextureName, std::string sLife, std::string sStrike, int iFlags, std::string sAmplitude, std::string sRadius,
+			std::string sRenderAMT, Color color, float flDelayTime, float flDurationTime, std::string sName);
 		inline CBaseEntity* CreateLight(
 			CBaseEntity* parent,	Vector vPosition,	std::string attach, int iInnerCone, int iCone,			int iBrightness, 
 			int iPitch,				int iStyle,			int iFlags,			Color color,	float flDistance,	float flRadius, 

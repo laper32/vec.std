@@ -15,7 +15,6 @@ target_sources("vec.std.public" INTERFACE
 	${CMAKE_CURRENT_LIST_DIR}/hashlib.cpp
 	${CMAKE_CURRENT_LIST_DIR}/playermgr.h
 	${CMAKE_CURRENT_LIST_DIR}/playermgr.cpp
-	${CMAKE_CURRENT_LIST_DIR}/paramparser.cpp
 	${CMAKE_CURRENT_LIST_DIR}/fileparser.h
 	${CMAKE_CURRENT_LIST_DIR}/fileparser.cpp
 )
