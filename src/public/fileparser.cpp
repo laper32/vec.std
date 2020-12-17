@@ -14,7 +14,6 @@ namespace vec
 			{"fileparser_PrecacheParticle", API::PrecacheParticle},
 			{"fileparser_PrecacheWeapon", API::PrecacheWeapon},
 			{"fileparser_PrecacheSounds", API::PrecacheSounds},
-			{"fileparser_PrecacheResources", API::PrecacheResources},
 			{"fileparser_PrecacheModelSounds", API::PrecacheModelSounds},
 			{"fileparser_PrecacheMaterials", API::PrecacheMaterials},
 			{"fileparser_PrecacheEffects", API::PrecacheEffects},
@@ -26,43 +25,62 @@ namespace vec
 		{
 			static cell_t PrecacheModel(IPluginContext* pContext, const cell_t* params)
 			{
-				return cell_t();
+				std::string path;
+				sm::interop::cell2native(pContext, params[1], path);
+				vec::fileparser::PrecacheModel(path);
+				return true;
 			}
 			static cell_t PrecacheParticle(IPluginContext* pContext, const cell_t* params)
 			{
-				return cell_t();
+				std::string path;
+				sm::interop::cell2native(pContext, params[1], path);
+				vec::fileparser::PrecacheParticle(path);
+				return true;
 			}
 			static cell_t PrecacheWeapon(IPluginContext* pContext, const cell_t* params)
 			{
-				return cell_t();
+				std::string path;
+				sm::interop::cell2native(pContext, params[1], path);
+				vec::fileparser::PrecacheWeapon(path);
+				return true;
 			}
 			static cell_t PrecacheSounds(IPluginContext* pContext, const cell_t* params)
 			{
-				return cell_t();
+				std::string path;
+				sm::interop::cell2native(pContext, params[1], path);
+				vec::fileparser::PrecacheSounds(path);
+				return true;
 			}
 			// 下面的都是功能测试, 一旦完成将会被删除.
-			static cell_t PrecacheResources(IPluginContext* pContext, const cell_t* params)
+			static cell_t PrecacheModelSounds(IPluginContext* pContext, const cell_t* params)
 			{
 				std::string path;
 				sm::interop::cell2native(pContext, params[1], path);
-				vec::fileparser::PrecacheResources(path);
-				return 0;
-			}
-			static cell_t PrecacheModelSounds(IPluginContext* pContext, const cell_t* params)
-			{
-				return cell_t();
+				vec::fileparser::PrecacheModelSounds(path);
+				return true;
 			}
 			static cell_t PrecacheMaterials(IPluginContext* pContext, const cell_t* params)
 			{
-				return cell_t();
+				std::string path;
+				sm::interop::cell2native(pContext, params[1], path);
+				vec::fileparser::PrecacheMaterials(path);
+				return true;
 			}
 			static cell_t PrecacheEffects(IPluginContext* pContext, const cell_t* params)
 			{
-				return cell_t();
+				std::string path;
+				sm::interop::cell2native(pContext, params[1], path);
+				vec::fileparser::PrecacheEffects(path);
+				return true;
 			}
 			static cell_t PrecacheTextures(IPluginContext* pContext, const cell_t* params)
 			{
-				return cell_t();
+				//bool PrecacheTextures(std::string modelname, std::string path)
+				std::string modelname, path;
+				sm::interop::cell2native(pContext, params[1], modelname);
+				sm::interop::cell2native(pContext, params[2], path);
+				vec::fileparser::PrecacheTextures(modelname, path);
+				return true;
 			}
 		}
 		
@@ -153,8 +171,7 @@ namespace vec
 				std::string ret = resources + i;
 				if (sm::filesystem::FileExists(ret.c_str()))
 				{
-					g_SMAPI->ConPrintf("AddFileToDownloadsTable: %s", ret.c_str());
-					//sm::sdktools::AddFileToDownloadsTable(ret.c_str());
+					sm::sdktools::AddFileToDownloadsTable(ret.c_str());
 				}
 			}
 		}
