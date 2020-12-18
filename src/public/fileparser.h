@@ -17,7 +17,6 @@ namespace vec
 			static cell_t PrecacheModelSounds(IPluginContext*, const cell_t*);
 			static cell_t PrecacheMaterials(IPluginContext*, const cell_t*);
 			static cell_t PrecacheEffects(IPluginContext*, const cell_t*);
-			static cell_t PrecacheTextures(IPluginContext*, const cell_t*);
 		}
 
 		sp_nativeinfo_t g_FileParserNatives[];

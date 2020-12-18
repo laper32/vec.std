@@ -17,7 +17,6 @@ namespace vec
 			{"fileparser_PrecacheModelSounds", API::PrecacheModelSounds},
 			{"fileparser_PrecacheMaterials", API::PrecacheMaterials},
 			{"fileparser_PrecacheEffects", API::PrecacheEffects},
-			{"fileparser_PrecacheTextures", API::PrecacheTextures},
 			{nullptr, nullptr}
 		};
 
@@ -71,15 +70,6 @@ namespace vec
 				std::string path;
 				sm::interop::cell2native(pContext, params[1], path);
 				vec::fileparser::PrecacheEffects(path);
-				return true;
-			}
-			static cell_t PrecacheTextures(IPluginContext* pContext, const cell_t* params)
-			{
-				//bool PrecacheTextures(std::string modelname, std::string path)
-				std::string modelname, path;
-				sm::interop::cell2native(pContext, params[1], modelname);
-				sm::interop::cell2native(pContext, params[2], path);
-				vec::fileparser::PrecacheTextures(modelname, path);
 				return true;
 			}
 		}
@@ -260,7 +250,7 @@ namespace vec
 			return true;
 		}
 
-		bool PrecacheMaterials(std::string path)
+		inline bool PrecacheMaterials(std::string path)
 		{
 			std::size_t first_occurence = path.rfind('.');
 			if (path.size() - first_occurence > 4)
@@ -278,72 +268,46 @@ namespace vec
 			if (!exist)
 			{
 				sm::SystemFile* file = sm::SystemFile::Open(path.c_str(), "rb");
-				std::ofstream local_fs(local_cache, std::ofstream::app);
+
+				//char realpath_config[256] = {};
+				//g_pSM->BuildPath(Path_Game, realpath_config, sizeof(realpath_config), "%s", local_cache.c_str());
+				//std::ofstream local_fs(realpath_config, std::ofstream::app);
 
 				if (!file)
 				{
-					local_fs.close();
-					sm::filesystem::DeleteFile(local_cache.c_str());
+					//local_fs.close();
+					//sm::filesystem::DeleteFile(local_cache.c_str());
 					smutils->LogError(myself, "Unable to find the file: \"%s\"", path.c_str());
 					return false;
 				}
 
-				char sMaterial[256] = {}; int32_t iNumMat = 0; int8_t iChar = 0;
-
+				int iNumMat; 
 				file->Seek(204, SEEK_SET);
 				file->Read(&iNumMat, sizeof(iNumMat));
 				file->Seek(0, SEEK_END);
+				META_CONPRINTF("iNumMat: %d\n", iNumMat);
+
+				int8_t iChar;
 
 				do
 				{
-					file->Seek(2, SEEK_CUR);
+					file->Seek(-2, SEEK_CUR);
 					file->Read(&iChar, sizeof(iChar));
 				} while (!iChar);
+				META_CONPRINTF("Last iChar: %s", iChar);
 
-				file->Seek(1, SEEK_CUR);
+				file->Seek(-1, SEEK_CUR);
 
 				do
 				{
-					file->Seek(2, SEEK_CUR);
+					file->Seek(-2, SEEK_CUR);
 					file->Read(&iChar, sizeof(iChar));
 				} while (iChar);
 
-				int iPosIndex = file->Tell();
-				sm::ReadFileString(file, sMaterial, sizeof(sMaterial));
-				file->Seek(iPosIndex, SEEK_SET);
-				file->Seek(-1, SEEK_CUR);
-
-				std::vector<std::string> hList;
-
-				char sTemp[256] = {};
-				while (file->Tell() > 1 && hList.size() < iNumMat)
-				{
-					do
-					{
-						file->Seek(-2, SEEK_CUR);
-						file->Read(&iChar, sizeof(iChar));
-					} while (iChar);
-
-					iPosIndex = file->Tell();
-					sm::ReadFileString(file, sTemp, sizeof(sTemp));
-					file->Seek(iPosIndex, SEEK_SET);
-					file->Seek(-1, SEEK_CUR);
-					
-					std::string sMaterialPath(sTemp);
-					if (!sMaterialPath.size()) continue;
-
-					if (sMaterialPath.rfind('.'))
-					{
-						sMaterialPath = "materials\\" + sMaterialPath;
-					}
-				}
+				file->Close();
 			}
-			else
-			{
-
-			}
-
-			return bool();
+			
+			return true;
 		}
 		
 		bool PrecacheEffects(std::string path)
