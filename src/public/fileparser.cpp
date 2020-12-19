@@ -187,7 +187,10 @@ namespace vec
 			if (!exist)
 			{
 				sm::SystemFile* file = sm::SystemFile::Open(path.c_str(), "rb");
-				std::ofstream local_fs(local_cache, std::ofstream::app);
+
+				char cache_realpath[256];
+				g_pSM->BuildPath(Path_Game, cache_realpath, sizeof(cache_realpath), "%s", local_cache.c_str());
+				std::ofstream local_fs(cache_realpath, std::ofstream::app);
 
 				if (!file)
 				{
