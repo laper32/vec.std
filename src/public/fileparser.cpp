@@ -308,6 +308,42 @@ namespace vec
 				} while (iChar);
 
 				file->Close();
+
+				char sMaterials[256];
+				int iPosIndex = file->Tell();
+				sm::ReadFileString(file, sMaterials, sizeof(sMaterials));
+				file->Seek(iPosIndex, SEEK_SET);
+				file->Seek(-1, SEEK_CUR);
+
+				std::vector<std::string> hList;
+
+				char sTemp[256];
+				while (file->Tell() > 1 && hList.size() < iNumMat)
+				{
+					do
+					{
+						file->Seek(-2, SEEK_CUR);
+						file->Read(&iChar, sizeof(iChar));
+					} while (iChar);
+
+					iPosIndex = file->Tell();
+					sm::ReadFileString(file, sTemp, sizeof(sTemp));
+					file->Seek(iPosIndex, SEEK_SET);
+					file->Seek(-1, SEEK_CUR);
+
+					resource = std::string(sTemp);
+
+					if (!resource.size()) continue;
+
+					if (resource.rfind('\\'))
+					{
+
+					}
+					else
+					{
+
+					}
+				}
 			}
 			
 			return true;

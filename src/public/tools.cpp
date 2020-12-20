@@ -336,12 +336,14 @@ namespace vec
 			static cell_t GetMaxs(IPluginContext* pContext, const cell_t* params)
 			{
 				Vector maxs = vec::tools::GetMaxs(sm::ent_cast<CBaseEntity*>(params[1]));
-				cell_t* addr;
+				//inline int native2cell(IPluginContext* pContext, const Vector& in, cell_t out)
+				return sm::interop::native2cell(pContext, maxs, params[2]);
+				/*cell_t* addr;
 				pContext->LocalToPhysAddr(params[2], &addr);
 				addr[0] = sp_ftoc(maxs.x);
 				addr[1] = sp_ftoc(maxs.y);
 				addr[2] = sp_ftoc(maxs.z);
-				return 0;
+				return 0;*/
 			}
 			static cell_t GetMins(IPluginContext* pContext, const cell_t* params)
 			{
