@@ -5,6 +5,13 @@
 #include <stdexcept>
 #include <fstream>
 
+/*
+TODO
+1. 重写文件安全检查逻辑.
+2. 为变量设置正确的命名.
+3. 优化
+*/
+
 namespace vec
 {
 	namespace fileparser
@@ -16,7 +23,7 @@ namespace vec
 			{"fileparser_PrecacheSounds", API::PrecacheSounds},
 			{"fileparser_PrecacheModelSounds", API::PrecacheModelSounds},
 			{"fileparser_PrecacheMaterials", API::PrecacheMaterials},
-			{"fileparser_PrecacheEffects", API::PrecacheEffects},
+			//{"fileparser_PrecacheEffects", API::PrecacheEffects},
 			{nullptr, nullptr}
 		};
 
@@ -62,15 +69,13 @@ namespace vec
 			{
 				std::string path;
 				sm::interop::cell2native(pContext, params[1], path);
-				vec::fileparser::PrecacheMaterials(path);
-				return true;
+				return vec::fileparser::PrecacheMaterials(path);
 			}
 			static cell_t PrecacheEffects(IPluginContext* pContext, const cell_t* params)
 			{
 				std::string path;
 				sm::interop::cell2native(pContext, params[1], path);
-				vec::fileparser::PrecacheEffects(path);
-				return true;
+				return vec::fileparser::PrecacheEffects(path);
 			}
 		}
 		
@@ -253,104 +258,179 @@ namespace vec
 			return true;
 		}
 
-		inline bool PrecacheMaterials(std::string path)
+		inline bool PrecacheMaterials(std::string sFileName)
 		{
-			std::size_t first_occurence = path.rfind('.');
-			if (path.size() - first_occurence > 4)
+			int iFormat = 0; // to fix later.
+
+			std::size_t iFirstOccurence = sFileName.rfind('.');
+
+			if (sFileName.size() - iFirstOccurence > 4)
 			{
-				smutils->LogError(myself, "[fileparser::PrecacheEffects] The first occurence should not > 4, because it's vmt's suffix size.\nFile path: \"%s\"", path.c_str());
+				smutils->LogError(myself, "[fileparser::PrecacheEffects] The first occurence should not > 4, because it's vmt's suffix size.\nFile path: \"%s\"", sFileName.c_str());
 				return false;
 			}
 
-			std::string resource = path;
-			resource.erase(resource.begin() + first_occurence, resource.end());
-			std::string local_cache = resource + "_materials.txt";
+			std::string sPath = sFileName;
+			sPath.erase(sPath.begin() + iFirstOccurence, sPath.end());
 
-			bool exist = sm::filesystem::FileExists(local_cache.c_str());
+			sPath += "_materials.txt";
 
-			if (!exist)
+			char sRealLocalCache[256] = {};
+			g_pSM->BuildPath(Path_Game, sRealLocalCache, sizeof(sRealLocalCache), "%s", sPath.c_str());
+
+			bool bExist = sm::FileExists(sPath.c_str());
+
+			if (!bExist)
 			{
-				sm::SystemFile* file = sm::SystemFile::Open(path.c_str(), "rb");
+				sm::SystemFile* pFile = sm::SystemFile::Open(sFileName.c_str(), "rb");
 
-				//char realpath_config[256] = {};
-				//g_pSM->BuildPath(Path_Game, realpath_config, sizeof(realpath_config), "%s", local_cache.c_str());
-				//std::ofstream local_fs(realpath_config, std::ofstream::app);
+				char sRealLocalCache[256] = {};
+				g_pSM->BuildPath(Path_Game, sRealLocalCache, sizeof(sRealLocalCache), "%s", sPath.c_str());
+				std::ofstream local_fs(sRealLocalCache, std::ofstream::app);
 
-				if (!file)
+				if (!pFile)
 				{
-					//local_fs.close();
-					//sm::filesystem::DeleteFile(local_cache.c_str());
-					smutils->LogError(myself, "Unable to find the file: \"%s\"", path.c_str());
+					local_fs.close();
+					sm::DeleteFile(sPath.c_str());
+
+					smutils->LogError(myself, "Unable to find the file: \"%s\"", sFileName.c_str());
 					return false;
 				}
 
-				int iNumMat; 
-				file->Seek(204, SEEK_SET);
-				file->Read(&iNumMat, sizeof(iNumMat));
-				file->Seek(0, SEEK_END);
-				META_CONPRINTF("iNumMat: %d\n", iNumMat);
+				char sMaterial[256]; int iNumMat; int8_t iChar;
 
-				int8_t iChar;
+				pFile->Seek(204, SEEK_SET);
+				pFile->Read(&iNumMat, sizeof(iNumMat));
+				pFile->Seek(0, SEEK_END);
+				g_SMAPI->ConPrintf("iNumMat: %d\n", iNumMat);
 
 				do
 				{
-					file->Seek(-2, SEEK_CUR);
-					file->Read(&iChar, sizeof(iChar));
+					pFile->Seek(-2, SEEK_CUR);
+					pFile->Read(&iChar, sizeof(iChar));
 				} while (!iChar);
-				META_CONPRINTF("Last iChar: %s", iChar);
+				g_SMAPI->ConPrintf("Last iChar: %d\n", iChar);
 
-				file->Seek(-1, SEEK_CUR);
+				pFile->Seek(-1, SEEK_CUR);
 
 				do
 				{
-					file->Seek(-2, SEEK_CUR);
-					file->Read(&iChar, sizeof(iChar));
+					pFile->Seek(-2, SEEK_CUR);
+					pFile->Read(&iChar, sizeof(iChar));
 				} while (iChar);
+				g_SMAPI->ConPrintf("Last iChar: %d\n", iChar);
 
-				file->Close();
+				int iPosIndex = pFile->Tell();
+				g_SMAPI->ConPrintf("iPosIndex: %d\n", iPosIndex);
 
-				char sMaterials[256];
-				int iPosIndex = file->Tell();
-				sm::ReadFileString(file, sMaterials, sizeof(sMaterials));
-				file->Seek(iPosIndex, SEEK_SET);
-				file->Seek(-1, SEEK_CUR);
+				sm::ReadFileString(pFile, sMaterial, sizeof(sMaterial));
+				pFile->Seek(iPosIndex, SEEK_SET);
+				pFile->Seek(-1, SEEK_CUR);
+				g_SMAPI->ConPrintf("sMaterial: %s\n", sMaterial);
 
-				std::vector<std::string> hList;
+				std::vector<std::string> vList;
 
-				char sTemp[256];
-				while (file->Tell() > 1 && hList.size() < iNumMat)
+				char sPathTemp[256];
+				while (pFile->Tell() > 1 && vList.size() < iNumMat)
 				{
 					do
 					{
-						file->Seek(-2, SEEK_CUR);
-						file->Read(&iChar, sizeof(iChar));
+						pFile->Seek(-2, SEEK_CUR);
+						pFile->Read(&iChar, sizeof(iChar));
 					} while (iChar);
 
-					iPosIndex = file->Tell();
-					sm::ReadFileString(file, sTemp, sizeof(sTemp));
-					file->Seek(iPosIndex, SEEK_SET);
-					file->Seek(-1, SEEK_CUR);
+					iPosIndex = pFile->Tell();
+					sm::ReadFileString(pFile, sPathTemp, sizeof(sPathTemp));
+					pFile->Seek(iPosIndex, SEEK_SET);
+					pFile->Seek(-1, SEEK_CUR);
 
-					resource = std::string(sTemp);
+					sPath = std::string(sPathTemp, sizeof(sPathTemp));
+					if (!sPath.size()) continue;
 
-					if (!resource.size()) continue;
+					iFormat = sm::FindCharInString(sPath, sPath.rfind('\\'));
 
-					if (resource.rfind('\\'))
+					if (iFormat != -1)
 					{
+						sPath = std::string("materials\\") + sPath;
 
+						IDirectory* pDir = libsys->OpenDirectory(sPath.c_str());
+
+						if (!pDir)
+						{
+							smutils->LogError(myself, "[fileparser::PrecacheMaterials] Unable to open folder: \"%s\"", sPath.c_str());
+							continue;
+						}
+
+						while (pDir->IsEntryValid())
+						{
+							if (pDir->IsEntryFile())
+							{
+								std::string sFile = std::string(pDir->GetEntryName());
+
+								iFormat = sm::FindCharInString(sFile, sFile.rfind('.'));
+
+								if (iFormat != -1)
+								{
+									if (std::equal(sPath.rbegin(), sPath.rend(), std::string(".vmt").rbegin()))
+									{
+										if (std::find(vList.begin(), vList.end(), sPath) == vList.end())
+										{
+											vList.push_back(sPath);
+										}
+
+										sFile = sPath + sFile;
+
+										local_fs.write(std::string(sFile + "\n").c_str(), std::string(sFile + "\n").size());
+
+										PrecacheTextures(sFileName, sFile);
+									}
+								}
+							}
+						}
+
+						delete pDir;
 					}
 					else
 					{
+						sPath += ".vmt";
 
+						if (std::find(vList.begin(), vList.end(), sPath) == vList.end())
+						{
+							vList.push_back(sPath);
+						}
+
+						sPath = "materials\\" + std::string(sMaterial) + sPath;
+
+						local_fs.write(std::string(sPath + "\n").c_str(), std::string(sPath + "\n").size());
+
+						PrecacheTextures(sFileName, sPath);
 					}
 				}
+
+				delete pFile;
 			}
-			
+			else
+			{
+				std::ifstream local_fs(sRealLocalCache);
+				std::string lines;
+				while (std::getline(local_fs, lines))
+				{
+					if (lines.rfind("//") != std::string::npos) lines.erase(lines.begin() + lines.rfind("//"), lines.end());
+					std::remove_if(lines.begin(), lines.end(), isspace);
+
+					if (!lines.size()) continue;
+					PrecacheTextures(sFileName, lines);
+				}
+				local_fs.close();
+
+			}
+
 			return true;
 		}
 		
-		bool PrecacheEffects(std::string path)
+		inline bool PrecacheEffects(std::string path)
 		{
+			//43.249.195.138:4024
 			std::size_t first_occurence = path.rfind('.');
 			if (path.size() - first_occurence > 4)
 			{
@@ -363,11 +443,14 @@ namespace vec
 			std::string local_cache = resource + "_particles.txt";
 
 			bool exist = sm::filesystem::FileExists(local_cache.c_str());
+			
+			char localCacheRealPath[256];
+			g_pSM->BuildPath(Path_Game, localCacheRealPath, sizeof(localCacheRealPath), "%s", local_cache.c_str());
 
 			if (!exist)
 			{
 				sm::SystemFile* file = sm::SystemFile::Open(path.c_str(), "rb");
-				std::ofstream local_fs(local_cache, std::ofstream::app);
+				std::ofstream local_fs(localCacheRealPath, std::ofstream::app);
 
 				if (!file)
 				{
@@ -400,8 +483,9 @@ namespace vec
 
 					if (std::strstr(temp, ".vmt"))
 					{
-						std::string out = std::string("materials\\") + std::string(temp) + "\n";
-						local_fs.write(out.c_str(), out.size());
+						std::string out = std::string("materials\\") + std::string(temp);
+						
+						local_fs.write(std::string(out + "\n").c_str(), std::string(out + "\n").size());
 
 						PrecacheTextures(path, out);
 					}
@@ -413,7 +497,7 @@ namespace vec
 			}
 			else
 			{
-				std::ifstream local_fs(local_cache);
+				std::ifstream local_fs(localCacheRealPath);
 				std::string lines;
 
 				while (std::getline(local_fs, lines))
@@ -444,12 +528,12 @@ namespace vec
 				{
 					return true;
 				}
-				
-				smutils->LogError(myself, "[fileparser::PrecacheTextures] Invalid material path. File not found: \"%s\" in \"%s\"", sTexture.c_str(), modelname);
+
+				smutils->LogError(myself, "[fileparser::PrecacheTextures] Unable to find file: \"%s\" in \"%s\"", sTexture.c_str(), modelname.c_str());
 				return false;
 			}
 
-			//sm::sdktools::AddFileToDownloadsTable(sTexture.c_str());
+			sm::sdktools::AddFileToDownloadsTable(sTexture.c_str());
 
 			std::vector<std::string> sTypes = { "$baseTexture", "$bumpmap", "$lightwarptexture", "$REFRACTTINTtexture" };
 
@@ -489,7 +573,7 @@ namespace vec
 						{
 							bFound[i] = true;
 
-							sTexture.replace(sTexture.begin(), sTexture.begin() + iShift, "");
+							sTexture.erase(sTexture.begin(), sTexture.begin() + iShift);
 
 							sTexture.erase(std::remove(sTexture.begin(), sTexture.end(), '\"'), sTexture.end());
 
@@ -502,7 +586,6 @@ namespace vec
 
 							if (sm::filesystem::FileExists(sTexture.c_str()))
 							{
-
 								sm::sdktools::AddFileToDownloadsTable(sTexture.c_str());
 							}
 							else

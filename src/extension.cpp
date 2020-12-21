@@ -28,7 +28,6 @@ VECStandard g_VECStandard;
 SMEXT_LINK(&g_VECStandard);
 
 #include <random>
-#include <filesystem>
 
 static const char* g_DebugHintMessage[] = {
 	"这是第 1 条测试信息",
@@ -125,7 +124,7 @@ bool VECStandard::SDK_OnLoad(char* error, size_t maxlen, bool late)
 	vec::client::SDK_OnLoad(error, maxlen, late);
 	sharesys->RegisterLibrary(myself, "vec.std");
 	//debug::Co_DebugHint();
-
+	
 	return SDKExtension::SDK_OnLoad(error, maxlen, late);
 }
 
