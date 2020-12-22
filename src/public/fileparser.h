@@ -13,10 +13,6 @@ namespace vec
 			static cell_t PrecacheParticle(IPluginContext*, const cell_t*);
 			static cell_t PrecacheWeapon(IPluginContext*, const cell_t*);
 			static cell_t PrecacheSounds(IPluginContext*, const cell_t*);
-			// 下面的都是功能测试, 一旦完成将会被删除.
-			static cell_t PrecacheModelSounds(IPluginContext*, const cell_t*);
-			static cell_t PrecacheMaterials(IPluginContext*, const cell_t*);
-			static cell_t PrecacheEffects(IPluginContext*, const cell_t*);
 		}
 
 		sp_nativeinfo_t g_FileParserNatives[];

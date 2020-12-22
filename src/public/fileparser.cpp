@@ -21,9 +21,6 @@ namespace vec
 			{"fileparser_PrecacheParticle", API::PrecacheParticle},
 			{"fileparser_PrecacheWeapon", API::PrecacheWeapon},
 			{"fileparser_PrecacheSounds", API::PrecacheSounds},
-			{"fileparser_PrecacheModelSounds", API::PrecacheModelSounds},
-			{"fileparser_PrecacheMaterials", API::PrecacheMaterials},
-			//{"fileparser_PrecacheEffects", API::PrecacheEffects},
 			{nullptr, nullptr}
 		};
 
@@ -33,53 +30,28 @@ namespace vec
 			{
 				std::string path;
 				sm::interop::cell2native(pContext, params[1], path);
-				vec::fileparser::PrecacheModel(path);
-				return true;
+				return vec::fileparser::PrecacheModel(path);;
 			}
 			static cell_t PrecacheParticle(IPluginContext* pContext, const cell_t* params)
 			{
 				std::string path;
 				sm::interop::cell2native(pContext, params[1], path);
-				vec::fileparser::PrecacheParticle(path);
-				return true;
+				return vec::fileparser::PrecacheParticle(path);;
 			}
 			static cell_t PrecacheWeapon(IPluginContext* pContext, const cell_t* params)
 			{
 				std::string path;
 				sm::interop::cell2native(pContext, params[1], path);
-				vec::fileparser::PrecacheWeapon(path);
-				return true;
+				return vec::fileparser::PrecacheWeapon(path);;
 			}
 			static cell_t PrecacheSounds(IPluginContext* pContext, const cell_t* params)
 			{
 				std::string path;
 				sm::interop::cell2native(pContext, params[1], path);
-				vec::fileparser::PrecacheSounds(path);
-				return true;
-			}
-			// 下面的都是功能测试, 一旦完成将会被删除.
-			static cell_t PrecacheModelSounds(IPluginContext* pContext, const cell_t* params)
-			{
-				std::string path;
-				sm::interop::cell2native(pContext, params[1], path);
-				vec::fileparser::PrecacheModelSounds(path);
-				return true;
-			}
-			static cell_t PrecacheMaterials(IPluginContext* pContext, const cell_t* params)
-			{
-				std::string path;
-				sm::interop::cell2native(pContext, params[1], path);
-				return vec::fileparser::PrecacheMaterials(path);
-			}
-			static cell_t PrecacheEffects(IPluginContext* pContext, const cell_t* params)
-			{
-				std::string path;
-				sm::interop::cell2native(pContext, params[1], path);
-				return vec::fileparser::PrecacheEffects(path);
+				return vec::fileparser::PrecacheSounds(path);;
 			}
 		}
 		
-
 		bool SDK_OnLoad(char* error, size_t maxlen, bool late)
 		{
 			sharesys->AddNatives(myself, g_FileParserNatives);
@@ -98,11 +70,14 @@ namespace vec
 				}
 
 				smutils->LogError(myself, "Unable to find the model: %s", path.c_str());
+				return 0;
 			}
 
 			if (!sm::IsModelPrecached(path.c_str()))
 			{
-				// TODO
+				PrecacheMaterials(path);
+
+				PrecacheResources(path);
 			}
 
 			return sm::PrecacheModel(path.c_str(), true);
@@ -136,7 +111,29 @@ namespace vec
 
 		inline int PrecacheWeapon(std::string path)
 		{
-			return int();
+			if (!path.size()) return 0;
+
+			if (!sm::filesystem::FileExists(path.c_str()))
+			{
+				if (sm::filesystem::FileExists(path.c_str(), true))
+				{
+					return sm::PrecacheModel(path.c_str(), true);
+				}
+
+				smutils->LogError(myself, "[fileparser::PrecacheWeapon] Unable to find: \"%s\"", path.c_str());
+				return 0;
+			}
+
+			if (!sm::IsModelPrecached(path.c_str()))
+			{
+				PrecacheModelSounds(path);
+
+				PrecacheMaterials(path);
+
+				PrecacheResources(path);
+			}
+
+			return sm::PrecacheModel(path.c_str(), true);
 		}
 
 		/**
@@ -175,6 +172,14 @@ namespace vec
 
 		inline bool PrecacheModelSounds(std::string path)
 		{
+			int iFormat = sm::FindCharInString(path, path.rfind('.'));
+
+			if (iFormat == -1)
+			{
+				smutils->LogError(myself, "[fileparser::PrecacheModelSounds] Missing file format: %s", path.c_str());
+				return false;
+			}
+
 			std::size_t first_occurence = path.rfind('.');
 
 			if ((path.size() - first_occurence) > 4)
@@ -228,8 +233,9 @@ namespace vec
 
 					if (std::strstr(temp, ".mp3") || std::strstr(temp, ".wav"))
 					{
-						std::string out = std::string("sounds/") + std::string(temp) + "\n";
-						local_fs.write(out.c_str(), out.size());
+						std::string out = std::string("sound/") + std::string(temp);
+						std::replace(out.begin(), out.end(), '\\', '/');
+						local_fs.write(std::string(out + "\n").c_str(), std::string(out + "\n").size());
 
 						vec::fileparser::PrecacheSounds(out);
 					}
@@ -260,13 +266,19 @@ namespace vec
 
 		inline bool PrecacheMaterials(std::string sFileName)
 		{
-			int iFormat = 0; // to fix later.
+			int iFormat = sm::FindCharInString(sFileName, sFileName.rfind('.'));
+
+			if (iFormat == -1)
+			{
+				smutils->LogError(myself, "[fileparser::PrecacheMaterials] Missing file format: %s", sFileName.c_str());
+				return false;
+			}
 
 			std::size_t iFirstOccurence = sFileName.rfind('.');
 
 			if (sFileName.size() - iFirstOccurence > 4)
 			{
-				smutils->LogError(myself, "[fileparser::PrecacheEffects] The first occurence should not > 4, because it's vmt's suffix size.\nFile path: \"%s\"", sFileName.c_str());
+				smutils->LogError(myself, "[fileparser::PrecacheMaterials] The first occurence should not > 4, because it's vmt's suffix size.\nFile path: \"%s\"", sFileName.c_str());
 				return false;
 			}
 
@@ -302,14 +314,12 @@ namespace vec
 				pFile->Seek(204, SEEK_SET);
 				pFile->Read(&iNumMat, sizeof(iNumMat));
 				pFile->Seek(0, SEEK_END);
-				g_SMAPI->ConPrintf("iNumMat: %d\n", iNumMat);
 
 				do
 				{
 					pFile->Seek(-2, SEEK_CUR);
 					pFile->Read(&iChar, sizeof(iChar));
 				} while (!iChar);
-				g_SMAPI->ConPrintf("Last iChar: %d\n", iChar);
 
 				pFile->Seek(-1, SEEK_CUR);
 
@@ -318,15 +328,11 @@ namespace vec
 					pFile->Seek(-2, SEEK_CUR);
 					pFile->Read(&iChar, sizeof(iChar));
 				} while (iChar);
-				g_SMAPI->ConPrintf("Last iChar: %d\n", iChar);
 
 				int iPosIndex = pFile->Tell();
-				g_SMAPI->ConPrintf("iPosIndex: %d\n", iPosIndex);
-
 				sm::ReadFileString(pFile, sMaterial, sizeof(sMaterial));
 				pFile->Seek(iPosIndex, SEEK_SET);
 				pFile->Seek(-1, SEEK_CUR);
-				g_SMAPI->ConPrintf("sMaterial: %s\n", sMaterial);
 
 				std::vector<std::string> vList;
 
@@ -343,8 +349,10 @@ namespace vec
 					sm::ReadFileString(pFile, sPathTemp, sizeof(sPathTemp));
 					pFile->Seek(iPosIndex, SEEK_SET);
 					pFile->Seek(-1, SEEK_CUR);
+					
+					if (sPathTemp[0] == '\0') continue;
 
-					sPath = std::string(sPathTemp, sizeof(sPathTemp));
+					sPath = sPathTemp;
 					if (!sPath.size()) continue;
 
 					iFormat = sm::FindCharInString(sPath, sPath.rfind('\\'));
@@ -353,29 +361,32 @@ namespace vec
 					{
 						sPath = std::string("materials\\") + sPath;
 
-						IDirectory* pDir = libsys->OpenDirectory(sPath.c_str());
+						g_pSM->BuildPath(Path_Game, sPathTemp, sizeof(sPathTemp), "%s", sPath.c_str());
+
+						std::unique_ptr<IDirectory> pDir(libsys->OpenDirectory(sPathTemp));
 
 						if (!pDir)
 						{
-							smutils->LogError(myself, "[fileparser::PrecacheMaterials] Unable to open folder: \"%s\"", sPath.c_str());
+							smutils->LogError(myself, "[fileparser::PrecacheMaterials] Error opening folder: %s", sPath.c_str());
+							//META_CONPRINTF("pDir is nullptr. With: %s\n", sPath.c_str());
 							continue;
 						}
 
-						while (pDir->IsEntryValid())
+						while (pDir->MoreFiles())
 						{
 							if (pDir->IsEntryFile())
 							{
 								std::string sFile = std::string(pDir->GetEntryName());
-
+								
 								iFormat = sm::FindCharInString(sFile, sFile.rfind('.'));
 
 								if (iFormat != -1)
 								{
-									if (std::equal(sPath.rbegin(), sPath.rend(), std::string(".vmt").rbegin()))
-									{
-										if (std::find(vList.begin(), vList.end(), sPath) == vList.end())
+									if (std::equal(sFile.rbegin(), sFile.rbegin() + 4, std::string(".vmt").rbegin(), [](char a, char b) {return tolower(a) == tolower(b); }))
+									{										
+										if (std::find(vList.begin(), vList.end(), sFile) == vList.end())
 										{
-											vList.push_back(sPath);
+											vList.push_back(sFile);
 										}
 
 										sFile = sPath + sFile;
@@ -386,27 +397,27 @@ namespace vec
 									}
 								}
 							}
-						}
 
-						delete pDir;
+							pDir->NextEntry();
+						}
 					}
 					else
 					{
 						sPath += ".vmt";
-
 						if (std::find(vList.begin(), vList.end(), sPath) == vList.end())
 						{
 							vList.push_back(sPath);
 						}
 
-						sPath = "materials\\" + std::string(sMaterial) + sPath;
-
+						sPath = std::string("materials\\") + std::string(sMaterial) + sPath;
 						local_fs.write(std::string(sPath + "\n").c_str(), std::string(sPath + "\n").size());
 
 						PrecacheTextures(sFileName, sPath);
 					}
 				}
 
+				local_fs.close();
+				pFile->Close();
 				delete pFile;
 			}
 			else
@@ -424,13 +435,18 @@ namespace vec
 				local_fs.close();
 
 			}
-
 			return true;
 		}
 		
 		inline bool PrecacheEffects(std::string path)
 		{
-			//43.249.195.138:4024
+			int iFormat = sm::FindCharInString(path, path.rfind('.'));
+			if (iFormat == -1)
+			{
+				smutils->LogError(myself, "[fileparser::PrecacheEffects] Missing file format: %s", path.c_str());
+				return false;
+			}
+
 			std::size_t first_occurence = path.rfind('.');
 			if (path.size() - first_occurence > 4)
 			{
@@ -546,7 +562,7 @@ namespace vec
 
 			if (in.bad())
 			{
-				smutils->LogError(myself, "[fileparser::PrecacheTexture] Error opening file: %s", temp);
+				smutils->LogError(myself, "[fileparser::PrecacheTextures] Error opening file: %s", temp);
 				return false;
 			}
 
