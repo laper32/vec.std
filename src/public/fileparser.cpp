@@ -30,25 +30,25 @@ namespace vec
 			{
 				std::string path;
 				sm::interop::cell2native(pContext, params[1], path);
-				return vec::fileparser::PrecacheModel(path);;
+				return vec::fileparser::PrecacheModel(path);
 			}
 			static cell_t PrecacheParticle(IPluginContext* pContext, const cell_t* params)
 			{
 				std::string path;
 				sm::interop::cell2native(pContext, params[1], path);
-				return vec::fileparser::PrecacheParticle(path);;
+				return vec::fileparser::PrecacheParticle(path);
 			}
 			static cell_t PrecacheWeapon(IPluginContext* pContext, const cell_t* params)
 			{
 				std::string path;
 				sm::interop::cell2native(pContext, params[1], path);
-				return vec::fileparser::PrecacheWeapon(path);;
+				return vec::fileparser::PrecacheWeapon(path);
 			}
 			static cell_t PrecacheSounds(IPluginContext* pContext, const cell_t* params)
 			{
 				std::string path;
 				sm::interop::cell2native(pContext, params[1], path);
-				return vec::fileparser::PrecacheSounds(path);;
+				return vec::fileparser::PrecacheSounds(path);
 			}
 		}
 		

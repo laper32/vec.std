@@ -288,13 +288,6 @@ namespace vec
 				return sm::ent_cast<cell_t>(Ret);
 			}
 			static cell_t CreateBeam(IPluginContext* pContext, const cell_t* params) {
-				/*
-			inline CBaseEntity* CreateBeam(
-			Vector vStartPosition, Vector vEndPosition, std::string sDamage, std::string sFrame, float flWidth,
-			std::string sRenderFX, std::string sType, std::string sRate, std::string sDecalName, std::string sScroll, std::string sScale,
-			std::string sTextureName, std::string sLife, std::string sStrike, int iFlags, std::string sAmplitude, std::string sRadius,
-			std::string sRenderAMT, Color color, float flDelayTime, float flDurationTime, std::string sName) 
-				*/
 				Vector vStartPosition, vEndPosition;
 				sm::interop::cell2native(pContext, params[1], vStartPosition);
 				sm::interop::cell2native(pContext, params[2], vEndPosition);
@@ -303,26 +296,26 @@ namespace vec
 				sm::interop::cell2native(pContext, params[4], sFrame);
 				float flWidth = sp_ctof(params[5]);
 				std::string sRenderFX, sType, sRate, sDecalName, sScroll, sScale, sTextureName, sLife, sStrike;
-				sm::interop::cell2native(pContext, params[5], sRenderFX);
-				sm::interop::cell2native(pContext, params[6], sType);
-				sm::interop::cell2native(pContext, params[7], sRate);
-				sm::interop::cell2native(pContext, params[8], sDecalName);
-				sm::interop::cell2native(pContext, params[9], sScroll);
-				sm::interop::cell2native(pContext, params[10], sScale);
-				sm::interop::cell2native(pContext, params[11], sTextureName);
-				sm::interop::cell2native(pContext, params[12], sLife);
-				sm::interop::cell2native(pContext, params[13], sStrike);
-				int iFlags = params[14];
+				sm::interop::cell2native(pContext, params[6], sRenderFX);
+				sm::interop::cell2native(pContext, params[7], sType);
+				sm::interop::cell2native(pContext, params[8], sRate);
+				sm::interop::cell2native(pContext, params[9], sDecalName);
+				sm::interop::cell2native(pContext, params[10], sScroll);
+				sm::interop::cell2native(pContext, params[11], sScale);
+				sm::interop::cell2native(pContext, params[12], sTextureName);
+				sm::interop::cell2native(pContext, params[13], sLife);
+				sm::interop::cell2native(pContext, params[14], sStrike);
+				int iFlags = params[15];
 				std::string sAmplitude, sRadius, sRenderAMT;
-				sm::interop::cell2native(pContext, params[15], sAmplitude);
-				sm::interop::cell2native(pContext, params[16], sRadius);
-				sm::interop::cell2native(pContext, params[17], sRenderAMT);
+				sm::interop::cell2native(pContext, params[16], sAmplitude);
+				sm::interop::cell2native(pContext, params[17], sRadius);
+				sm::interop::cell2native(pContext, params[18], sRenderAMT);
 				Color color;
-				sm::interop::cell2native(pContext, params[18], color);
-				float flDelayTime = sp_ctof(params[19]);
-				float flDurationTime = sp_ctof(params[20]);
+				sm::interop::cell2native(pContext, params[19], color);
+				float flDelayTime = sp_ctof(params[20]);
+				float flDurationTime = sp_ctof(params[21]);
 				std::string sName;
-				sm::interop::cell2native(pContext, params[21], sName);
+				sm::interop::cell2native(pContext, params[22], sName);
 				CBaseEntity* Ret = vec::utils::CreateBeam(
 					vStartPosition, vEndPosition, sDamage, sFrame, flWidth,
 					sRenderFX, sType, sRate, sDecalName, sScroll, sScale,
