@@ -322,7 +322,7 @@ namespace vec
 					sTextureName, sLife, sStrike, iFlags, sAmplitude, sRadius,
 					sRenderAMT, color, flDelayTime, flDurationTime, sName
 				);
-				return 0;
+				return sm::ent_cast<cell_t>(Ret);
 			}
 			static cell_t CreateLight(IPluginContext* pContext, const cell_t* params) {
 				CBaseEntity* parent = sm::ent_cast<CBaseEntity*>(params[1]);

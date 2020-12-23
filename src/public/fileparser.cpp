@@ -5,13 +5,8 @@
 #include <stdexcept>
 #include <fstream>
 
-/*
-TODO
-1. 重写文件安全检查逻辑.
-2. 为变量设置正确的命名.
-3. 优化
-*/
-
+// WARNING: This is ONLY TESTED in CSGO!!!!
+// ANY GAMES OUTSIDE CSGO MAY NOT BE ACCEPTED!!
 namespace vec
 {
 	namespace fileparser
@@ -565,8 +560,6 @@ namespace vec
 				smutils->LogError(myself, "[fileparser::PrecacheTextures] Error opening file: %s", temp);
 				return false;
 			}
-
-			int cnt = 0;
 
 			while (std::getline(in, sTexture))
 			{
