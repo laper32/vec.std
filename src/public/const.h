@@ -1,6 +1,6 @@
 #pragma once
 
-enum ExplosionFlags
+enum ExplosionFlags_t
 {
 	EXP_NODAMAGE			= (1<<0),
 	EXP_REPEATABLE			= (1<<1),

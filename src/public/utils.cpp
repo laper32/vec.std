@@ -845,7 +845,7 @@ namespace vec
 				//sm::sdktools::DispatchKeyValue<Vector>(entity, "angles", Vector(angle.x, angle.y, angle.z));
 				sm::sdktools::DispatchKeyValue<int>(entity, "spawnflags", iFlags);
 				sm::sdktools::DispatchKeyValue<const char*>(entity, "fireballsprite", sSpriteName.c_str());
-				if (!(iFlags & ExplosionFlags::EXP_NODAMAGE))
+				if (!(iFlags & ExplosionFlags_t::EXP_NODAMAGE))
 				{
 					sm::sdktools::DispatchKeyValue<const char*>(entity, "classname", sWeapon.c_str());
 					sm::sdktools::DispatchKeyValue<int>(entity, "iMagnitude", std::round(flDamage));
