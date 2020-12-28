@@ -14,6 +14,11 @@ namespace vec
 		int Player_BlockingUseActionInProgress = -1;
 		int Entity_SimulationTime = -1;
 
+		sp_nativeinfo_t g_EngineNative[] = {
+			{"InitSendPropOffset", API::InitSendPropOffset},
+			{nullptr, nullptr}
+		};
+
 		void InitSendPropOffset(int& offset, const char* _class, const char* _prop)
 		{
 			sm_sendprop_info_t info = {};
@@ -32,6 +37,8 @@ namespace vec
 			InitSendPropOffset(Player_ProgressBarDuration, "CCSPlayer", "m_iProgressBarDuration");
 			InitSendPropOffset(Player_BlockingUseActionInProgress, "CCSPlayer", "m_iBlockingUseActionInProgress");
 			InitSendPropOffset(Entity_SimulationTime, "CBaseEntity", "m_flSimulationTime");
+
+			sharesys->AddNatives(myself, g_EngineNative);
 
 			return true;
 		}

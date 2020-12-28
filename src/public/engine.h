@@ -16,6 +16,8 @@ namespace vec
 		extern int Player_BlockingUseActionInProgress;
 		extern int Entity_SimulationTime;
 
+		sp_nativeinfo_t g_EngineNative[];
+
 		namespace API
 		{
 			static cell_t InitSendPropOffset(IPluginContext*, const cell_t*);
@@ -23,7 +25,7 @@ namespace vec
 
 		bool SDK_OnLoad(char* error, size_t maxlen, bool late);
 
-		void InitSendPropOffset(int &offset, const char* _class, const char* _prop);
+		inline void InitSendPropOffset(int &offset, const char* _class, const char* _prop);
 	}
 }
 
