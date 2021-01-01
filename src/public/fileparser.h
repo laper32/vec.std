@@ -12,6 +12,7 @@ namespace vec
 			static cell_t PrecacheModel(IPluginContext*, const cell_t*);
 			static cell_t PrecacheParticle(IPluginContext*, const cell_t*);
 			static cell_t PrecacheWeapon(IPluginContext*, const cell_t*);
+			static cell_t PrecacheTextures(IPluginContext*, const cell_t*);
 			static cell_t PrecacheSounds(IPluginContext*, const cell_t*);
 		}
 

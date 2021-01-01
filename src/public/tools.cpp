@@ -95,33 +95,18 @@ namespace vec
 			}
 			static cell_t GetVelocity(IPluginContext* pContext, const cell_t* params) {
 				Vector pos = vec::tools::GetVelocity(sm::ent_cast<CBaseEntity*>(params[1]));
-				cell_t* addr;
-				pContext->LocalToPhysAddr(params[2], &addr);
-				addr[0] = sp_ftoc(pos.x);
-				addr[1] = sp_ftoc(pos.y);
-				addr[2] = sp_ftoc(pos.z);
-				return 1;
+				return sm::interop::native2cell(pContext, pos, params[2]);
 			}
 			static cell_t GetSpeed(IPluginContext* pContext, const cell_t* params) {
 				return sp_ftoc(vec::tools::GetSpeed(sm::ent_cast<CBaseEntity*>(params[1])));
 			}
 			static cell_t GetAbsOrigin(IPluginContext* pContext, const cell_t* params) {
 				Vector pos = vec::tools::GetAbsOrigin(sm::ent_cast<CBaseEntity*>(params[1]));
-				cell_t* addr;
-				pContext->LocalToPhysAddr(params[2], &addr);
-				addr[0] = sp_ftoc(pos.x);
-				addr[1] = sp_ftoc(pos.y);
-				addr[2] = sp_ftoc(pos.z);
-				return 1;
+				return sm::interop::native2cell(pContext, pos, params[2]);
 			}
 			static cell_t GetAbsAngles(IPluginContext* pContext, const cell_t* params) {
 				QAngle ang = vec::tools::GetAbsAngles(sm::ent_cast<CBaseEntity*>(params[1]));
-				cell_t* addr;
-				pContext->LocalToPhysAddr(params[2], &addr);
-				addr[0] = sp_ftoc(ang.x);
-				addr[1] = sp_ftoc(ang.y);
-				addr[2] = sp_ftoc(ang.z);
-				return 1;
+				return sm::interop::native2cell(pContext, ang, params[2]);
 			}
 			// 因为一些原因 (如ZP等), 我们必须用GetEntPropArraySize类似的方式
 			// 如果只是DLL限定的话, 就无所谓了.
@@ -336,29 +321,16 @@ namespace vec
 			static cell_t GetMaxs(IPluginContext* pContext, const cell_t* params)
 			{
 				Vector maxs = vec::tools::GetMaxs(sm::ent_cast<CBaseEntity*>(params[1]));
-				//inline int native2cell(IPluginContext* pContext, const Vector& in, cell_t out)
 				return sm::interop::native2cell(pContext, maxs, params[2]);
-				/*cell_t* addr;
-				pContext->LocalToPhysAddr(params[2], &addr);
-				addr[0] = sp_ftoc(maxs.x);
-				addr[1] = sp_ftoc(maxs.y);
-				addr[2] = sp_ftoc(maxs.z);
-				return 0;*/
 			}
 			static cell_t GetMins(IPluginContext* pContext, const cell_t* params)
 			{
 				Vector mins = vec::tools::GetMins(sm::ent_cast<CBaseEntity*>(params[1]));
-				cell_t* addr;
-				pContext->LocalToPhysAddr(params[2], &addr);
-				addr[0] = sp_ftoc(mins.x);
-				addr[1] = sp_ftoc(mins.y);
-				addr[2] = sp_ftoc(mins.z);
-				return 0;
+				return sm::interop::native2cell(pContext, mins, params[2]);
 			}
 			static cell_t GetModelName(IPluginContext* pContext, const cell_t* params)
 			{
 				const char* name = vec::tools::GetModelName(sm::ent_cast<CBaseEntity*>(params[1]));
-
 				return pContext->StringToLocalUTF8(params[2], params[3], name, nullptr);
 			}
 		}

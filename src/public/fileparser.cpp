@@ -15,6 +15,7 @@ namespace vec
 			{"fileparser_PrecacheModel", API::PrecacheModel},
 			{"fileparser_PrecacheParticle", API::PrecacheParticle},
 			{"fileparser_PrecacheWeapon", API::PrecacheWeapon},
+			{"fileparser_PrecacheTextures", API::PrecacheTextures},
 			{"fileparser_PrecacheSounds", API::PrecacheSounds},
 			{nullptr, nullptr}
 		};
@@ -38,6 +39,13 @@ namespace vec
 				std::string path;
 				sm::interop::cell2native(pContext, params[1], path);
 				return vec::fileparser::PrecacheWeapon(path);
+			}
+			static cell_t PrecacheTextures(IPluginContext* pContext, const cell_t* params)
+			{
+				std::string filename, path;
+				sm::interop::cell2native(pContext, params[1], filename);
+				sm::interop::cell2native(pContext, params[2], path);
+				return vec::fileparser::PrecacheTextures(filename, path);
 			}
 			static cell_t PrecacheSounds(IPluginContext* pContext, const cell_t* params)
 			{
