@@ -17,6 +17,8 @@ target_sources("vec.std.public" INTERFACE
 	${CMAKE_CURRENT_LIST_DIR}/playermgr.cpp
 	${CMAKE_CURRENT_LIST_DIR}/fileparser.h
 	${CMAKE_CURRENT_LIST_DIR}/fileparser.cpp
+	${CMAKE_CURRENT_LIST_DIR}/vmathlib.h
+	${CMAKE_CURRENT_LIST_DIR}/vmathlib.cpp
 )
 
 target_include_directories("vec.std.public" INTERFACE ${CMAKE_CURRENT_LIST_DIR})
