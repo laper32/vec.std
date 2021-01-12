@@ -255,7 +255,9 @@ namespace vec
 				while (std::getline(local_fs, lines))
 				{
 					if (lines.rfind("//") != std::string::npos) lines.erase(lines.begin() + lines.rfind("//"), lines.end());
-					std::remove_if(lines.begin(), lines.end(), isspace);
+					
+					sm::trim(lines);
+					//std::remove_if(lines.begin(), lines.end(), isspace);
 
 					if (!lines.size()) continue;
 
@@ -371,7 +373,6 @@ namespace vec
 						if (!pDir)
 						{
 							smutils->LogError(myself, "[fileparser::PrecacheMaterials] Error opening folder: %s", sPath.c_str());
-							//META_CONPRINTF("pDir is nullptr. With: %s\n", sPath.c_str());
 							continue;
 						}
 
@@ -430,7 +431,9 @@ namespace vec
 				while (std::getline(local_fs, lines))
 				{
 					if (lines.rfind("//") != std::string::npos) lines.erase(lines.begin() + lines.rfind("//"), lines.end());
-					std::remove_if(lines.begin(), lines.end(), isspace);
+					
+					sm::trim(lines);
+					//std::remove_if(lines.begin(), lines.end(), isspace);
 
 					if (!lines.size()) continue;
 					PrecacheTextures(sFileName, lines);
@@ -522,7 +525,10 @@ namespace vec
 				while (std::getline(local_fs, lines))
 				{
 					if (lines.rfind("//") != std::string::npos) lines.erase(lines.begin() + lines.rfind("//"), lines.end());
-					std::remove_if(lines.begin(), lines.end(), isspace);
+					
+					sm::trim(lines);
+
+					//std::remove_if(lines.begin(), lines.end(), isspace);
 
 					if (!lines.size()) continue;
 					PrecacheTextures(path, lines);
@@ -566,6 +572,7 @@ namespace vec
 			if (in.bad())
 			{
 				smutils->LogError(myself, "[fileparser::PrecacheTextures] Error opening file: %s", temp);
+				in.close();
 				return false;
 			}
 
@@ -592,9 +599,10 @@ namespace vec
 
 							sTexture.erase(sTexture.begin(), sTexture.begin() + iShift);
 
+							sm::trim(sTexture);
+							//sTexture.erase(std::remove_if(sTexture.begin(), sTexture.end(), isspace), sTexture.end());
+							
 							sTexture.erase(std::remove(sTexture.begin(), sTexture.end(), '\"'), sTexture.end());
-
-							sTexture.erase(std::remove_if(sTexture.begin(), sTexture.end(), isspace), sTexture.end());
 
 							if (!sTexture.size()) continue;
 
@@ -617,6 +625,7 @@ namespace vec
 				}
 			}
 
+			in.close();
 			return true;
 		}
 
