@@ -571,10 +571,9 @@ namespace vec
 		 * @param entity            The entity index.
 		 * @param sModel            The model path.
 		 */
-		// problems here.
-		inline void SetArm(CBasePlayer* entity, const char* path)
+		inline void SetArm(CBasePlayer* entity, char* path)
 		{
-			sm::SetEntProp(entity, sm::Prop_Send, "m_szArmsModel", path);
+			sm::SetEntProp<const char*>(entity, sm::Prop_Send, "m_szArmsModel", path);
 		}
 
 		/**

@@ -80,7 +80,6 @@ namespace vec
 		bool SDK_OnLoad(char* error, size_t maxlen, bool late)
 		{
 			sharesys->AddNatives(myself, g_ToolNatives);
-			//sharesys->AddNatives(myself, g_ToolsNative);
 
 			return true;
 		}
@@ -154,7 +153,6 @@ namespace vec
 				{
 					cnt++;
 				}
-				//return 0;
 				return cnt;
 			}
 			// keeps in there...
@@ -497,7 +495,9 @@ namespace vec
 					pContext->ReportError("Player is nullptr. Index: %d", params[1]);
 					return 0;
 				}
-				vec::tools::SetArm(player, out.c_str());
+				char mdlpath[256];
+				out.copy(mdlpath, sizeof(mdlpath), 0);
+				vec::tools::SetArm(player, mdlpath);
 				return 0;
 			}
 			static cell_t SetAttack(IPluginContext* pContext, const cell_t* params) {
