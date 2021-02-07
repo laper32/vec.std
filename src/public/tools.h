@@ -697,7 +697,7 @@ namespace vec
 		 * @param parent            The parent ptr.
 		 */
 		inline void SetParent(CBaseEntity* ent, CBaseEntity* parent) {
-			sm::SetEntPropEnt(ent, sm::Prop_Data, "m_nParent", parent);
+			sm::SetEntPropEnt(ent, sm::Prop_Data, "m_pParent", parent);
 		}
 
 		/**
