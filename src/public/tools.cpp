@@ -88,31 +88,69 @@ namespace vec
 		namespace API
 		{
 			static cell_t SetVelocity(IPluginContext* pContext, const cell_t* params) {
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
 				Vector in;
 				sm::interop::cell2native(pContext, params[2], in);
-				vec::tools::SetVelocity(sm::ent_cast<CBaseEntity*>(params[1]), in, params[3], params[4]);
+
+				vec::tools::SetVelocity(entity, in, params[3], params[4]);
 				return 1;
 			}
 			static cell_t GetVelocity(IPluginContext* pContext, const cell_t* params) {
-				Vector pos = vec::tools::GetVelocity(sm::ent_cast<CBaseEntity*>(params[1]));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				Vector pos = vec::tools::GetVelocity(entity);
 				return sm::interop::native2cell(pContext, pos, params[2]);
 			}
 			static cell_t GetSpeed(IPluginContext* pContext, const cell_t* params) {
-				return sp_ftoc(vec::tools::GetSpeed(sm::ent_cast<CBaseEntity*>(params[1])));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				return sp_ftoc(vec::tools::GetSpeed(entity));
 			}
 			static cell_t GetAbsOrigin(IPluginContext* pContext, const cell_t* params) {
-				Vector pos = vec::tools::GetAbsOrigin(sm::ent_cast<CBaseEntity*>(params[1]));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				Vector pos = vec::tools::GetAbsOrigin(entity);
 				return sm::interop::native2cell(pContext, pos, params[2]);
 			}
 			static cell_t GetAbsAngles(IPluginContext* pContext, const cell_t* params) {
-				QAngle ang = vec::tools::GetAbsAngles(sm::ent_cast<CBaseEntity*>(params[1]));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				QAngle ang = vec::tools::GetAbsAngles(entity);
 				return sm::interop::native2cell(pContext, ang, params[2]);
 			}
 			// 因为一些原因 (如ZP等), 我们必须用GetEntPropArraySize类似的方式
 			// 如果只是DLL限定的话, 就无所谓了.
 			static cell_t GetMyWeapons(IPluginContext* pContext, const cell_t* params) {
 				int cnt = 0;
-				for (CBaseCombatWeapon* weapon : vec::tools::GetMyWeapons(sm::ent_cast<CBasePlayer*>(params[1])))
+				CBasePlayer* player = sm::ent_cast<CBasePlayer*>(params[1]);
+				if (!player)
+				{
+					pContext->ReportError("Player is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+
+				for (CBaseCombatWeapon* weapon : vec::tools::GetMyWeapons(player))
 				{
 					cnt++;
 				}
@@ -124,7 +162,14 @@ namespace vec
 				int pos = params[2];
 				int cnt = 0;
 				int out = -1;
-				for (CBaseCombatWeapon* weapon : vec::tools::GetMyWeapons(sm::ent_cast<CBasePlayer*>(params[1])))
+				CBasePlayer* player = sm::ent_cast<CBasePlayer*>(params[1]);
+				if (!player)
+				{
+					pContext->ReportError("Player is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+
+				for (CBaseCombatWeapon* weapon : vec::tools::GetMyWeapons(player))
 				{
 					cnt++;
 					if (cnt == pos) out = sm::ent_cast<int>(weapon); break;
@@ -132,119 +177,312 @@ namespace vec
 				return out;
 			}
 			static cell_t GetHealth(IPluginContext* pContext, const cell_t* params) {
-				return vec::tools::GetHealth(sm::ent_cast<CBaseEntity*>(params[1]));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				return vec::tools::GetHealth(entity, params[2]);
 			}
 			static cell_t SetHealth(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::SetHealth(sm::ent_cast<CBaseEntity*>(params[1]), params[2], params[3]);
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				vec::tools::SetHealth(entity, params[2], params[3]);
 				return 0;
 			}
 			static cell_t GetLMV(IPluginContext* pContext, const cell_t* params) {
-				return sp_ftoc(vec::tools::GetLMV(sm::ent_cast<CBaseEntity*>(params[1])));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				return sp_ftoc(vec::tools::GetLMV(entity));
 			}
 			static cell_t SetLMV(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::SetLMV(sm::ent_cast<CBaseEntity*>(params[1]), sp_ctof(params[2]));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				vec::tools::SetLMV(entity, sp_ctof(params[2]));
 				return 0;
 			}
 			static cell_t GetArmor(IPluginContext* pContext, const cell_t* params) {
-				return vec::tools::GetArmor(sm::ent_cast<CBaseEntity*>(params[1]));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				return vec::tools::GetArmor(entity);
 			}
 			static cell_t SetArmor(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::SetArmor(sm::ent_cast<CBaseEntity*>(params[1]), params[2]);
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				vec::tools::SetArmor(entity, params[2]);
 				return 0;
 			}
 			static cell_t GetTeam(IPluginContext* pContext, const cell_t* params) {
-				return vec::tools::GetTeam(sm::ent_cast<CBaseEntity*>(params[1]));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				return vec::tools::GetTeam(entity);
 			}
 			static cell_t SetTeam(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::SetTeam(sm::ent_cast<CBaseEntity*>(params[1]), static_cast<CSTeam_e>(params[2]));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				vec::tools::SetTeam(entity, static_cast<CSTeam_e>(params[2]));
 				return 0;
 			}
 			static cell_t GetNightVision(IPluginContext* pContext, const cell_t* params) {
-				return vec::tools::GetNightVision(sm::ent_cast<CBaseEntity*>(params[1]), params[2]);
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				return vec::tools::GetNightVision(entity, params[2]);
 			}
 			static cell_t SetNightVision(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::SetNightVision(sm::ent_cast<CBaseEntity*>(params[1]), params[2], params[3]);
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				vec::tools::SetNightVision(entity, params[2], params[3]);
 				return 0;
 			}
 			static cell_t GetDefuser(IPluginContext* pContext, const cell_t* params) {
-				return vec::tools::GetDefuser(sm::ent_cast<CBaseEntity*>(params[1]));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				return vec::tools::GetDefuser(entity);
 			}
 			static cell_t SetDefuser(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::SetDefuser(sm::ent_cast<CBaseEntity*>(params[1]), params[2]);
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				vec::tools::SetDefuser(entity, params[2]);
 				return 0;
 			}
 			// WARNING: When using, only accepted player entity index is in the bound of 1~MaxClients
 			// or will crash the server!
 			static cell_t GetHelmet(IPluginContext* pContext, const cell_t* params) {
-				return vec::tools::GetHelmet(sm::ent_cast<CBaseEntity*>(params[1]));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				return vec::tools::GetHelmet(entity);
 			}
 			static cell_t SetHelmet(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::SetHelmet(sm::ent_cast<CBaseEntity*>(params[1]), params[2]);
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				vec::tools::SetHelmet(entity, params[2]);
 				return 0;
 			}
 			static cell_t GetHeavySuit(IPluginContext* pContext, const cell_t* params) {
-				return vec::tools::GetHeavySuit(sm::ent_cast<CBaseEntity*>(params[1]));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				return vec::tools::GetHeavySuit(entity);
 			}
 			static cell_t SetHeavySuit(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::SetHeavySuit(sm::ent_cast<CBaseEntity*>(params[1]), params[2]);
+
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				vec::tools::SetHeavySuit(entity, params[2]);
 				return 0;
 			}
 			static cell_t GetActiveWeapon(IPluginContext* pContext, const cell_t* params) {
-				return sm::ent_cast<cell_t>(vec::tools::GetActiveWeapon(sm::ent_cast<CBasePlayer*>(params[1])));
+				CBasePlayer* player = sm::ent_cast<CBasePlayer*>(params[1]);
+				if (!player)
+				{
+					pContext->ReportError("Player is nullptr. Index: %d", params[1]);
+					return -1;
+				}
+				return sm::ent_cast<cell_t>(vec::tools::GetActiveWeapon(player));
 			}
 			static cell_t SetActiveWeapon(IPluginContext* pContext, const cell_t* params) {
 				return 0;
 			}
 			static cell_t GetAddonBits(IPluginContext* pContext, const cell_t* params) {
-				return vec::tools::GetAddonBits(sm::ent_cast<CBaseEntity*>(params[1]));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				return vec::tools::GetAddonBits(entity);
 			}
 			static cell_t SetAddonBits(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::SetAddonBits(sm::ent_cast<CBaseEntity*>(params[1]), params[2]);
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				vec::tools::SetAddonBits(entity, params[2]);
 				return 0;
 			}
 			static cell_t GetObserverMode(IPluginContext* pContext, const cell_t* params) {
-				return vec::tools::GetObserverMode(sm::ent_cast<CBaseEntity*>(params[1]));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				return vec::tools::GetObserverMode(entity);
 			}
 			static cell_t GetObserverTarget(IPluginContext* pContext, const cell_t* params) {
-				return sm::ent_cast<cell_t>(vec::tools::GetObserverTarget(sm::ent_cast<CBaseEntity*>(params[1])));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				return sm::ent_cast<cell_t>(vec::tools::GetObserverTarget(entity));
 			}
 			static cell_t GetHitGroup(IPluginContext* pContext, const cell_t* params) {
-				return vec::tools::GetHitGroup(sm::ent_cast<CBaseEntity*>(params[1]));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				return vec::tools::GetHitGroup(entity);
 			}
 			static cell_t GetScore(IPluginContext* pContext, const cell_t* params) {
-				return vec::tools::GetScore(sm::ent_cast<CBaseEntity*>(params[1]));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				return vec::tools::GetScore(entity, params[2]);
 			}
 			static cell_t SetScore(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::SetScore(sm::ent_cast<CBaseEntity*>(params[1]), params[3], params[2]);
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				vec::tools::SetScore(entity, params[2], params[3]);
 				return 0;
 			}
 			static cell_t GetFrags(IPluginContext* pContext, const cell_t* params) {
-				return vec::tools::GetFrags(sm::ent_cast<CBaseEntity*>(params[1]));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				return vec::tools::GetFrags(entity);
 			}
 			static cell_t SetFrags(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::SetFrags(sm::ent_cast<CBaseEntity*>(params[1]), params[2]);
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				vec::tools::SetFrags(entity, params[2]);
 				return 0;
 			}
 			static cell_t GetDeaths(IPluginContext* pContext, const cell_t* params) {
-				return vec::tools::GetDeaths(sm::ent_cast<CBaseEntity*>(params[1]));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				return vec::tools::GetDeaths(entity);
 			}
 			static cell_t SetDeaths(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::SetDeaths(sm::ent_cast<CBaseEntity*>(params[1]), params[2]);
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				vec::tools::SetDeaths(entity, params[2]);
 				return 0;
 			}
 			static cell_t GetGravity(IPluginContext* pContext, const cell_t* params) {
-				return sp_ftoc(vec::tools::GetGravity(sm::ent_cast<CBaseEntity*>(params[1])));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				return sp_ftoc(vec::tools::GetGravity(entity));
 			}
 			static cell_t SetGravity(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::SetGravity(sm::ent_cast<CBaseEntity*>(params[1]), sp_ctof(params[2]));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				vec::tools::SetGravity(entity, sp_ctof(params[2]));
 				return 0;
 			}
 			static cell_t SetSpot(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::SetSpot(sm::ent_cast<CBaseEntity*>(params[1]), params[2]);
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				vec::tools::SetSpot(entity, params[2]);
 				return 0;
 			}
 			static cell_t SetDetecting(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::SetDetecting(sm::ent_cast<CBaseEntity*>(params[1]), params[2]);
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				vec::tools::SetDetecting(entity, params[2]);
 				return 0;
 			}
 			static cell_t SetHud(IPluginContext* pContext, const cell_t* params) {
@@ -253,84 +491,223 @@ namespace vec
 			static cell_t SetArm(IPluginContext* pContext, const cell_t* params) {
 				std::string out;
 				sm::interop::cell2native(pContext, params[2], out);
-				vec::tools::SetArm(sm::ent_cast<CBasePlayer*>(params[1]), out.c_str());
+				CBasePlayer* player = sm::ent_cast<CBasePlayer*>(params[1]);
+				if (!player)
+				{
+					pContext->ReportError("Player is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				vec::tools::SetArm(player, out.c_str());
 				return 0;
 			}
 			static cell_t SetAttack(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::SetAttack(sm::ent_cast<CBaseEntity*>(params[1]), sp_ctof(params[2]));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				vec::tools::SetAttack(entity, sp_ctof(params[2]));
 				return 0;
 			}
 			static cell_t SetFlashLight(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::SetFlashLight(sm::ent_cast<CBasePlayer*>(params[1]), params[2]);
+				CBasePlayer* player = sm::ent_cast<CBasePlayer*>(params[1]);
+				if (!player)
+				{
+					pContext->ReportError("Player is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				vec::tools::SetFlashLight(player, params[2]);
 				return 0;
 			}
 			static cell_t SetFov(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::SetFov(sm::ent_cast<CBaseEntity*>(params[1]), params[2]);
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				vec::tools::SetFov(entity, params[2]);
 				return 0;
 			}
 			static cell_t SetTextures(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::SetTextures(sm::ent_cast<CBaseEntity*>(params[1]), params[2], params[3]);
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				vec::tools::SetTextures(entity, params[2], params[3]);
 				return 0;
 			}
 			static cell_t GetEffect(IPluginContext* pContext, const cell_t* params) {
-				return vec::tools::GetEffect(sm::ent_cast<CBaseEntity*>(params[1]));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				return vec::tools::GetEffect(entity);
 			}
 			static cell_t SetEffect(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::SetEffect(sm::ent_cast<CBaseEntity*>(params[1]), params[2]);
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				vec::tools::SetEffect(entity, params[2]);
 				return 0;
 			}
 			static cell_t GetActivator(IPluginContext* pContext, const cell_t* params) {
-				return sm::ent_cast<cell_t>(vec::tools::GetActivator(sm::ent_cast<CBaseEntity*>(params[1])));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				return sm::ent_cast<cell_t>(vec::tools::GetActivator(entity));
 			}
 			static cell_t SetModelIndex(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::SetModelIndex(sm::ent_cast<CBaseEntity*>(params[1]), params[2]);
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				vec::tools::SetModelIndex(entity, params[2]);
 				return 0;
 			}
 			static cell_t GetOwner(IPluginContext* pContext, const cell_t* params) {
-				return sm::ent_cast<cell_t>(vec::tools::GetOwner(sm::ent_cast<CBaseEntity*>(params[1])));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				return sm::ent_cast<cell_t>(vec::tools::GetOwner(entity));
 			}
 			static cell_t SetOwner(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::SetOwner(sm::ent_cast<CBaseEntity*>(params[1]), sm::ent_cast<CBaseEntity*>(params[2]));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+
+				CBaseEntity* owner = sm::ent_cast<CBaseEntity*>(params[2]);
+				if (!owner)
+				{
+					pContext->ReportError("Owner is nullptr. Index: %d", params[2]);
+					return 0;
+				}
+
+				vec::tools::SetOwner(entity, owner);
 				return 0;
 			}
 			static cell_t GetParent(IPluginContext* pContext, const cell_t* params) {
-				return sm::ent_cast<cell_t>(vec::tools::GetParent(sm::ent_cast<CBaseEntity*>(params[1])));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				return sm::ent_cast<cell_t>(vec::tools::GetParent(entity));
 			}
 			static cell_t SetParent(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::SetParent(sm::ent_cast<CBaseEntity*>(params[1]), sm::ent_cast<CBaseEntity*>(params[2]));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+
+				CBaseEntity* parent = sm::ent_cast<CBaseEntity*>(params[2]);
+				if (!parent)
+				{
+					pContext->ReportError("Parent is nullptr. Index: %d", params[2]);
+					return 0;
+				}
+
+				vec::tools::SetParent(entity, parent);
 				return 0;
 			}
 			static cell_t GetRagdollIndex(IPluginContext* pContext, const cell_t* params) {
-				return vec::tools::GetRagdollIndex(sm::ent_cast<CBaseEntity*>(params[1]));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				return vec::tools::GetRagdollIndex(entity);
 			}
 			static cell_t GetCollisionGroup(IPluginContext* pContext, const cell_t* params) {
-				return vec::tools::GetCollisionGroup(sm::ent_cast<CBaseEntity*>(params[1]));
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				return vec::tools::GetCollisionGroup(entity);
 			}
 			static cell_t SetCollisionGroup(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::SetCollisionGroup(sm::ent_cast<CBaseEntity*>(params[1]), params[2]);
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				vec::tools::SetCollisionGroup(entity, params[2]);
 				return 0;
 			}
 			static cell_t SetProgressBarTime(IPluginContext*pContext, const cell_t* params) {
-				vec::tools::SetProgressBarTime(sm::ent_cast<CBasePlayer*>(params[1]), params[2]);
+				CBasePlayer* player = sm::ent_cast<CBasePlayer*>(params[1]);
+				if (!player)
+				{
+					pContext->ReportError("Player is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				vec::tools::SetProgressBarTime(player, params[2]);
 				return 0;
 			}
 			static cell_t ResetProgressBarTime(IPluginContext* pContext, const cell_t* params) {
-				vec::tools::ResetProgressBarTime(sm::ent_cast<CBasePlayer*>(params[1]));
+				CBasePlayer* player = sm::ent_cast<CBasePlayer*>(params[1]);
+				if (!player)
+				{
+					pContext->ReportError("Player is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				vec::tools::ResetProgressBarTime(player);
 				return 0;
 			}
-			static cell_t GetMaxs(IPluginContext* pContext, const cell_t* params)
-			{
-				Vector maxs = vec::tools::GetMaxs(sm::ent_cast<CBaseEntity*>(params[1]));
+			static cell_t GetMaxs(IPluginContext* pContext, const cell_t* params) {
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				Vector maxs = vec::tools::GetMaxs(entity);
 				return sm::interop::native2cell(pContext, maxs, params[2]);
 			}
-			static cell_t GetMins(IPluginContext* pContext, const cell_t* params)
-			{
-				Vector mins = vec::tools::GetMins(sm::ent_cast<CBaseEntity*>(params[1]));
+			static cell_t GetMins(IPluginContext* pContext, const cell_t* params) {
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				Vector mins = vec::tools::GetMins(entity);
 				return sm::interop::native2cell(pContext, mins, params[2]);
 			}
-			static cell_t GetModelName(IPluginContext* pContext, const cell_t* params)
-			{
-				const char* name = vec::tools::GetModelName(sm::ent_cast<CBaseEntity*>(params[1]));
+			static cell_t GetModelName(IPluginContext* pContext, const cell_t* params) {
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				const char* name = vec::tools::GetModelName(entity);
 				return pContext->StringToLocalUTF8(params[2], params[3], name, nullptr);
 			}
 		}

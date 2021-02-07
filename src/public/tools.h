@@ -217,7 +217,7 @@ namespace vec
 			if (iValue <= CS_TEAM_SPECTATOR) /// Fix, thanks to inklesspen!
 			{
 				// Sets team of the entity
-				sm::sourcemod::ChangeClientTeam(playerhelpers->GetGamePlayer(gamehelpers->EntityToReference(entity)), iValue);
+				sm::sourcemod::ChangeClientTeam(sm::ent_cast<IGamePlayer*>(entity), iValue);
 			}
 			else
 			{
@@ -286,7 +286,7 @@ namespace vec
 		 * @param bScore            True to look at score, false to look at deaths.
 		 * @param iValue            The score/death amount.
 		 */
-		inline void SetScore(CBaseEntity* entity, int val, bool score = true) {
+		inline void SetScore(CBaseEntity* entity, bool score, int val) {
 			score ? SetFrags(entity, val) : SetDeaths(entity, val);
 		}
 
@@ -413,14 +413,15 @@ namespace vec
 		{
 			if (!enable)
 			{
-				sm::SetEntData(entity, vec::engine::Player_Spotted, false, 1, true);
-				sm::SetEntData(entity, vec::engine::Player_SpottedByMask, false, {}, true);
-				sm::SetEntData(entity, vec::engine::Player_SpottedByMask + 4, false, {}, true); // table
-				sm::SetEntData(entity, vec::engine::Player_Spotted - 4, 0, {}, true);
+				//sm::SetEntData<float>(ent, vec::engine::Entity_SimulationTime, flGameTime + float(val), true);
+				sm::SetEntData<int>(entity, vec::engine::Player_Spotted,			false,	1,				true);
+				sm::SetEntData<int>(entity, vec::engine::Player_SpottedByMask,		false,	sizeof(int),	true);
+				sm::SetEntData<int>(entity, vec::engine::Player_SpottedByMask + 4,	false,	sizeof(int),	true); // table
+				sm::SetEntData<int>(entity, vec::engine::Player_Spotted - 4,		0,		sizeof(int),	true);
 			}
 			else
 			{
-				sm::SetEntData(entity, vec::engine::Player_Spotted - 4, 9, {}, true);
+				sm::SetEntData<int>(entity, vec::engine::Player_Spotted - 4,		9,		sizeof(int), true);
 			}
 		}
 
@@ -570,10 +571,12 @@ namespace vec
 		 * @param entity            The entity index.
 		 * @param sModel            The model path.
 		 */
+		// problems here.
 		inline void SetArm(CBasePlayer* entity, const char* path)
 		{
-			sm::SetEntProp<const char*>(entity, sm::Prop_Send, "m_szArmsModel", path);
+			sm::SetEntProp(entity, sm::Prop_Send, "m_szArmsModel", path);
 		}
+
 		/**
 		 * @brief Sets the attack delay of a entity.
 		 *
@@ -664,7 +667,7 @@ namespace vec
 		 * @return                  The owner ptr.
 		 */
 		inline CBaseEntity* GetOwner(CBaseEntity* ent) {
-			return sm::ent_cast<CBaseEntity*>(sm::GetEntPropEnt(ent, sm::Prop_Data, "m_hOwner"));
+			return sm::ent_cast<CBaseEntity*>(sm::GetEntPropEnt(ent, sm::Prop_Data, "m_hOwnerEntity"));
 		}
 
 		/**
@@ -674,7 +677,7 @@ namespace vec
 		 * @param owner             The owner ptr.
 		 */
 		inline void SetOwner(CBaseEntity* ent, CBaseEntity* owner) {
-			sm::SetEntPropEnt(ent, sm::Prop_Data, "m_hOwner", owner);
+			sm::SetEntPropEnt<CBaseEntity*>(ent, sm::Prop_Data, "m_hOwnerEntity", owner);
 		}
 
 		/**

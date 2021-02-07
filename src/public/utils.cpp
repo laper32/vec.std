@@ -800,7 +800,7 @@ namespace vec
 				{
 					sm::sdktools::SetVariantString("!activator");
 					sm::sdktools::AcceptEntityInput(entity, "SetParent", parent, entity);
-					sm::SetEntPropEnt<CBaseEntity*>(entity, sm::Prop_Data, "m_hOwnerEntity", parent);
+					vec::tools::SetOwner(entity, parent);
 
 					if (attach.size())
 					{

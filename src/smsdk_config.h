@@ -7,13 +7,13 @@
  */
 
  /* Basic information exposed publicly */
-#define SMEXT_CONF_NAME			"Vector community standard library"
-#define SMEXT_CONF_DESCRIPTION	"Standard library for Vector community, CSGO Only"
+#define SMEXT_CONF_NAME			"vec.std"
+#define SMEXT_CONF_DESCRIPTION	"vec.std"
 #define SMEXT_CONF_VERSION		"1.0-Dev"
 #define SMEXT_CONF_AUTHOR		"laper32"
 #define SMEXT_CONF_URL			"http://github.com/laper32/vec.std"
-#define SMEXT_CONF_LOGTAG		"VEC"
-#define SMEXT_CONF_LICENSE		"_Private_"
+#define SMEXT_CONF_LOGTAG		"vec.std"
+#define SMEXT_CONF_LICENSE		"Private"
 #define SMEXT_CONF_DATESTRING	__DATE__
 
 /**
