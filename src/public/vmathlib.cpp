@@ -32,7 +32,6 @@ namespace vec
 
 		namespace API
 		{
-			// native int ProcessAliasMethod(
 			static cell_t GetAliasMethodValue(IPluginContext* pContext, const cell_t* params)
 			{
 				std::string probStr;
@@ -65,7 +64,21 @@ namespace vec
 					pContext->ReportError("Invalid rate input: %d", rate);
 					return -1;
 				}
-				return vec::mathlib::GetPresudoExponentialDistributionValue2(rate);
+				cell_t maxIterCount = params[2];
+
+				if (!maxIterCount)
+				{
+					pContext->ReportError("Maximum iter cannot be 0");
+					return -1;
+				}
+
+				if (rate < 0)
+				{
+					pContext->ReportError("Maximum iterate count must unsigned (Have transfer to + to avoid crash): %d.", maxIterCount);
+					maxIterCount = std::abs(maxIterCount);
+				}
+
+				return vec::mathlib::GetPresudoExponentialDistributionValue2(rate, maxIterCount);
 			}
 		}
 	}

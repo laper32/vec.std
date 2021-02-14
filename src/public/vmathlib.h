@@ -86,7 +86,7 @@ namespace vec
 			while (true)
 			{
 				std::size_t p = std::floor(std::log(1 - dist(rd)) * (-rate));
-				if (p < rate)
+				if (int(p) < rate)
 				{
 					return p;
 					break;
@@ -94,15 +94,15 @@ namespace vec
 			}
 		}
 
-		inline std::size_t GetPresudoExponentialDistributionValue2(int rate)
+		inline std::size_t GetPresudoExponentialDistributionValue2(int rate, std::size_t maxIterCnt)
 		{
 			std::random_device rd;
 			std::uniform_real_distribution<> dist(0, 1);
 			std::size_t i = 0;
-			while (i <= 100)
+			while (i <= maxIterCnt)
 			{
 				std::size_t p = std::floor(std::log(1 - dist(rd)) * (-rate));
-				if (p < rate)
+				if (int(p) < rate)
 				{
 					return p;
 					break;
