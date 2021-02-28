@@ -7,6 +7,7 @@
 #include "public/hashlib.h"
 #include "public/fileparser.h"
 #include "public/vmathlib.h"
+#include "public/text.h"
 namespace vec
 {
 	namespace functions
@@ -38,6 +39,7 @@ namespace vec
 			vec::hashlib::SDK_OnLoad(error, maxlen, late);
 			vec::fileparser::SDK_OnLoad(error, maxlen, late);
 			vec::mathlib::SDK_OnLoad(error, maxlen, late);
+			vec::text::SDK_OnLoad(error, maxlen, late);
 			return true;
 		}
 	}
