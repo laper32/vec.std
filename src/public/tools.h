@@ -69,6 +69,7 @@ namespace vec
 			static cell_t SetSpot(IPluginContext*, const cell_t*);
 			static cell_t SetDetecting(IPluginContext*, const cell_t*);
 			static cell_t SetHud(IPluginContext*, const cell_t*);
+			static cell_t GetArm(IPluginContext*, const cell_t*);
 			static cell_t SetArm(IPluginContext*, const cell_t*);
 			static cell_t SetAttack(IPluginContext*, const cell_t*);
 			static cell_t SetFlashLight(IPluginContext*, const cell_t*);
@@ -565,6 +566,12 @@ namespace vec
 			sm::SetEntProp<int>(player, sm::Prop_Send, "m_iHideHud", enable ? (sm::GetEntProp<int>(player, sm::Prop_Send, "m_iHideHud") & ~pos) : (sm::GetEntProp<int>(player, sm::Prop_Send, "m_iHideHud") | pos));
 		}
 
+		[[deprecated("Doesn't work correctly, DO NOT USE")]]
+		inline const char* GetArm(CBasePlayer* entity)
+		{
+			return nullptr;
+		}
+
 		/**
 		 * @brief Sets the arms of a entity.
 		 *
@@ -573,7 +580,7 @@ namespace vec
 		 */
 		inline void SetArm(CBasePlayer* entity, char* path)
 		{
-			sm::SetEntProp<const char*>(entity, sm::Prop_Send, "m_szArmsModel", path);
+			sm::SetEntProp<char*>(entity, sm::Prop_Send, "m_szArmsModel", path);
 		}
 
 		/**

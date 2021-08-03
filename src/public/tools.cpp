@@ -46,6 +46,7 @@ namespace vec
 			{"ToolsSetSpot",						API::SetSpot},
 			{"ToolsSetDetecting",					API::SetDetecting},
 			{"ToolsSetHud",							API::SetHud},
+			{"ToolsGetArm",							API::GetArm},
 			{"ToolsSetArm",							API::SetArm},
 			{"ToolsSetAttack",						API::SetAttack},
 			{"ToolsSetFlashLight",					API::SetFlashLight},
@@ -486,6 +487,16 @@ namespace vec
 			static cell_t SetHud(IPluginContext* pContext, const cell_t* params) {
 				return 0;
 			}
+			static cell_t GetArm(IPluginContext* pContext, const cell_t* params) {
+				CBasePlayer* player = sm::ent_cast<CBasePlayer*>(params[1]);
+				if (!player)
+				{
+					pContext->ReportError("Player is nullptr. Index: %d", params[1]);
+					return 0;
+				}
+				const char* name = sm::GetEntProp(player, sm::Prop_Send, "m_szArmsModel");
+				return pContext->StringToLocalUTF8(params[2], params[3], name, nullptr);
+			}
 			static cell_t SetArm(IPluginContext* pContext, const cell_t* params) {
 				std::string out;
 				sm::interop::cell2native(pContext, params[2], out);
@@ -495,8 +506,8 @@ namespace vec
 					pContext->ReportError("Player is nullptr. Index: %d", params[1]);
 					return 0;
 				}
-				char mdlpath[256];
-				out.copy(mdlpath, sizeof(mdlpath), 0);
+				char* mdlpath = {};
+				strcpy(mdlpath, out.c_str());
 				vec::tools::SetArm(player, mdlpath);
 				return 0;
 			}

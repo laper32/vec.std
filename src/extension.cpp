@@ -20,6 +20,8 @@
 #include "events.h"
 #include "client.h"
 
+#include <bitbuf.h>
+
 CGlobalVars* gpGlobals = nullptr;
 KeyValues* kv = nullptr;
 
