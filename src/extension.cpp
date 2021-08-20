@@ -118,6 +118,8 @@ namespace debug
 	}
 }
 
+void x_debug(const CCommand& args);
+
 static ConCommand xor_debug("xor_debug", x_debug, "Debug command");
 
 void x_debug(const CCommand& args)
