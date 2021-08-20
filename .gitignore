@@ -5,6 +5,7 @@
 
 CMakeSettings.json
 .vscode/
+cmake-*
 
 # User-specific files
 *.rsuser

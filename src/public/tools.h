@@ -91,6 +91,8 @@ namespace vec
 			static cell_t GetMaxs(IPluginContext*, const cell_t*);
 			static cell_t GetMins(IPluginContext*, const cell_t*);
 			static cell_t GetModelName(IPluginContext*, const cell_t*);
+			static cell_t GetWarmupPeriod(IPluginContext*, const cell_t*);
+			static cell_t SetWarmupPeriod(IPluginContext*, const cell_t*);
 		}
 
 		// Header-SDK Functions.

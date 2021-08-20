@@ -68,6 +68,8 @@ namespace vec
 			{"ToolsGetMaxs",						API::GetMaxs},
 			{"ToolsGetMins",						API::GetMins},
 			{"ToolsGetModelName",					API::GetModelName},
+			{"ToolsGetWarmupPeriod",				API::GetWarmupPeriod},
+			{"ToolsSetWarmupPeriod",				API::SetWarmupPeriod},
 			{nullptr, nullptr}
 		};
 		
@@ -494,7 +496,7 @@ namespace vec
 					pContext->ReportError("Player is nullptr. Index: %d", params[1]);
 					return 0;
 				}
-				const char* name = sm::GetEntProp(player, sm::Prop_Send, "m_szArmsModel");
+				const char* name = sm::GetEntPropString(player, sm::Prop_Send, "m_szArmsModel");
 				return pContext->StringToLocalUTF8(params[2], params[3], name, nullptr);
 			}
 			static cell_t SetArm(IPluginContext* pContext, const cell_t* params) {
@@ -720,6 +722,13 @@ namespace vec
 				}
 				const char* name = vec::tools::GetModelName(entity);
 				return pContext->StringToLocalUTF8(params[2], params[3], name, nullptr);
+			}
+			static cell_t GetWarmupPeriod(IPluginContext* pContext, const cell_t* params) {
+					return sm::sdktools::GameRulesGetProp<bool>("m_bWarmupPeriod");
+			}
+			static cell_t SetWarmupPeriod(IPluginContext* pContext, const cell_t* params) {
+				sm::sdktools::GameRulesSetProp<bool>("m_bWarmupPeriod", params[1]);
+				return 0;
 			}
 		}
 	}

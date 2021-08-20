@@ -118,6 +118,13 @@ namespace debug
 	}
 }
 
+static ConCommand xor_debug("xor_debug", x_debug, "Debug command");
+
+void x_debug(const CCommand& args)
+{
+	META_CONPRINTF("xor_debug: Command registered...");
+}
+
 bool VECStandard::SDK_OnLoad(char* error, size_t maxlen, bool late)
 {
 	sm::SDK_OnLoad(error, maxlen, late);
