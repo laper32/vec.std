@@ -19,8 +19,7 @@
 #include "functions.h"
 #include "events.h"
 #include "client.h"
-
-#include <bitbuf.h>
+#include "command.h"
 
 CGlobalVars* gpGlobals = nullptr;
 KeyValues* kv = nullptr;
@@ -118,22 +117,73 @@ namespace debug
 	}
 }
 
-void x_debug(const CCommand& args);
+namespace vec {
+	IGameConfig* g_pGameConf = nullptr;
+	IBinTools* g_pBinTools = nullptr;
+	ISDKTools* g_pSDKTools = nullptr;
+	IServerGameClients* serverClients = nullptr;
+	IServerPluginHelpers* serverpluginhelpers = nullptr;
+	ICvar* icvar = nullptr;
+	namespace detail {
+		bool SDK_OnLoad(char* error, size_t maxlength, bool late)
+		{
+			sharesys->RegisterLibrary(myself, "vec.std");
+			char conf_error[256];
+			if (!gameconfs->LoadGameConfigFile("vec.std.games", &g_pGameConf, conf_error, sizeof(conf_error)))
+			{
+				smutils->LogError(myself, "Unable to load game config file: %s", conf_error);
+				return false;
+			}
+			SM_GET_IFACE(BINTOOLS, g_pBinTools);
+			SM_GET_IFACE(SDKTOOLS, g_pSDKTools);
+			return true;
+		}
+		void SDK_OnUnload()
+		{
+			gameconfs->CloseGameConfigFile(g_pGameConf);
+		}
+		bool SDK_OnMetamodLoad(ISmmAPI* ismm, char* error, size_t maxlen, bool late)
+		{
+			gpGlobals = ismm->GetCGlobals();
+			GET_V_IFACE_CURRENT(GetEngineFactory, icvar, ICvar, CVAR_INTERFACE_VERSION);
+			GET_V_IFACE_CURRENT(GetServerFactory, serverClients, IServerGameClients, INTERFACEVERSION_SERVERGAMECLIENTS);
+			GET_V_IFACE_CURRENT(GetEngineFactory, serverpluginhelpers, IServerPluginHelpers, INTERFACEVERSION_ISERVERPLUGINHELPERS);
+			return true;
+		}
+	}
 
-static ConCommand xor_debug("xor_debug", x_debug, "Debug command");
-
-void x_debug(const CCommand& args)
-{
-	META_CONPRINTF("xor_debug: Command registered...");
+	bool SDK_OnLoad(char* error, size_t maxlen, bool late)
+	{
+		sm::SDK_OnLoad(error, maxlen, late);
+		detail::SDK_OnLoad(error, maxlen, late);
+		command::SDK_OnLoad(error, maxlen, late);
+		functions::SDK_OnLoad(error, maxlen, late);
+		events::SDK_OnLoad(error, maxlen, late);
+		client::SDK_OnLoad(error, maxlen, late);
+		return true;
+	}
+	void SDK_OnUnload()
+	{
+		events::SDK_OnUnload();
+		client::SDK_OnUnload();
+		command::SDK_OnUnload();
+		detail::SDK_OnUnload();
+		sm::SDK_OnUnload();
+	}
+	bool SDK_OnMetamodLoad(ISmmAPI* ismm, char* error, size_t maxlen, bool late)
+	{
+		detail::SDK_OnMetamodLoad(ismm, error, maxlen, late);
+		sm::SDK_OnMetamodLoad(ismm, error, maxlen, late);
+		vec::command::SDK_OnMetamodLoad(ismm, error, maxlen, late);
+		vec::events::SDK_OnMetamodLoad(ismm, error, maxlen, late);
+		vec::client::SDK_OnMetamodLoad(ismm, error, maxlen, late);
+		return true;
+	}
 }
 
 bool VECStandard::SDK_OnLoad(char* error, size_t maxlen, bool late)
 {
-	sm::SDK_OnLoad(error, maxlen, late);
-	vec::functions::SDK_OnLoad(error, maxlen, late);
-	vec::events::SDK_OnLoad(error, maxlen, late);
-	vec::client::SDK_OnLoad(error, maxlen, late);
-	sharesys->RegisterLibrary(myself, "vec.std");
+	vec::SDK_OnLoad(error, maxlen, late);
 	//debug::Co_DebugHint();
 
 	return SDKExtension::SDK_OnLoad(error, maxlen, late);
@@ -142,9 +192,7 @@ bool VECStandard::SDK_OnLoad(char* error, size_t maxlen, bool late)
 
 void VECStandard::SDK_OnUnload()
 {
-	vec::events::SDK_OnUnload();
-	vec::client::SDK_OnUnload();
-	sm::SDK_OnUnload();
+	vec::SDK_OnUnload();
 	return SDKExtension::SDK_OnUnload();
 }
 
@@ -155,9 +203,6 @@ void VECStandard::SDK_OnAllLoaded()
 
 bool VECStandard::SDK_OnMetamodLoad(ISmmAPI* ismm, char* error, size_t maxlen, bool late)
 {
-	gpGlobals = ismm->GetCGlobals();
-	sm::SDK_OnMetamodLoad(ismm, error, maxlen, late);
-	vec::events::SDK_OnMetamodLoad(ismm, error, maxlen, late);
-	vec::client::SDK_OnMetamodLoad(ismm, error, maxlen, late);
+	vec::SDK_OnMetamodLoad(ismm, error, maxlen, late);
 	return SDKExtension::SDK_OnMetamodLoad(ismm, error, maxlen, late);
 }

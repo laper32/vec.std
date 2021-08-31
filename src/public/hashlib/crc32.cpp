@@ -60,6 +60,7 @@
   *     hardware you could probably optimize the shift in assembler by
   *     using byte-swap instructions.
   */
+#pragma endregion
 
 #include "crc32.h"
 

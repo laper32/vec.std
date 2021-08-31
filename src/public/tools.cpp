@@ -68,8 +68,7 @@ namespace vec
 			{"ToolsGetMaxs",						API::GetMaxs},
 			{"ToolsGetMins",						API::GetMins},
 			{"ToolsGetModelName",					API::GetModelName},
-			{"ToolsGetWarmupPeriod",				API::GetWarmupPeriod},
-			{"ToolsSetWarmupPeriod",				API::SetWarmupPeriod},
+			{"ToolsGetEntityKeyValue",				API::GetEntityKeyValue},
 			{nullptr, nullptr}
 		};
 		
@@ -723,12 +722,18 @@ namespace vec
 				const char* name = vec::tools::GetModelName(entity);
 				return pContext->StringToLocalUTF8(params[2], params[3], name, nullptr);
 			}
-			static cell_t GetWarmupPeriod(IPluginContext* pContext, const cell_t* params) {
-					return sm::sdktools::GameRulesGetProp<bool>("m_bWarmupPeriod");
-			}
-			static cell_t SetWarmupPeriod(IPluginContext* pContext, const cell_t* params) {
-				sm::sdktools::GameRulesSetProp<bool>("m_bWarmupPeriod", params[1]);
-				return 0;
+			static cell_t GetEntityKeyValue(IPluginContext* pContext, const cell_t* params) {
+				CBaseEntity* entity = sm::ent_cast<CBaseEntity*>(params[1]);
+				if (!entity)
+				{
+					pContext->ReportError("Entity is nullptr. Index: %d", params[1]);
+					return false;
+				}
+				std::string key;
+				sm::interop::cell2native(pContext, params[2], key);
+				char output[512];
+				sm::sdktools::servertools->GetKeyValue(entity, key.c_str(), output, sizeof(output));
+				return pContext->StringToLocalUTF8(params[3], params[4], output, nullptr);
 			}
 		}
 	}

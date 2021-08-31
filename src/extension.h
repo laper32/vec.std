@@ -7,11 +7,41 @@
  */
 
 #include "smsdk_ext.h"
-
+#include <stdexcept>
 // We are now using C++20, we must disable all of these stupid macro
 #undef min
 #undef max
 #undef clamp
+
+namespace SourceMod {
+	class IBinTools;
+	class ISDKTools;
+	class IGameConfig;
+}
+
+namespace vec {
+	extern SourceMod::IGameConfig* g_pGameConf;
+	extern SourceMod::ISDKTools* g_pSDKTools;
+	extern SourceMod::IBinTools* g_pBinTools;
+	extern IServerGameClients* serverClients;
+	extern IServerPluginHelpers* serverpluginhelpers;
+	extern ICvar* icvar;
+
+	inline void* FindSig(const char* name)
+	{
+		void* addr;
+		if (!g_pGameConf->GetMemSig(name, &addr))
+			throw std::runtime_error("hook : sig not found - " + std::string(name));
+		return addr;
+	}
+	inline int FindOffset(const char* name)
+	{
+		int offset;
+		if (!g_pGameConf->GetOffset(name, &offset))
+			throw std::runtime_error("hook : sig not found - " + std::string(name));
+		return offset;
+	}
+}
 
 /**
  * @brief Sample implementation of the SDK Extension.
