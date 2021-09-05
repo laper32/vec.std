@@ -507,7 +507,8 @@ namespace vec
 					pContext->ReportError("Player is nullptr. Index: %d", params[1]);
 					return 0;
 				}
-				char* mdlpath = {};
+				// leak here
+				char* mdlpath = new char[out.size() + 1];
 				strcpy(mdlpath, out.c_str());
 				vec::tools::SetArm(player, mdlpath);
 				return 0;
