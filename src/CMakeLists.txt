@@ -1,3 +1,4 @@
+set(ENABLE_JSON ON)
 if(MSVC)
 	add_compile_options(/permissive- /utf-8)
 endif()
