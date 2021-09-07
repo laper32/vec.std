@@ -1,4 +1,3 @@
-set(ENABLE_JSON ON)
 if(MSVC)
 	add_compile_options(/permissive- /utf-8)
 endif()
@@ -20,7 +19,7 @@ add_library("vec.std" SHARED
 target_include_directories("vec.std" PUBLIC
 	./
 )
-
+add_definitions(-DENABLE_JSON)
 target_link_libraries("vec.std" PUBLIC smcppsdk)
 target_link_libraries("vec.std" PUBLIC "vec.std.public")
 
