@@ -790,10 +790,6 @@ namespace vec
 		{
 			return sm::GetEntProp<const char*>(entity, sm::Prop_Data, "m_ModelName");
 		}
-		inline void something_here()
-		{
-			sm::json::json_t j;
-		}
 	}
 }
 

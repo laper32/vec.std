@@ -495,8 +495,7 @@ namespace vec
 					pContext->ReportError("Player is nullptr. Index: %d", params[1]);
 					return 0;
 				}
-				const char* name = sm::GetEntPropString(player, sm::Prop_Send, "m_szArmsModel");
-				return pContext->StringToLocalUTF8(params[2], params[3], name, nullptr);
+				const char* name = sm::GetEntProp<const char*>(player, sm::Prop_Send, "m_szArmsModel");
 			}
 			static cell_t SetArm(IPluginContext* pContext, const cell_t* params) {
 				std::string out;
